@@ -5,9 +5,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page | Global Mart</title>
+
+    <!-- /* Nav links */ -->
+    <link rel="stylesheet" href="../../public/css/components_css/nav.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- /* Links */ -->
+    <link rel="stylesheet" href="../../public/css/index.css">
+    <link rel="stylesheet" href="../../public/css/components_css/slider.css">
+
+    <!-- /* Itim Font */ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
+    <!-- ----------------- Nav ----------------- -->
+    <nav class="main_nav_div">
+        <div class="title_sections_div">
+            <h1 class="title_sections">GlobalMart</h1>
+
+            <div class="sections_list">
+                <a href="index.php" class="section">Home</a>
+                <a href="products.php" class="section">Products</a>
+                <a href="about.php" class="section">Ofertas</a>
+            </div>
+        </div>
+
+
+        <form class="search_form" role="search">
+            <select class="search_category">
+                <option value="all">All</option>
+                <option value="electronics">Electronics</option>
+                <option value="fashion">Fashion</option>
+                <option value="home">Home</option>
+                <option value="books">Books</option>
+            </select>
+            <input class="search_input" type="search" placeholder="Search" aria-label="Search">
+            <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+        <div class="user_div">
+            <a href="login.php" class="login">Login</a>
+            <a href="register.php" class="register">Register</a>
+        </div>
+    </nav>
+
+    <div class="categories_div">
+        <a href="products.php?category=electronics" class="category"><i class="bi bi-list"></i>All</a>
+        <a href="products.php?category=electronics" class="category">Electronics</a>
+        <a href="products.php?category=fashion" class="category">Fashion</a>
+        <a href="products.php?category=home" class="category">Home</a>
+        <a href="products.php?category=books" class="category">Books</a>
+    </div>
+
+    <!-- ----------------- Slider ----------------- -->
+    <div class="main_slider_div">
+        <div class="slider">
+            <img src="../public/images/1.jpg" alt="Slider 1" class=" slide_image active">
+            <img src="../public/images/2.jpg" alt="Slider 2" class="slide_image">
+            <img src="../public/images/3.jpg" alt="Slider 3" class="slide_image">
+            <img src="../public/images/4.jpg" alt="Slider 4" class="slide_image">
+        </div>
+
+        <div class="buttons">
+            <button class="prev"><i class="bi bi-chevron-left"></i></button>
+            <button class="next"><i class="bi bi-chevron-right"></i></button>
+        </div>
+
+        <div class="dots_container">
+            <div class="dot active" attr='0'></div>
+            <div class="dot" attr='1'></div>
+            <div class="dot" attr='2'></div>
+            <div class="dot" attr='3'></div>
+        </div>
+    </div>
 </body>
+
+<script src="../public/js/slider.js"></script>
 
 </html>
