@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="../../public/css/components_css/nav.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<body>
+    <nav class="main_nav_div">
+        <div class="title_sections_div">
+            <h1 class="title_sections">Global Mart</h1>
+
+            <div class="sections_list">
+                <a href="index.php" class="section">Home</a>
+                <a href="products.php" class="section">Products</a>
+                <a href="about.php" class="section">Ofertas</a>
+            </div>
+        </div>
+
+
+        <form class="search_form" role="search">
+            <select class="search_category">
+                <option value="all">All</option>
+                <option value="electronics">Electronics</option>
+                <option value="fashion">Fashion</option>
+                <option value="home">Home</option>
+                <option value="books">Books</option>
+            </select>
+            <input class="search_input" type="search" placeholder="Search" aria-label="Search">
+            <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+        <div class="user_div">
+            <a href="login.php" class="login">Login</a>
+            <a href="register.php" class="register">Register</a>
+        </div>
+    </nav>
+
+    <div class="categories_div">
+        <a href="products.php?category=electronics" class="category"><i class="bi bi-list"></i>All</a>
+        <a href="products.php?category=electronics" class="category">Electronics</a>
+        <a href="products.php?category=fashion" class="category">Fashion</a>
+        <a href="products.php?category=home" class="category">Home</a>
+        <a href="products.php?category=books" class="category">Books</a>
+    </div>
+</body>
