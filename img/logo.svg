@@ -7,7 +7,7 @@
         </linearGradient>
     </defs>
     <text x="10" y="70" font-family="Arial, sans-serif" font-size="50" font-weight="bold"
-        fill="url(#grad1)" stroke="#000" stroke-width="1" letter-spacing="2" text-anchor="start">
+        fill="#000000" stroke="#000" stroke-width="1" letter-spacing="2" text-anchor="start">
         GlobalMart
     </text>
 </svg>
