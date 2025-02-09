@@ -1,6 +1,11 @@
+body {
+    font-family: "Itim", sans-serif;
+}
+
 .login_div {
     width: 300px;
-    margin: 50px auto 0 auto; /* Agrega un margen superior de 50px */
+    margin: 50px auto 0 auto;
+    /* Agrega un margen superior de 50px */
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -34,6 +39,7 @@
 .login_div .google_login img {
     width: 50px;
     cursor: pointer;
+    background: transparent;
 }
 
 .login_div .buttons_div {

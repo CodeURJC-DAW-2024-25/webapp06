@@ -32,8 +32,17 @@
     gap: 20px;
 }
 
-.sections_list a {
+a {
     text-decoration: none;
+}
+
+.title_sections {
+    color: black;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.sections_list a {
     color: rgba(0, 0, 0, 0.6);
     font-size: 1rem;
     font-weight: 800;
