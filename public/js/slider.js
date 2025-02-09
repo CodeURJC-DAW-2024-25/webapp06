@@ -11,7 +11,6 @@ var counter = 0;
 next.addEventListener('click', slide_next);
 function slide_next() {
     slide_images[counter].style.animation = 'next1 0.5s ease-in forwards';
-    console.log(slide_images[counter]);
 
     counter++;
     if (counter == slide_images.length) {
@@ -25,7 +24,6 @@ function slide_next() {
 prev.addEventListener('click', slide_prev);
 function slide_prev() {
     slide_images[counter].style.animation = 'prev1 0.5s ease-in forwards';
-    console.log(slide_images[counter]);
 
     counter--;
     if (counter < 0) {
