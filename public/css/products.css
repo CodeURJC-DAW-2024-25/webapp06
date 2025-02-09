@@ -1,0 +1,52 @@
+body {
+    font-family: 'Itim', sans-serif;
+}
+
+/* Existing styles */
+.main_products_div {
+    padding: 20px;
+}
+
+.product_section_container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section_title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.products_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+    gap: 20px;
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.product_image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.product_title {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.product_price {
+    font-size: 1em;
+    color: #333;
+}
