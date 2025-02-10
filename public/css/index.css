@@ -2,12 +2,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Itim", sans-serif;
 }
 
 body {
     width: 100%;
     min-width: 100vh;
+    font-family: "Itim", sans-serif;
 }
 
 .main_products_div {
