@@ -11,7 +11,7 @@
 
     <!-- /* Links */ -->
     <link rel="stylesheet" href="../public/css/login.css">
-
+    <link rel="stylesheet" href="../public/css/administrator.css">
 
     <!-- /* Slider links */ -->
     <link rel="stylesheet" href="../public/css/components_css/slider.css">
@@ -57,7 +57,7 @@
         </form>
 
         <div class="user_div">
-            <a href="login.html" class="login">Login</a>
+            <a href="register.html" class="login">Register</a>
         </div>
     </nav>
 
@@ -71,38 +71,30 @@
 
 
 
-    <div class="login_div">
+    
+    <div class="requests_container">
 
-        <h3>Registro</h3>
+        <div class="requests">
+            <img src="../public/images/1.jpg" alt="request_name">
+            <h3>IKEA</h3>
+            <p>Perchas de madera</p>
+            <p>10.99</p>
 
-        <form action="api/sendFormData" method="POST">
-
-            <input type="text" placeholder="Nombre de usuario"><br>
-            <input type="text" placeholder="Dirección de correo"><br>
-            <input type="password" placeholder="Introduzca contraseña"><br>
-
-            <label>
-                <input type="radio" name="userType" value="individual"> Individual
-            </label>
-            <label>
-                <input type="radio" name="userType" value="company"> Empresa
-            </label>
-
-
-            <div class="google_login">
-                <img src="../public/images/google_logo.png" alt="Google Logo" onclick="redirectToGoogleLogin()">
+            <div class="request_buttons">
+                <button class="accepted_button">Aceptar</button>
+                <button class="decline_button">Rechazar</button>
+                <button class="view_more_button">Ver más</button>
             </div>
+            
+        </div>
 
-            <div class="buttons_div">
-                <button type="submit">Registrar</button>
-                <button type="reset" onclick="window.location.href='index.html'">Cancelar</button>
-            </div>
+        
 
-        </form>
+        
+
+
     </div>
 
 
-
 </body>
-
 </html>
