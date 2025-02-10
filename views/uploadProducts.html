@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details | Global Mart</title>
+    <title>Upload Product | Global Mart</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../../public/css/descriptionProduct.css">
+    <link rel="stylesheet" href="../../public/css/uploadProducts.css">
     <link rel="stylesheet" href="../../public/css/components_css/nav.css">
     <link rel="stylesheet" href="../../public/css/components_css/footer.css">
 
@@ -32,15 +32,14 @@
             <a href="./index.html">
                 <h1 class="title_sections">GlobalMart</h1>
             </a>
-    
+
             <div class="sections_list">
                 <a href="./products.html" class="section">Products</a>
                 <a href="./products.html" class="section">Offers</a>
                 <a href="./about.html" class="section">About us</a>
             </div>
         </div>
-    
-    
+
         <form class="search_form" role="search">
             <select class="search_category">
                 <option value="all">All</option>
@@ -52,39 +51,54 @@
             <input class="search_input" type="search" placeholder="Search" aria-label="Search">
             <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
         </form>
-    
+
         <div class="user_div">
             <a href="./choose_login_option.html" class="login">Login</a>
             <a href="./register.html" class="register">Register</a>
         </div>
     </nav>
-    
+
     <div class="categories_div">
-        <a href="products.php?category=electronics" class="category"><i class="bi bi-list"></i>All</a>
+        <a href="products.php?category=all" class="category"><i class="bi bi-list"></i>All</a>
         <a href="products.php?category=electronics" class="category">Electronics</a>
         <a href="products.php?category=fashion" class="category">Fashion</a>
         <a href="products.php?category=home" class="category">Home</a>
         <a href="products.php?category=books" class="category">Books</a>
     </div>
 
-    <!-- ----------------- Product Details ----------------- -->
+    <!-- ----------------- Upload Product Form ----------------- -->
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6">
-                <img src="../public/images/esmalte.png" class="img-fluid" alt="Product Image">
+        <h2 class="text-center mb-4">Upload Product</h2>
+        <form>
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="text" class="form-control" id="productName" placeholder="Enter product name" required>
             </div>
-            <div class="col-md-6">
-                <h2 class="product-title">Product Name</h2>
-                <p class="product-price">$99.99</p>
-                <p class="product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam non urna
-                    vitae odio convallis tincidunt. Integer nec odio nec nulla facilisis tincidunt. Sed at lacus
-                    vehicula, fermentum justo a, tincidunt justo.</p>
-                <a href="" class="btn btn-primary btn-lg mt-3">Add to cart</a>
-                <a href="./products.html" class="btn btn-secondary btn-lg mt-3">Back to Products</a>
+            <div class="form-group">
+                <label for="productImage">Product Image URL</label>
+                <input type="url" class="form-control" id="productImage" placeholder="Enter image URL" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="productDescription">Product Description</label>
+                <textarea class="form-control" id="productDescription" rows="3" placeholder="Enter product description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="productType">Product Type</label>
+                <select class="form-control" id="productType" required>
+                    <option value="electronics">Electronics</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="home">Home</option>
+                    <option value="books">Books</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="productQuantity">Quantity</label>
+                <input type="number" class="form-control" id="productQuantity" placeholder="Enter quantity" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
-
+    <br><br><br><br>
     <!-- ----------------- Footer ----------------- -->
     <footer class="footer_main_div mt-5">
         <span class="footer_text">
