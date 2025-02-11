@@ -45,3 +45,41 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 | Cell 5      | Cell 6   |
 | Cell 7      | Cell 8   |
 | Cell 9      | Cell 10  |
+
+## Ficheros de mayor participación
+
+### Luis 
+| Descripción | Link     |
+|-------------|----------|
+| Cell 1      | Cell 2   |
+| Cell 3      | Cell 4   |
+| Cell 5      | Cell 6   |
+| Cell 7      | Cell 8   |
+| Cell 9      | Cell 10  |
+
+### Cristian
+| Descripción | Link     |
+|-------------|----------|
+| Cell 1      | Cell 2   |
+| Cell 3      | Cell 4   |
+| Cell 5      | Cell 6   |
+| Cell 7      | Cell 8   |
+| Cell 9      | Cell 10  |
+
+### Juan Manuel
+| Descripción | Link     |
+|-------------|----------|
+| Cell 1      | Cell 2   |
+| Cell 3      | Cell 4   |
+| Cell 5      | Cell 6   |
+| Cell 7      | Cell 8   |
+| Cell 9      | Cell 10  |
+
+### Álvaro
+| Descripción | Link     |
+|-------------|----------|
+| Cell 1      | Cell 2   |
+| Cell 3      | Cell 4   |
+| Cell 5      | Cell 6   |
+| Cell 7      | Cell 8   |
+| Cell 9      | Cell 10  |
