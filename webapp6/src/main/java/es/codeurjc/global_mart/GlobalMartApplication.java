@@ -1,13 +1,13 @@
-package es.codeurjc.helloworld_vscode;
+package es.codeurjc.global_mart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HelloworldVscodeApplication {
+public class GlobalMartApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HelloworldVscodeApplication.class, args);
+		SpringApplication.run(GlobalMartApplication.class, args);
 	}
 
 }
