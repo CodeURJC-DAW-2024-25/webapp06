@@ -18,21 +18,23 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 
 ## Preparación
 
-### Entidades
+### Preparación 1
+
+#### Entidades
 
 - **Usuario**
 - **Productos**
 - **Pedidos**
 - **Reseñas**
 
-### Tipos de Usuarios
+#### Tipos de Usuarios
 
 - **Anónimo**
 - **Comprador (registrado)**
 - **Empresa**
 - **Administrador**
 
-### Permisos de los Usuarios
+#### Permisos de los Usuarios
 
 - **Anónimo**: No tiene permisos, solo puede ver productos y registrarse.
 - **Comprador**:
@@ -45,7 +47,7 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
     - Gestionar solicitudes de productos de empresas (aceptar/rechazar).
     - Eliminar productos que no cumplan con el reglamento.
 
-### Información de las Bases de Datos
+#### Información de las Bases de Datos
 
 1. **Usuarios**:
     - Tipo de usuario
@@ -68,7 +70,9 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
     - Método de pago
     - Instrucciones para el repartidor
 
-### Diagramas
+### Preparación 2
+
+#### Diagramas
 
 ![Diagrama de Páginas GlobalMart](./public/images/diagrama_paginas_GlobalMart.png)
 
