@@ -11,7 +11,7 @@
 	<groupId>es.codeurjc</groupId>
 	<artifactId>global_mart</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Global Mart</name>
+	<name>GlobalMart</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
