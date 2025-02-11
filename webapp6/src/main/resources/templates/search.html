@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Searching ...</title>
+
+    <!-- Nav links -->
+    <link rel="stylesheet" href="../public/css/components_css/nav.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../public/css/search.css">
+
+    <!-- Itim Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
+        rel="stylesheet">
+
+    <!-- Footer links -->
+    <link rel="stylesheet" href="../public/css/components_css/footer.css">
+</head>
+
+<body>
+    <!-- ----------------- Nav ----------------- -->
+    <nav class="main_nav_div">
+        <div class="title_sections_div">
+            <a href="./index.html">
+                <h1 class="title_sections">GlobalMart</h1>
+            </a>
+
+            <div class="sections_list">
+                <a href="./products.html" class="section">Products</a>
+                <a href="./products.html" class="section">Offers</a>
+                <a href="./about.html" class="section">About us</a>
+            </div>
+        </div>
+
+
+        <form class="search_form" role="search">
+            <select class="search_category">
+                <option value="all">All</option>
+                <option value="electronics">Electronics</option>
+                <option value="fashion">Fashion</option>
+                <option value="home">Home</option>
+                <option value="books">Books</option>
+            </select>
+            <input class="search_input" type="search" placeholder="Search" aria-label="Search">
+            <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+        <div class="user_div">
+            <a href="./choose_login_option.html" class="login">Login</a>
+            <a href="./register.html" class="register">Register</a>
+        </div>
+    </nav>
+
+    <div class="categories_div">
+        <a href="" class="category"><i class="bi bi-list"></i>All</a>
+        <a href="" class="category">Electronics</a>
+        <a href="" class="category">Fashion</a>
+        <a href="" class="category">Home</a>
+        <a href="" class="category">Books</a>
+    </div>
+
+    <!-- ----------------- Search Results ----------------- -->
+    <div class="main_search_div">
+        <div class="search_results_div">
+            <h2 class="title_search_results">Resultados de la búsqueda: </h2>
+            <div class="results_div">
+                <div class="product_div">
+                    <img src="../public/images/products/1.jpg" alt="product" class="product_img">
+                    <h3 class="product_name">Product name</h3>
+                    <p class="product_price">$100.00</p>
+                    <a href="./product.html" class="product_button">View</a>
+                </div>
+                <div class="product_div">
+                    <img src="../public/images/products/2.jpg" alt="product" class="product_img">
+                    <h3 class="product_name">Product name</h3>
+                    <p class="product_price">$100.00</p>
+                    <a href="./product.html" class="product_button">View</a>
+                </div>
+                <div class="product_div">
+                    <img src="../public/images/products/3.jpg" alt="product" class="product_img">
+                    <h3 class="product_name">Product name</h3>
+                    <p class="product_price">$100.00</p>
+                    <a href="./product.html" class="product_button">View</a>
+                </div>
+                <div class="product_div">
+                    <img src="../public/images/products/4.jpg" alt="product" class="product_img">
+                    <h3 class="product_name">Product name</h3>
+                    <p class="product_price">$100.00</p>
+                    <a href="./product.html" class="product_button">View</a>
+                </div>
+                <div class="product_div">
+                    <img src="../public/images/products/5.jpg" alt="product" class="product_img">
+                    <h3 class="product_name">Product name</h3>
+                    <p class="product_price">$100.00</p>
+                    <a href="./product.html" class="product_button">View</a>
+                </div>
+                <div class="product_div">
+                    <img src="../public/images/products/6.jpg" alt="product" class="product_img">
+                    <h3 class="product_name">Product name</h3>
+                    <p class="product_price">$100.00</p>
+                    <a href="./product.html" class="product_button">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ----------------- Footer ----------------- -->
+    <footer class="footer_main_div">
+        <span class="footer_text">
+            &copy; 2021 GlobalMart. All rights reserved.
+        </span>
+    </footer>
+
+
+</body>
+
+</html>
