@@ -19,14 +19,12 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
         rel="stylesheet">
 
-    <!-- /* Footer links */ -->
-    <link rel="stylesheet" href="/css/footer.css">
 
 </head>
 
 <body>
     <!-- ----------------- Nav ----------------- -->
-    {{>nav}}
+    {{>./components/nav}}
 
     <!-- ----------------- Slider ----------------- -->
     <div class="main_slider_div">
@@ -153,12 +151,7 @@
     </div>
 
     <!-- ----------------- Footer ----------------- -->
-    <footer class="footer_main_div">
-        <span class="footer_text">
-            &copy; 2021 GlobalMart. All rights reserved.
-        </span>
-    </footer>
-</body>
+    {{>./components/footer}}
 
 <script src="/js/slider.js"></script>
 

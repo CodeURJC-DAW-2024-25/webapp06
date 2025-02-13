@@ -34,6 +34,11 @@ public class MainController {
 	public String login(Model model) {
 		return "login";
 	}
+	//Redirection to the about us page
+	@GetMapping("/about_us")
+	public String about_us(Model model) {
+		return "about";
+	}
 
 
 

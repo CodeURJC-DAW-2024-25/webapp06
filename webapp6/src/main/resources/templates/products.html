@@ -6,10 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products | Global Mart</title>
 
-    <!-- Nav links -->
-    <link rel="stylesheet" href="css/nav.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/products.css">
 
@@ -20,51 +16,11 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
         rel="stylesheet">
 
-    <!-- Footer links -->
-    <link rel="stylesheet" href="css/footer.css">
 </head>
 
 <body>
     <!-- ----------------- Nav ----------------- -->
-    <nav class="main_nav_div">
-        <div class="title_sections_div">
-            <a href="./index.html">
-                <h1 class="title_sections">GlobalMart</h1>
-            </a>
-
-            <div class="sections_list">
-                <a href="./products.html" class="section">Products</a>
-                <a href="./products.html" class="section">Offers</a>
-                <a href="./about.html" class="section">About us</a>
-            </div>
-        </div>
-
-
-        <form class="search_form" role="search">
-            <select class="search_category">
-                <option value="all">All</option>
-                <option value="electronics">Electronics</option>
-                <option value="fashion">Fashion</option>
-                <option value="home">Home</option>
-                <option value="books">Books</option>
-            </select>
-            <input class="search_input" type="search" placeholder="Search" aria-label="Search">
-            <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
-        </form>
-
-        <div class="user_div">
-            <a href="./choose_login_option.html" class="login">Login</a>
-            <a href="./register.html" class="register">Register</a>
-        </div>
-    </nav>
-
-    <div class="categories_div">
-        <a href="" class="category"><i class="bi bi-list"></i>All</a>
-        <a href="" class="category">Electronics</a>
-        <a href="" class="category">Fashion</a>
-        <a href="" class="category">Home</a>
-        <a href="" class="category">Books</a>
-    </div>
+    {{>./components/nav}}
 
     <!-- ----------------- Products ----------------- -->
     <div class="main_products_div">
@@ -122,11 +78,7 @@
     </div>
     <br><br>
     <!-- ----------------- Footer ----------------- -->
-    <footer class="footer_main_div">
-        <span class="footer_text">
-            &copy; 2021 GlobalMart. All rights reserved.
-        </span>
-    </footer>
+    {{>./components/footer}}
 </body>
 
 </html>

@@ -10,9 +10,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../public/css/descriptionProduct.css">
-    <link rel="stylesheet" href="../public/css/components_css/nav.css">
-    <link rel="stylesheet" href="../public/css/components_css/footer.css">
+    <link rel="stylesheet" href="/css/descriptionProduct.css">
 
     <!-- Itim Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,51 +19,11 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
         rel="stylesheet">
 
-    <!-- Footer links -->
-    <link rel="stylesheet" href="../public/css/components_css/footer.css">
 </head>
 
 <body>
     <!-- ----------------- Nav ----------------- -->
-    <nav class="main_nav_div">
-        <div class="title_sections_div">
-            <a href="./index.html">
-                <h1 class="title_sections">GlobalMart</h1>
-            </a>
-
-            <div class="sections_list">
-                <a href="./products.html" class="section">Products</a>
-                <a href="./products.html" class="section">Offers</a>
-                <a href="./about.html" class="section">About us</a>
-            </div>
-        </div>
-
-
-        <form class="search_form" role="search">
-            <select class="search_category">
-                <option value="all">All</option>
-                <option value="electronics">Electronics</option>
-                <option value="fashion">Fashion</option>
-                <option value="home">Home</option>
-                <option value="books">Books</option>
-            </select>
-            <input class="search_input" type="search" placeholder="Search" aria-label="Search">
-            <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
-        </form>
-
-        <div class="user_div">
-            <a href="./choose_login_option.html" class="login">Login</a>
-            <a href="./register.html" class="register">Register</a>
-        </div>
-    </nav>
-
-    <div class="categories_div">
-        <a href="products.php?category=electronics" class="category"><i class="bi bi-list"></i>All</a>
-        <a href="products.php?category=electronics" class="category">Electronics</a>
-        <a href="products.php?category=fashion" class="category">Fashion</a>
-        <a href="products.php?category=home" class="category">Home</a>
-        <a href="products.php?category=books" class="category">Books</a>
-    </div>
+    {{>./components/nav}}
 
     <!-- ----------------- Product Details ----------------- -->
     <div class="container mt-5">
@@ -85,12 +43,8 @@
         </div>
     </div>
 
-    <!-- ----------------- Footer ----------------- -->
-    <footer class="footer_main_div mt-5">
-        <span class="footer_text">
-            &copy; 2021 GlobalMart. All rights reserved.
-        </span>
-    </footer>
+    <!-- ------------Footer ------------ -->
+    {{>./components/footer}}
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
