@@ -49,4 +49,10 @@ public class MainController {
 	public String seeAllProds(Model model) {
 		return "products";
 	}
+
+	// Redirection to the descriprion of a produdct
+	@GetMapping("/descriptionProduct")
+	public String descriptionProduct(Model model) {
+		return "descriptionProduct";
+	}
 }
