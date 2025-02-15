@@ -117,11 +117,19 @@ a {
     font-size: 1rem;
 }
 
+.login {
+    background-color: transparent;
+    border: none;
+    font-family: "Itim", serif;
+    cursor: pointer;
+}
+
 .register {
     background-color: black;
     color: white;
     padding: 5px 10px;
     border-radius: 20px;
+    cursor: pointer;
 }
 
 /* ------------------- Categories ------------------- */

@@ -51,11 +51,3 @@ slider.addEventListener('mouseover', function () {
 
 
 slider.addEventListener('mouseout', auto_sliding);
-
-// ------------------------ Dots active class ------------------------
-function indicators() {
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(' active', '');
-    }
-    dots[counter].className += ' active';
-}
