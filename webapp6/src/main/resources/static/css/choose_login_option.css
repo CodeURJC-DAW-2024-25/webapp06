@@ -38,7 +38,9 @@ body {
     display: flex;
     justify-content: center;
     flex-direction: row;
-    margin: 1rem;
+    width: 95%;
+    margin: 1rem 1rem 1rem 1rem;
+    cursor: pointer;
 }
 
 .google_login_button,
@@ -70,15 +72,14 @@ a {
     font-weight: bold;
     width: 100%;
     text-align: center;
-
 }
 
-.popup_container.active .overlay,
-.popup_container.active .content {
+.popup_container .overlay.active,
+.popup_container .content.active {
     display: block;
 }
 
-.popup_container.active .content {
+.popup_container .content.active {
     transition: all 0.7s ease-in-out;
     transform: translate(-50%, -50%) scale(1);
     -webkit-transition: all 0.7s ease-in-out;

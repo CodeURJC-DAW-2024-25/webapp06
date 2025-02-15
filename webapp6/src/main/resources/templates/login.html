@@ -26,40 +26,28 @@
 
 
 <body>
-    <!-- ----------------- Nav ----------------- -->
-    {{>./components/nav}}
-    <!-- -----------------/Nav ----------------- -->
+    <div class="form_div login_div">
 
-
-
-    <div class="login_div">
-
-        <h3 class="main_title">Inicio de sesión</h3>
+        <h3 class="main_title">Log In</h3>
 
         <form action="api/sendFormData" method="POST">
 
             <div class="mail_div">
-                <p class="mail_title">Dirección de correo electrónico o nombre de usuario</p>
-                <input type="text" placeholder="Dirección de correo">
+                <p class="mail_title">Email address or username</p>
+                <input type="text" placeholder="Email address">
             </div>
 
             <div class="password_div">
-                <p class="mail_title">Contraseña</p>
-                <input type="password" placeholder="Introduzca contraseña">
+                <p class="mail_title">Password</p>
+                <input type="password" placeholder="Enter password">
             </div>
 
             <div class="buttons_div">
-                <button type="submit">Acceder</button>
-                <button type="reset" onclick="window.location.href='redir'">Cancelar</button>
+                <button type="submit">Sign in</button>
             </div>
 
         </form>
     </div>
-
-<!-- ------------Footer ------------ -->
-    {{>./components/footer}}
-    
-
 </body>
 
 </html>
