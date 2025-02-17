@@ -15,10 +15,10 @@ public class DataLoader {
     
     @PostConstruct
     public void loadData() {
-        productService.createProduct("Product 1", 10.0);
-        productService.createProduct("Product 2", 20.0);
-        productService.createProduct("Product 3", 30.0);
-        productService.createProduct("Product 4", 40.0);
-        productService.createProduct("Product 5", 50.0);
+        productService.createProduct("Hogar", "Producto1", "Amazon", 20.0, "Muy chulo", "String image");
+        productService.createProduct("Electrónica", "Producto2", "eBay", 30.0, "Muy útil", "String image");
+        productService.createProduct("Jardinería", "Producto3", "Walmart", 40.0, "Muy práctico", "String image");
+        productService.createProduct("Deportes", "Producto4", "Decathlon", 50.0, "Muy resistente", "String image");
+        productService.createProduct("Moda", "Producto5", "Zara", 60.0, "Muy elegante", "String image");
     }
 }
