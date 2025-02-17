@@ -73,9 +73,9 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 
 ### Preparación 2
 
-#### Diagramas
+#### Diagrama de Páginas GlobalMart
 
-![Diagrama de Páginas GlobalMart](./public/images/diagrama_paginas_GlobalMart.png)
+![Diagrama de Páginas GlobalMart](./images_readme/diagrama_paginas_GlobalMart.png)
 
 ## Commits de Mayor Importancia Realizados
 

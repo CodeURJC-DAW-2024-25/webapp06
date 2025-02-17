@@ -26,6 +26,7 @@ loginButton.addEventListener("click", function () {
     });
     popupButtonEmail.addEventListener("click", function () {
         popupContainerContent.classList.remove("active");
+        popupRegister.classList.remove("active");
         popupLogin.classList.add("active");
     });
 });
@@ -39,6 +40,7 @@ registerButton.addEventListener("click", function () {
     });
     popupButtonEmail.addEventListener("click", function () {
         popupContainerContent.classList.remove("active");
+        popupLogin.classList.remove("active");
         popupRegister.classList.add("active");
     });
 });
