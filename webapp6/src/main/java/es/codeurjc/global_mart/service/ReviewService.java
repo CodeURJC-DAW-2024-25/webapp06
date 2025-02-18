@@ -1,7 +1,6 @@
 package es.codeurjc.global_mart.service;
 
 import es.codeurjc.global_mart.model.Review;
-import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,11 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     // Crear una nueva reseña
-    public Review createReview(String comment, int calification, Product product) {
+    public Review createReview(String comment, int calification) {
         Review review = new Review();
         review.setComment(comment);
         review.setCalification(calification);
         review.setCreationDate(LocalDateTime.now());
-        review.setProduct(product);
         return reviewRepository.save(review);
     }
 

@@ -1,13 +1,12 @@
 package es.codeurjc.global_mart.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.JoinColumn;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "REVIEWS")
@@ -21,19 +20,17 @@ public class Review {
     private int calification; // Por ejemplo, de 1 a 5
     private LocalDateTime creationDate;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
     public Review() {}
 
-    public Review(String comment, int calification, LocalDateTime creationDate, Product product) {
-        this.comment = comment;
-        this.calification = calification;
-        this.creationDate = creationDate;
-        this.product = product;
+    public Review(String comment, int calification, LocalDateTime creationDate) {
+        if (!calificationValidation(calification)) {   
+            this.comment = comment;
+            this.calification = calification;
+            this.creationDate = creationDate;
+        }else{
+            throw new IllegalArgumentException("Calification must be between 0 and 5");
+        }
     }
-
 
     // Getters and Setters
     public Long getId() {
@@ -57,6 +54,9 @@ public class Review {
     }
 
     public void setCalification(int calification) {
+        if (!calificationValidation(calification)) {
+            throw new IllegalArgumentException("Calification must be between 0 and 5");
+        }
         this.calification = calification;
     }
 
@@ -68,11 +68,7 @@ public class Review {
         this.creationDate = creationDate;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
+    public boolean calificationValidation(int calification) {
+        return calification >= 0 && calification <= 5;
     }
 }
