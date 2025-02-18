@@ -2,10 +2,12 @@ package es.codeurjc.global_mart.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -26,6 +28,9 @@ public class Product {
 
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     // ----------------- Constructor -----------------
     public Product() {

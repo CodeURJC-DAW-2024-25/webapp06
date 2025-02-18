@@ -26,6 +26,9 @@ public class User {
     @OneToMany
     private List<Order> orders;
 
+    @OneToMany 
+    private List<Review> reviews;
+
     // ----------------- Constructor -----------------
     public User() {
     }
