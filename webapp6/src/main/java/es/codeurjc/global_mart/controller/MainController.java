@@ -58,7 +58,7 @@ public class MainController {
 	// Redirection to see all products
 	@GetMapping("/allProducts")
 	public String seeAllProds(Model model) {
-		Map<String, Object> data = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();	//Creation of a map to pass the boolean values to the mustache template
 		data.put("Hogar", true);
 		data.put("Electronica", true);
 		data.put("Libros", true);
@@ -68,6 +68,7 @@ public class MainController {
 		data.put("Musica", true);
 		data.put("Cine", true);
 		data.put("Otros", true);
+		//Add all the products scanning them by type of product
 		model.addAttribute("HogarProds", productService.getProductsByType("Hogar"));
 		model.addAttribute("ElectronicaProds", productService.getProductsByType("Electronica"));
 		model.addAttribute("LibrosProds", productService.getProductsByType("Libros"));
@@ -81,9 +82,10 @@ public class MainController {
 		return "products";
 	}
 
+	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-		Map<String, Object> data = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();	//Creation of a map to pass the boolean (make dissapear the titles of the other types)
 			data.put(type, true);
 		model.addAttribute(type + "Prods", productService.getProductsByType(type));
 		model.addAttribute("boolean", data);
@@ -92,7 +94,14 @@ public class MainController {
 
 	@GetMapping("/product/{id}")
 	public String productDescription(@PathVariable Long id, Model model) {
-		model.addAttribute("product", productService.getProductById(id));
+		var product = productService.getProductById(id);	//Extract the product by its id
+		//Extract all the info of the product to use it in the musctache template
+		model.addAttribute("productName", productService.getProductName(product.get()));
+		model.addAttribute("productType", productService.getProductType(product.get()));
+		model.addAttribute("productCompany", productService.getProductCompany(product.get()));
+		model.addAttribute("productPrice", productService.getProductPrice(product.get()));
+		model.addAttribute("productDescription", productService.getProductDescription(product.get()));
+		model.addAttribute("productImage", productService.getProductImage(product.get()));
 		return "descriptionProduct";
 	}
 	

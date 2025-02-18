@@ -2,6 +2,7 @@ package es.codeurjc.global_mart.service;
 
 import es.codeurjc.global_mart.repository.ProductRepository;
 import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.model.Review;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ReviewService reviewService;
 
     public Product createProduct(String type, String name, String business, Double price, String description, String image) {
         Product product = new Product(type, name, business, price, description, image);
@@ -47,4 +51,28 @@ public class ProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+
+    public String getProductName(Product product) {
+        return product.getName();
+    }
+    public String getProductType(Product product) {
+        return product.getType();
+    }
+    public String getProductCompany(Product product) {
+        return product.getCompany();
+    }
+    public Double getProductPrice(Product product) {
+        return product.getPrice();
+    }
+    public String getProductDescription(Product product) {
+        return product.getDescription();
+    }
+    public String getProductImage(Product product) {
+        return product.getImage();
+    }
+    public List<Review> getProductReviews(Product product) {
+        return reviewService.getAllReviews();
+    }
+    
+    
 }
