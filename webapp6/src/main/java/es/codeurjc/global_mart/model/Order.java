@@ -7,6 +7,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "ORDERS")
@@ -28,6 +29,9 @@ public class Order {
 
     // ----------------- Constructor -----------------
     public Order() {
+        this.products = new ArrayList<Product>();
+        this.total = 0.0;
+
     }
 
     public Order(List<Product> products, Double total, String direction, String userName) {
@@ -37,7 +41,22 @@ public class Order {
         this.userName = userName;
     }
 
+
+
+
     // ----------------- Methods -----------------
+
+    public void addProduct(Product product) {       // Add a product to the order and actualize the total price
+        products.add(product);
+        total += product.getPrice();
+    }
+
+    public void deleteProduct(Product product) {    // Delete a product from the order and actualize the total price
+        products.remove(product);
+        total -= product.getPrice();
+    }
+
+
     // !Getters
     public Long getId() {
         return id;
