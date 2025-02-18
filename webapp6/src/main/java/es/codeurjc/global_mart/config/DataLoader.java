@@ -1,6 +1,8 @@
 package es.codeurjc.global_mart.config;
 
 import es.codeurjc.global_mart.service.ProductService;
+import es.codeurjc.global_mart.service.UserService;
+import es.codeurjc.global_mart.service.ReviewService;
 import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,20 @@ public class DataLoader {
     @Autowired
     private ProductService productService;
     
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private ReviewService reviewService;
+    
+
     @PostConstruct
     public void loadData() {
+
+        userService.createUser("user1", "", "");
+
+        reviewService.createReview("user1", "Muy bueno", 5);
+
         productService.createProduct("Hogar", "Producto1", "Amazon", 20.0, "Muy chulo", "String image");
         productService.createProduct("Electrónica", "Producto2", "eBay", 30.0, "Muy útil", "String image");
         productService.createProduct("Jardinería", "Producto3", "Walmart", 40.0, "Muy práctico", "String image");
