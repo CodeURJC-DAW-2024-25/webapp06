@@ -1,16 +1,18 @@
 package es.codeurjc.global_mart.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-
 
 @Entity
 @Table(name = "PRODUCTS")
 public class Product {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,8 +24,11 @@ public class Product {
     private String description;
     private String image;
 
+    @ManyToMany(mappedBy = "products")
+    private List<Order> orders;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(String type, String name, String business, Double price, String description, String image) {
         this.type = type;
@@ -89,6 +94,5 @@ public class Product {
     public void setImage(String image) {
         this.image = image;
     }
-    
-}
 
+}

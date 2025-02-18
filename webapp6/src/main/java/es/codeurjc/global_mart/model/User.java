@@ -3,7 +3,7 @@ package es.codeurjc.global_mart.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -23,8 +23,8 @@ public class User {
     private String email;
     private String password;
 
-    @ManyToMany(mappedBy = "user")
-    private List<Product> products;
+    @OneToMany
+    private List<Order> orders;
 
     // ----------------- Constructor -----------------
     public User() {
@@ -34,7 +34,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.products = new ArrayList<>();
+        this.orders = new ArrayList<>();
     }
 
     // ----------------- Methods -----------------
@@ -51,8 +51,12 @@ public class User {
         return email;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     // Setters
@@ -72,7 +76,7 @@ public class User {
         this.password = password;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }
