@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -43,6 +44,7 @@ public class Product {
         this.price = price;
         this.description = description;
         this.image = image;
+        this.reviews = new ArrayList<>();
     }
 
     // ----------------- Methods -----------------
@@ -103,5 +105,31 @@ public class Product {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
+    public void removeReview(Review review) {
+        this.reviews.remove(review);
+    }
+
+
 
 }
