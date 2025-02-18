@@ -19,7 +19,7 @@ public class Product {
 
     private String type;
     private String name;
-    private String business;
+    private String company;
     private Double price;
     private String description;
     private String image;
@@ -31,10 +31,10 @@ public class Product {
     public Product() {
     }
 
-    public Product(String type, String name, String business, Double price, String description, String image) {
+    public Product(String type, String name, String company, Double price, String description, String image) {
         this.type = type;
         this.name = name;
-        this.business = business;
+        this.company = company;
         this.price = price;
         this.description = description;
         this.image = image;
@@ -54,8 +54,8 @@ public class Product {
         return name;
     }
 
-    public String getBusiness() {
-        return business;
+    public String getCompany() {
+        return company;
     }
 
     public Double getPrice() {
@@ -83,8 +83,8 @@ public class Product {
         this.name = name;
     }
 
-    public void setBusiness(String business) {
-        this.business = business;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public void setPrice(Double price) {
