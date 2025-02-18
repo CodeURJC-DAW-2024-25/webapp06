@@ -24,38 +24,41 @@
 
     <!-- ----------------- Products ----------------- -->
     <div class="main_products_div">
-        
-
+        {{#boolean.Electronica}}
         <div class="product_section_container">
             <h2 class="section_title">Electronica</h2>
             <div class="products_container">
-            {{#elecProds}}
+            {{#ElectronicaProds}}
         
             {{>./components/individualProduct}}
         
-            {{/elecProds}}
+            {{/ElectronicaProds}}
         
-            {{^elecProds}}
+            {{^ElectronicaProds}}
             <h3>No hay productos en esta categoría</h3>
-            {{/elecProds}}
+            {{/ElectronicaProds}}
             </div>
         </div>
+        {{/boolean.Electronica}}
 
+        {{#boolean.Libros}}
         <div class="product_section_container">
             <h2 class="section_title">Libros</h2>
             <div class="products_container">
-            {{#bookProds}}
+            {{#LibrosProds}}
         
             {{>./components/individualProduct}}
         
-            {{/bookProds}}
+            {{/LibrosProds}}
         
-            {{^bookProds}}
+            {{^LibrosProds}}
             <h3>No hay productos en esta categoría</h3>
-            {{/bookProds}}
+            {{/LibrosProds}}
             </div>
         </div>
+        {{/boolean.Libros}}
 
+        {{#boolean.Educacion}}
         <div class="product_section_container">
             <h2 class="section_title">Educación</h2>
             <div class="products_container">
@@ -70,7 +73,9 @@
             {{/eduProds}}
             </div>
         </div>
+        {{/boolean.Educacion}}
 
+        {{#boolean.Electrodomesticos}}
         <div class="product_section_container">
             <h2 class="section_title">Electrodomesticos</h2>
             <div class="products_container">
@@ -85,7 +90,9 @@
             {{/applianceProds}}
             </div>
         </div>
+        {{/boolean.Electrodomesticos}}
 
+        {{#boolean.Deporte}}
         <div class="product_section_container">
             <h2 class="section_title">Deporte</h2>
             <div class="products_container">
@@ -100,7 +107,9 @@
             {{/sportProds}}
             </div>
         </div>
+        {{/boolean.Deporte}}
 
+        {{#boolean.Musica}}
         <div class="product_section_container">
             <h2 class="section_title">Música</h2>
             <div class="products_container">
@@ -115,7 +124,9 @@
             {{/musicProds}}
             </div>
         </div>
+        {{/boolean.Musica}}
 
+        {{#boolean.Cine}}
         <div class="product_section_container">
             <h2 class="section_title">Cine</h2>
             <div class="products_container">
@@ -130,7 +141,9 @@
             {{/movieProds}}
             </div>
         </div>
+        {{/boolean.Cine}}
 
+        {{#boolean.Otros}}
         <div class="product_section_container">
             <h2 class="section_title">Otros</h2>
             <div class="products_container">
@@ -144,7 +157,9 @@
             <h3>No hay productos en esta categoría</h3>
             {{/otherProds}}
             </div>
-        </div></div>
+        </div>
+        {{/boolean.Otros}}
+    </div>
 
         
 
