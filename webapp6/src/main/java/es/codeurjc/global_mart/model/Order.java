@@ -26,6 +26,7 @@ public class Order {
     @ManyToMany
     private List<Product> products; // Our order have minum one product to n products
 
+    // ----------------- Constructor -----------------
     public Order() {
     }
 
@@ -36,6 +37,8 @@ public class Order {
         this.userName = userName;
     }
 
+    // ----------------- Methods -----------------
+    // !Getters
     public Long getId() {
         return id;
     }
@@ -44,32 +47,37 @@ public class Order {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-
     public Double getTotal() {
         return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
     }
 
     public String getDirection() {
         return direction;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
-
     public String getUserName() {
         return userName;
     }
 
+    // !Setters
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

@@ -38,7 +38,7 @@ public class User {
     }
 
     // ----------------- Methods -----------------
-    // Getters
+    // !Getters
     public Long getId() {
         return id;
     }
@@ -59,7 +59,7 @@ public class User {
         return password;
     }
 
-    // Setters
+    // !Setters
     public void setId(Long id) {
         this.id = id;
     }
