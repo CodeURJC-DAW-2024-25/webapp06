@@ -40,6 +40,22 @@
             </div>
         </div>
         {{/boolean.Electronica}}
+        {{#boolean.Hogar}}
+        <div class="product_section_container">
+            <h2 class="section_title">Hogar</h2>
+            <div class="products_container">
+            {{#HogarProds}}
+
+            {{>./components/individualProduct}}
+
+            {{/HogarProds}}
+
+            {{^HogarProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/HogarProds}}
+            </div>
+        </div>
+        {{/boolean.Hogar}}
 
         {{#boolean.Libros}}
         <div class="product_section_container">

@@ -89,5 +89,11 @@ public class MainController {
 		model.addAttribute("boolean", data);
 		return "products";
 	}
+
+	@GetMapping("/product/{id}")
+	public String productDescription(@PathVariable Long id, Model model) {
+		model.addAttribute("product", productService.getProductById(id));
+		return "descriptionProduct";
+	}
 	
 }
