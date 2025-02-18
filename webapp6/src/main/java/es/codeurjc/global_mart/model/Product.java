@@ -1,11 +1,14 @@
 package es.codeurjc.global_mart.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -27,6 +30,9 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
     // ----------------- Constructor -----------------
     public Product() {
     }
@@ -38,6 +44,7 @@ public class Product {
         this.price = price;
         this.description = description;
         this.image = image;
+        this.reviews = new ArrayList<>();
     }
 
     // ----------------- Methods -----------------
@@ -98,5 +105,31 @@ public class Product {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
+    public void removeReview(Review review) {
+        this.reviews.remove(review);
+    }
+
+
 
 }

@@ -26,6 +26,9 @@ public class User {
     @OneToMany
     private List<Order> orders;
 
+    @OneToMany 
+    private List<Review> reviews;
+
     // ----------------- Constructor -----------------
     public User() {
     }
@@ -35,6 +38,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.orders = new ArrayList<>();
+        this.reviews = new ArrayList<>();
     }
 
     // ----------------- Methods -----------------
@@ -79,4 +83,21 @@ public class User {
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
+    public void removeReview(Review review) {
+        this.reviews.remove(review);
+    }
+
 }

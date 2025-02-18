@@ -16,14 +16,16 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String username;
     private String comment;
     private int calification; // Por ejemplo, de 1 a 5
     private LocalDateTime creationDate;
 
     public Review() {}
 
-    public Review(String comment, int calification, LocalDateTime creationDate) {
-        if (!calificationValidation(calification)) {   
+    public Review(String username, String comment, int calification, LocalDateTime creationDate) {
+        if (calificationValidation(calification)) { 
+            this.username = username;  
             this.comment = comment;
             this.calification = calification;
             this.creationDate = creationDate;
@@ -41,6 +43,14 @@ public class Review {
         this.id = id;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getComment() {
         return comment;
     }
@@ -54,10 +64,11 @@ public class Review {
     }
 
     public void setCalification(int calification) {
-        if (!calificationValidation(calification)) {
+        if (calificationValidation(calification)) {
+            this.calification = calification;
+        } else {
             throw new IllegalArgumentException("Calification must be between 0 and 5");
         }
-        this.calification = calification;
     }
 
     public LocalDateTime getCreationDate() {
