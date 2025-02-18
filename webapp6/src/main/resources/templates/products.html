@@ -24,57 +24,133 @@
 
     <!-- ----------------- Products ----------------- -->
     <div class="main_products_div">
+        
+
         <div class="product_section_container">
-            <h2 class="section_title">Electronics</h2>
+            <h2 class="section_title">Electronica</h2>
             <div class="products_container">
-                <div class="product">
-                    <a href="descriptionProduct.html"><img src="../public/images/iphone16pro.jpg" alt="Product 1"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 1</h3>
-                    <p class="product_price">$19.99</p>
-                </div>
-
-                <div class="product">
-                    <a href="descriptionProduct.html"><img src="../public/images/ipadpro.png" alt="Product 2"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 2</h3>
-                    <p class="product_price">$29.99</p>
-                </div>
-
-                <div class="product">
-                    <a href="descriptionProduct.html"><img src="../public/images/macbookpro.png" alt="Product 3"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 3</h3>
-                    <p class="product_price">$39.99</p>
-                </div>
+            {{#elecProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/elecProds}}
+        
+            {{^elecProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/elecProds}}
             </div>
         </div>
 
         <div class="product_section_container">
-            <h2 class="section_title">Fashion</h2>
+            <h2 class="section_title">Libros</h2>
             <div class="products_container">
-                <div class="product">
-                    <a href="descriptionProduct.html"><img src="../public/images/esmalte.png" alt="Product 1"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 1</h3>
-                    <p class="product_price">$19.99</p>
-                </div>
-
-                <div class="product">
-                    <a href="descriptionProduct.html"><img src="../public/images/invictus.png" alt="Product 2"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 2</h3>
-                    <p class="product_price">$29.99</p>
-                </div>
-
-                <div class="product">
-                    <a href="descriptionProduct.html"><img src="../public/images/product3.jpg" alt="Product 3"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 3</h3>
-                    <p class="product_price">$39.99</p>
-                </div>
+            {{#bookProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/bookProds}}
+        
+            {{^bookProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/bookProds}}
             </div>
         </div>
+
+        <div class="product_section_container">
+            <h2 class="section_title">Educación</h2>
+            <div class="products_container">
+            {{#eduProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/eduProds}}
+        
+            {{^eduProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/eduProds}}
+            </div>
+        </div>
+
+        <div class="product_section_container">
+            <h2 class="section_title">Electrodomesticos</h2>
+            <div class="products_container">
+            {{#applianceProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/applianceProds}}
+        
+            {{^applianceProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/applianceProds}}
+            </div>
+        </div>
+
+        <div class="product_section_container">
+            <h2 class="section_title">Deporte</h2>
+            <div class="products_container">
+            {{#sportProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/sportProds}}
+        
+            {{^sportProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/sportProds}}
+            </div>
+        </div>
+
+        <div class="product_section_container">
+            <h2 class="section_title">Música</h2>
+            <div class="products_container">
+            {{#musicProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/musicProds}}
+        
+            {{^musicProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/musicProds}}
+            </div>
+        </div>
+
+        <div class="product_section_container">
+            <h2 class="section_title">Cine</h2>
+            <div class="products_container">
+            {{#movieProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/movieProds}}
+        
+            {{^movieProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/movieProds}}
+            </div>
+        </div>
+
+        <div class="product_section_container">
+            <h2 class="section_title">Otros</h2>
+            <div class="products_container">
+            {{#otherProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/otherProds}}
+        
+            {{^otherProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/otherProds}}
+            </div>
+        </div></div>
+
+        
+
+        
+
+        
     </div>
     <br><br>
     <!-- ----------------- Footer ----------------- -->
