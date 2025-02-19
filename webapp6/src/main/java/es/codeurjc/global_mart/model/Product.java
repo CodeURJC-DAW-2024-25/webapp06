@@ -77,6 +77,7 @@ public class Product {
         return image;
     }
 
+    
     // !Setters
     public void setId(Long id) {
         this.id = id;
