@@ -2,15 +2,12 @@ package es.codeurjc.global_mart.model;
 
 import java.util.ArrayList;
 
-import org.hibernate.metamodel.mapping.internal.EntityCollectionPart.Cardinality;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import es.codeurjc.global_mart.model.User;
 
 
 
@@ -60,7 +57,35 @@ public class Cart{
         productsQuantity --;
     }
 
+    public void emptyCart(){            //empty the cart
+        productsList.clear();
+        totalPrice = 0.0;
+        productsQuantity = 0;
+    }
 
+    public ArrayList<Product> getProductsList(){
+        return productsList;
+    }
+
+    public Double getTotalPrice(){
+        return totalPrice;
+    }
+
+    public int getProductsQuantity(){
+        return productsQuantity;
+    }
+
+    public User getUser(){
+        return user;
+    }
+
+    public void setUser(User user){
+        this.user = user;
+    }
+
+    public Long getId(){
+        return id;
+    }
 
 
 

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import java.util.List;
@@ -23,6 +24,8 @@ public class Order {
     private String direction; // Direction where the order will be sent
 
     private String userName;
+    @ManyToOne
+    private User user; // Our order have one user
 
     @ManyToMany
     private List<Product> products; // Our order have minum one product to n products
@@ -34,11 +37,10 @@ public class Order {
 
     }
 
-    public Order(List<Product> products, Double total, String direction, String userName) {
-        this.products = products;
-        this.total = total;
-        this.direction = direction;
-        this.userName = userName;
+    public Order(User user) {
+        this();
+        this.userName = user.getUsername();
+
     }
 
 
