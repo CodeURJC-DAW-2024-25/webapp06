@@ -43,4 +43,22 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    public Optional<User> login(String usernameOrEmail, String password) {
+        Optional<User> userOpt = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail); // Busca el
+                                                                                                         // ussuario por
+                                                                                                         // nombre de
+                                                                                                         // usuario o
+                                                                                                         // email
+        System.out.println("Login recibido - username/email: " + usernameOrEmail + ", password: " + password);
+        if (userOpt.isPresent()) { // Si el usuario existe
+            User user = userOpt.get(); // Obtiene el usuario
+            System.out.println("Login correcto: " + user.getUsername() + " - " + user.getEmail());
+            // Se asume que la contraseña se almacena en texto plano
+            if (user.getPassword().equals(password)) { // Si la contraseña es correcta
+                return Optional.of(user); // Devuelve el usuario
+            }
+        }
+        return Optional.empty();
+    }
 }

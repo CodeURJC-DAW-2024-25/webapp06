@@ -2,6 +2,9 @@ package es.codeurjc.global_mart.controller;
 
 import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.model.User;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller; // Asegurarse de importar Controller
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,14 +19,22 @@ public class LoginRegisterController {
 
     // Procesa el registro del usuario
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username,
+    public String registerUser(@RequestParam String username, // Recibe los datos del formulario
             @RequestParam String mail,
             @RequestParam String password,
             @RequestParam boolean isCompany) {
         // Imprime en consola para comprobar los datos
         System.out.println(
                 "Registro recibido - username: " + username + ", email: " + mail + ", isCompany: " + isCompany);
-        userService.createUser(username, mail, password, isCompany);
-        return "redirect:/login"; // Redirecciona a la página de login tras el registro
+        userService.createUser(username, mail, password, isCompany); // Llama al método createUser del servicio
+        return "redirect:/"; // Redirecciona a la página de login tras el registro
+    }
+
+    // Procesa el login del usuario
+    @PostMapping("/login")
+    public String login(@RequestParam String username_mail,
+            @RequestParam String password) {
+        userService.login(username_mail, password); // Llama al método login del servicio
+        return "redirect:/";
     }
 }
