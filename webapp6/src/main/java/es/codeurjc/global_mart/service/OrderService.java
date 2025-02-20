@@ -27,9 +27,38 @@ public class OrderService {
     }
 
     public Order findOrderById(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found with id " + id));
+
+        try {
+            return orderRepository.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding order with id " + id, e);
+        }
+        
     }
 
+    public Order addProductToOrder(Long orderId, Long productId) {
+        try {
+            Order order = orderRepository.findById(orderId);
+            Product product = productRepository.findById(productId);
+            order.addProduct(product);
+        } catch (Exception e) {
+            throw new RuntimeException("Error adding product to order with id " + orderId, e);
+        }
+
+        return orderRepository.save(order);
+    }
+
+    public Order deleteProductFromOrder(Long orderId, Long productId) {
+        try {
+            Order order = orderRepository.findById(orderId);
+            Product product = productRepository.findById(productId);
+            order.deleteProduct(product);
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting product from order with id " + orderId, e);
+        }
+
+        return orderRepository.save(order);
+    }
     
 
 
