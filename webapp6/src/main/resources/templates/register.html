@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page | Global Mart</title>
 
-    
+
     <!-- /* Links */ -->
     <link rel="stylesheet" href="/css/login.css">
 
 
-   
+
     <!-- /* Itim Font */ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
         rel="stylesheet">
 
-    
+
 </head>
 
 
@@ -32,17 +32,17 @@
 
         <h3>Registro</h3>
 
-        <form action="api/sendFormData" method="POST">
+        <form action="/register" method="POST">
 
-            <input type="text" placeholder="Nombre de usuario"><br>
-            <input type="text" placeholder="Dirección de correo"><br>
-            <input type="password" placeholder="Introduzca contraseña"><br>
+            <input type="text" name="username" placeholder="Nombre de usuario"><br>
+            <input type="text" name="mail" placeholder="Dirección de correo"><br>
+            <input type="password" name="password" placeholder="Introduzca contraseña"><br>
 
             <label>
-                <input type="radio" name="userType" value="individual"> Individual
+                <input type="radio" name="isCompany" value="false" checked> Individual
             </label>
             <label>
-                <input type="radio" name="userType" value="company"> Empresa
+                <input type="radio" name="isCompany" value="true"> Empresa
             </label>
 
 
@@ -64,5 +64,3 @@
 </body>
 
 </html>
-
-

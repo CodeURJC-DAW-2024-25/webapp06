@@ -22,21 +22,23 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private Boolean isCompany;
 
     @OneToMany
     private List<Order> orders;
 
-    @OneToMany 
+    @OneToMany
     private List<Review> reviews;
 
     // ----------------- Constructor -----------------
     public User() {
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password, Boolean isCompany) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.isCompany = isCompany;
         this.orders = new ArrayList<>();
         this.reviews = new ArrayList<>();
     }
@@ -63,6 +65,14 @@ public class User {
         return password;
     }
 
+    public boolean getIsCompany() {
+        return isCompany;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;
@@ -82,10 +92,6 @@ public class User {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
     }
 
     public void setReviews(List<Review> reviews) {
