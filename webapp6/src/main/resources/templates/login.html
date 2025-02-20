@@ -36,16 +36,17 @@
 
         <h3 class="main_title">Inicio de sesión</h3>
 
-        <form action="api/sendFormData" method="POST">
+        <form action="/login" method="POST"> <!--  la action es la ruta a la que se mandan los datos -->
 
             <div class="mail_div">
                 <p class="mail_title">Dirección de correo electrónico o nombre de usuario</p>
-                <input type="text" placeholder="Dirección de correo">
+                <input name="username_mail" type="text" placeholder="Dirección de correo">
+                <!-- El name de cada cosa es como se llama para hacer el ReqParam -->
             </div>
 
             <div class="password_div">
                 <p class="mail_title">Contraseña</p>
-                <input type="password" placeholder="Introduzca contraseña">
+                <input name="password" type="password" placeholder="Introduzca contraseña">
             </div>
 
             <div class="buttons_div">
@@ -56,9 +57,9 @@
         </form>
     </div>
 
-<!-- ------------Footer ------------ -->
+    <!-- ------------Footer ------------ -->
     {{>./components/footer}}
-    
+
 
 </body>
 
