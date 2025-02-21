@@ -37,4 +37,18 @@ public class LoginRegisterController {
         userService.login(username_mail, password); // Llama al método login del servicio
         return "redirect:/";
     }
+
+    // !NO BORRAR LO ESTOY INTENTANDO HACER
+    // // Procesa el login del usuario
+    // @PostMapping("/login")
+    // public String login(@RequestParam String username_mail,
+    // @RequestParam String password,
+    // HttpSession session) {
+    // Optional<User> userOptional = userService.login(username_mail, password);
+    // if (userOptional.isPresent()) {
+    // // Guarda el nombre en la sesión para mostrarlo en la vista
+    // session.setAttribute("loggedUsername", userOptional.get().getUsername());
+    // }
+    // return "redirect:/";
+    // }
 }

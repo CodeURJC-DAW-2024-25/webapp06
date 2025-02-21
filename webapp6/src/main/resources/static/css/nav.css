@@ -99,7 +99,7 @@ a {
 }
 
 /* User style */
-.user_div {
+.login_register_div {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -129,12 +129,49 @@ a {
     cursor: pointer;
 }
 
+/* !NO BORRAR LO ESTOY INTENTANDO HACER */
+/* .login_user {
+    display: none;
+}
+
+.login_user .active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 0 30px;
+}
+
+.user_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.username {
+    color: black;
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.user,
+.cart {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+} */
+
 /* ------------------- Categories ------------------- */
 .categories_div {
     width: 100%;
     min-height: 50px;
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    flex-wrap: wrap;
+    /* Allow items to wrap to the next line */
     gap: 20px;
     height: auto;
     align-items: center;

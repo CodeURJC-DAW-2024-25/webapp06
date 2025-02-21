@@ -32,6 +32,7 @@ loginButton.addEventListener("click", function () {
 });
 
 registerButton.addEventListener("click", function () {
+    console.log("registerButton clicked");
     popupContainerContent.classList.add("active");
     popupContainerOverlay.classList.add("active");
     popupTitle.innerHTML = "Choose your register method";
@@ -39,8 +40,8 @@ registerButton.addEventListener("click", function () {
         btn.innerHTML = "Register " + initialPopupButtons[index];
     });
     popupButtonEmail.addEventListener("click", function () {
-        popupContainerContent.classList.remove("active");
         popupLogin.classList.remove("active");
+        popupContainerContent.classList.remove("active");
         popupRegister.classList.add("active");
     });
 });
@@ -54,3 +55,15 @@ popupOverlay.addEventListener("click", function () {
         btn.innerHTML = initialPopupButtons[index];
     });
 });
+
+
+// !NO BORRAR LO ESTOY HACIENDO FUNCIONAR
+// // Mustache inyecta loggedUsername en el HTML
+// const loggedUsername = "{{ loggedUsername }}";
+// if (loggedUsername && loggedUsername.trim() !== "") {
+//     document.querySelector('.login_register_div').style.display = 'none';
+//     document.querySelector('.login_register_div').style.display = 'none';
+//     const loginUser = document.querySelector('.login_user');
+//     loginUser.style.display = 'flex';
+//     document.querySelector('.username').textContent = loggedUsername;
+// }

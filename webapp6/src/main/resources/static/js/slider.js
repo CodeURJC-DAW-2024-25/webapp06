@@ -1,6 +1,4 @@
 let slide_images = document.querySelectorAll('.slide_image');
-console.log(slide_images);
-
 let next = document.querySelector('.next');
 let prev = document.querySelector('.prev');
 
@@ -18,7 +16,6 @@ function slide_next() {
     }
 
     slide_images[counter].style.animation = 'next2 0.5s ease-in forwards';
-    indicators();
 }
 
 prev.addEventListener('click', slide_prev);
@@ -31,7 +28,6 @@ function slide_prev() {
     }
 
     slide_images[counter].style.animation = 'prev2 0.5s ease-in forwards';
-    indicators();
 }
 
 // ------------------------ Auto Sliding ------------------------
