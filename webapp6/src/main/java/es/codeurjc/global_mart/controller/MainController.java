@@ -82,6 +82,7 @@ public class MainController {
 		return "products";
 	}
 
+
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
@@ -106,4 +107,10 @@ public class MainController {
 		return "descriptionProduct";
 	}
 
+
+	// Redirection to the descriprion of a produdct
+	@GetMapping("/descriptionProduct")
+	public String descriptionProduct(Model model) {
+		return "descriptionProduct";
+	}
 }

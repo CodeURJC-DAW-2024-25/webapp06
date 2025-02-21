@@ -26,32 +26,26 @@
 
 
 <body>
-    <!-- ----------------- Nav ----------------- -->
-    {{>./components/nav}}
-    <!-- -----------------/Nav ----------------- -->
+    <div class="form_div login_div">
 
-
-
-    <div class="login_div">
-
-        <h3 class="main_title">Inicio de sesión</h3>
+        <h3 class="main_title">Log In</h3>
 
         <form action="/login" method="POST"> <!--  la action es la ruta a la que se mandan los datos -->
 
             <div class="mail_div">
-                <p class="mail_title">Dirección de correo electrónico o nombre de usuario</p>
+                <p class="mail_title">Email address or Username</p>
                 <input name="username_mail" type="text" placeholder="Dirección de correo">
                 <!-- El name de cada cosa es como se llama para hacer el ReqParam -->
             </div>
 
             <div class="password_div">
-                <p class="mail_title">Contraseña</p>
+                <p class="mail_title">Password</p>
                 <input name="password" type="password" placeholder="Introduzca contraseña">
+
             </div>
 
             <div class="buttons_div">
-                <button type="submit">Acceder</button>
-                <button type="reset" onclick="window.location.href='redir'">Cancelar</button>
+                <button type="submit">Sign in</button>
             </div>
 
         </form>
@@ -59,7 +53,6 @@
 
     <!-- ------------Footer ------------ -->
     {{>./components/footer}}
-
 
 </body>
 

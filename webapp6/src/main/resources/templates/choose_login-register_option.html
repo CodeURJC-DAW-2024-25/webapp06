@@ -18,31 +18,38 @@
 </head>
 
 <body>
-    <div class="main_login_options">
-        <div class="login_options">
-            <h3 class="login_options_title">Choose Your Login Option</h3>
+    <div class="popup_container">
+        <div class="overlay"></div>
 
-            <div>
-                <a href="" class="google_login_button">
-                    <img src="/images/google_logo.png" alt="" class="button_image">
-                    <p class="button_text">Login with Google</p>
-                </a>
-            </div>
+        <div class="content">
+            <h3 class="login-register_options_title"><!-- Dinamico con JS --></h3>
 
 
-            <a href="" class="microsoft_login_button">
+            <button class="login_button google_login_button">
+                <img src="/images/google_logo.png" alt="" class="button_image">
+                <p class="button_text">with Google</p>
+            </button>
+
+
+            <button class="login_button microsoft_login_button">
                 <img src="/images/microsoft_logo.png" alt="" class="button_image">
-                <p class="button_text">Login with Microsoft</p>
-            </a>
+                <p class="button_text">with Microsoft</p>
+            </button>
 
 
-            <a href="login" class="email_login_button">
+            <button class="login_button email_login_button">
                 <img src="/images/email_logo.png" alt="" class="button_image">
-                <p class="button_text">Login with Email</p>
-            </a>
+                <p class="button_text">with Email</p>
+            </button>
 
         </div>
+
+        {{> login}}
+        {{> register}}
+
     </div>
 </body>
+
+<script src="../js/login.js"></script>
 
 </html>

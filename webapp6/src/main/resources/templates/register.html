@@ -18,22 +18,17 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
         rel="stylesheet">
 
-
 </head>
 
 
+</head>
 
 <body>
-    <!-- ----------------- Nav ----------------- -->
-    {{>./components/nav}}
+    <div class="form_div register_div">
 
-
-    <div class="login_div">
-
-        <h3>Registro</h3>
+        <h3>Register</h3>
 
         <form action="/register" method="POST">
-
             <input type="text" name="username" placeholder="Nombre de usuario"><br>
             <input type="text" name="mail" placeholder="Dirección de correo"><br>
             <input type="password" name="password" placeholder="Introduzca contraseña"><br>
@@ -45,21 +40,31 @@
                 <input type="radio" name="isCompany" value="true"> Empresa
             </label>
 
-
-            <div class="google_login">
-                <img src="../public/images/google_logo.png" alt="Google Logo" onclick="redirectToGoogleLogin()">
+            <div class="id_div">
+                <p class="form_title id_title">Username</p>
+                <input type="text" placeholder="Username">
             </div>
 
+            <div class="password_div">
+                <p class="form_title password_title">Password</p>
+                <input type="password" placeholder="Enter password">
+            </div>
+
+            <label class="user_type_label">
+                <div class="individual_type">
+                    <input type="radio" name="userType" value="individual"> Individual
+                </div>
+                <div class="company_type">
+                    <input type="radio" name="userType" value="company"> Company
+                </div>
+            </label>
+
             <div class="buttons_div">
-                <button type="submit">Registrar</button>
-                <button type="reset" onclick="window.location.href='redir'">Cancelar</button>
+                <button type="submit">Register</button>
             </div>
 
         </form>
     </div>
-
-    <!-- ------------Footer ------------ -->
-    {{>./components/footer}}
 
 </body>
 

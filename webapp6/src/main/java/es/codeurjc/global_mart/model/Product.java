@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.model;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,7 +131,4 @@ public class Product {
     public void removeReview(Review review) {
         this.reviews.remove(review);
     }
-
-
-
 }
