@@ -29,16 +29,17 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
-                <img src="/images/esmalte.png" class="img-fluid" alt="Product Image">
+                <img src="{{productImage}}" class="img-fluid" alt="Product Image">
             </div>
             <div class="col-md-6">
-                <h2 class="product-title">Product Name</h2>
-                <p class="product-price">$99.99</p>
-                <p class="product-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam non urna
-                    vitae odio convallis tincidunt. Integer nec odio nec nulla facilisis tincidunt. Sed at lacus
-                    vehicula, fermentum justo a, tincidunt justo.</p>
+                <h2 class="product-title">{{productName}}</h2>
+                <p class="product-company">Company: {{productCompany}}</p>
+                <p class="product-type">Type: {{productType}}</p>
+                <p class="product-price">${{productPrice}}</p>
+                <p class="product-description">{{productDescription}}</p>
+                
                 <a href="" class="btn btn-primary btn-lg mt-3">Add to cart</a>
-                <a href="products" class="btn btn-secondary btn-lg mt-3">Back to Products</a>
+                <a href="/allProducts" class="btn btn-secondary btn-lg mt-3">Back to Products</a>
             </div>
         </div>
     </div>

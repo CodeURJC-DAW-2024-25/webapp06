@@ -57,7 +57,15 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
     - Carrito de compra
     - Historial de pedidos
 2. **Productos**:
-    - Tipo de producto
+    - Tipo de producto: 
+        - Electronica
+        - Libros
+        - Educación
+        - Electrodomesticos
+        - Deporte
+        - Música
+        - Cine
+        - Otros
     - Nombre de producto
     - Empresa
     - Precio

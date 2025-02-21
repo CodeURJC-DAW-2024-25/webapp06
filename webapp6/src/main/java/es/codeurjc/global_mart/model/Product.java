@@ -1,81 +1,134 @@
 package es.codeurjc.global_mart.model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+@Entity
+@Table(name = "PRODUCTS")
 public class Product {
 
-        private Long id;
-        private String name;
-        private String description;
-        private String type;
-        private float price;
-        private String image;
-        private int stock;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-public Long getId() {
+    private String type;
+    private String name;
+    private String company;
+    private Double price;
+    private String description;
+    private String image;
+
+    @ManyToMany(mappedBy = "products")
+    private List<Order> orders;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
+    // ----------------- Constructor -----------------
+    public Product() {
+    }
+
+    public Product(String type, String name, String company, Double price, String description, String image) {
+        this.type = type;
+        this.name = name;
+        this.company = company;
+        this.price = price;
+        this.description = description;
+        this.image = image;
+        this.reviews = new ArrayList<>();
+    }
+
+    // ----------------- Methods -----------------
+    // !Getters
+    public Long getId() {
         return id;
-}
+    }
 
-public void setId(Long id) {
-        this.id = id;
-}
-
-public String getName() {
-        return name;
-}
-
-public void setName(String name) {
-        this.name = name;
-}
-
-public String getDescription() {
-        return description;
-}
-
-public void setDescription(String description) {
-        this.description = description;
-}
-
-public String getType() {
+    public String getType() {
         return type;
-}
+    }
 
-public void setType(String type) {
-        this.type = type;
-}
+    public String getName() {
+        return name;
+    }
 
-public float getPrice() {
+    public String getCompany() {
+        return company;
+    }
+
+    public Double getPrice() {
         return price;
-}
+    }
 
-public void setPrice(float price) {
-        this.price = price;
-}
+    public String getDescription() {
+        return description;
+    }
 
-public String getImage() {
+    public String getImage() {
         return image;
-}
+    }
 
-public void setImage(String image) {
-        this.image = image;
-}
-
-public int getStock() {
-        return stock;
-}
-
-public void setStock(int stock) {
-        this.stock = stock;
-}
-
-public Product(Long id, String name, String description, String type, float price, String image, int stock) {
+    
+    // !Setters
+    public void setId(Long id) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.type = type;
-        this.price = price;
-        this.image = image;
-        this.stock = stock;      
-}
+    }
 
-public Product() {}
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
+    public void removeReview(Review review) {
+        this.reviews.remove(review);
+    }
 }

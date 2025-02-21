@@ -24,57 +24,165 @@
 
     <!-- ----------------- Products ----------------- -->
     <div class="main_products_div">
+        {{#boolean.Electronica}}
         <div class="product_section_container">
-            <h2 class="section_title">Electronics</h2>
+            <h2 class="section_title">Electronica</h2>
             <div class="products_container">
-                <div class="product">
-                    <a href="descriptionProduct"><img src="/images/iphone16pro.jpg" alt="Product 1"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 1</h3>
-                    <p class="product_price">$19.99</p>
-                </div>
+            {{#ElectronicaProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/ElectronicaProds}}
+        
+            {{^ElectronicaProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/ElectronicaProds}}
 
-                <div class="product">
-                    <a href="descriptionProduct"><img src="/images/ipadpro.png" alt="Product 2"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 2</h3>
-                    <p class="product_price">$29.99</p>
-                </div>
-
-                <div class="product">
-                    <a href="descriptionProduct"><img src="/images/macbookpro.png" alt="Product 3"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 3</h3>
-                    <p class="product_price">$39.99</p>
-                </div>
             </div>
         </div>
-
+        {{/boolean.Electronica}}
+        {{#boolean.Hogar}}
         <div class="product_section_container">
-            <h2 class="section_title">Fashion</h2>
+            <h2 class="section_title">Hogar</h2>
             <div class="products_container">
-                <div class="product">
-                    <a href="descriptionProduct"><img src="/images/esmalte.png" alt="Product 1"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 1</h3>
-                    <p class="product_price">$19.99</p>
-                </div>
+            {{#HogarProds}}
 
-                <div class="product">
-                    <a href="descriptionProduct"><img src="/images/invictus.png" alt="Product 2"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 2</h3>
-                    <p class="product_price">$29.99</p>
-                </div>
+            {{>./components/individualProduct}}
 
-                <div class="product">
-                    <a href="descriptionProduct"><img src="/images/product3.jpg" alt="Product 3"
-                            class="product_image"></a>
-                    <h3 class="product_title">Product 3</h3>
-                    <p class="product_price">$39.99</p>
-                </div>
+            {{/HogarProds}}
+
+            {{^HogarProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/HogarProds}}
             </div>
         </div>
+        {{/boolean.Hogar}}
+
+        {{#boolean.Libros}}
+        <div class="product_section_container">
+            <h2 class="section_title">Libros</h2>
+            <div class="products_container">
+            {{#LibrosProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/LibrosProds}}
+        
+            {{^LibrosProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/LibrosProds}}
+            </div>
+        </div>
+        {{/boolean.Libros}}
+
+        {{#boolean.Educacion}}
+        <div class="product_section_container">
+            <h2 class="section_title">Educación</h2>
+            <div class="products_container">
+            {{#EducacionProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/EducacionProds}}
+        
+            {{^EducacionProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/EducacionProds}}
+            </div>
+        </div>
+        {{/boolean.Educacion}}
+
+        {{#boolean.Electrodomesticos}}
+        <div class="product_section_container">
+            <h2 class="section_title">Electrodomesticos</h2>
+            <div class="products_container">
+            {{#ElectrodomesticosProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/ElectrodomesticosProds}}
+        
+            {{^ElectrodomesticosProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/ElectrodomesticosProds}}
+            </div>
+        </div>
+        {{/boolean.Electrodomesticos}}
+
+        {{#boolean.Deporte}}
+        <div class="product_section_container">
+            <h2 class="section_title">Deporte</h2>
+            <div class="products_container">
+            {{#DeporteProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/DeporteProds}}
+        
+            {{^DeporteProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/DeporteProds}}
+            </div>
+        </div>
+        {{/boolean.Deporte}}
+
+        {{#boolean.Musica}}
+        <div class="product_section_container">
+            <h2 class="section_title">Música</h2>
+            <div class="products_container">
+            {{#MusicaProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/MusicaProds}}
+        
+            {{^MusicaProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/MusicaProds}}
+            </div>
+        </div>
+        {{/boolean.Musica}}
+
+        {{#boolean.Cine}}
+        <div class="product_section_container">
+            <h2 class="section_title">Cine</h2>
+            <div class="products_container">
+            {{#CineProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/CineProds}}
+        
+            {{^CineProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/CineProds}}
+            </div>
+        </div>
+        {{/boolean.Cine}}
+
+        {{#boolean.Otros}}
+        <div class="product_section_container">
+            <h2 class="section_title">Otros</h2>
+            <div class="products_container">
+            {{#OtrosProds}}
+        
+            {{>./components/individualProduct}}
+        
+            {{/OtrosProds}}
+        
+            {{^OtrosProds}}
+            <h3>No hay productos en esta categoría</h3>
+            {{/OtrosProds}}
+            </div>
+        </div>
+        {{/boolean.Otros}}
+    </div>
+
+        
+
+        
+
+        
     </div>
     <br><br>
     <!-- ----------------- Footer ----------------- -->
