@@ -1,11 +1,13 @@
+package es.codeurjc.global_mart.security;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,6 +20,9 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 @EnableWebSecurity
 public class GlobalMartSecurityConfig {
 	
+    @Autowired
+	RepositoryUserDetailsService userDetailsService;
+
     // encode user password
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -29,33 +34,33 @@ public class GlobalMartSecurityConfig {
     public DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return authenticationProvider;
 
     }
 
-    @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("password"))
-                .roles("USER")
-                .build();
+    // @Bean
+    // public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
+    //     UserDetails user = User.builder()
+    //             .username("user")
+    //             .password(passwordEncoder().encode("password"))
+    //             .roles("USER")
+    //             .build();
 
-        UserDetails company = User.builder()
-                .username("company")
-                .password(passwordEncoder().encode("password"))
-                .roles("COMPANY")
-                .build();
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("password"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user, company, admin);
-    }
+    //     UserDetails company = User.builder()
+    //             .username("company")
+    //             .password(passwordEncoder().encode("password"))
+    //             .roles("COMPANY")
+    //             .build();
+    //     UserDetails admin = User.builder()
+    //             .username("admin")
+    //             .password(passwordEncoder().encode("password"))
+    //             .roles("ADMIN")
+    //             .build();
+    //     return new InMemoryUserDetailsManager(user, company, admin);
+    // }
 
 
     
