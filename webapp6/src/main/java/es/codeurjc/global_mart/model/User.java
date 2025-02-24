@@ -23,6 +23,7 @@ public class User {
     private String email;
     private String password;
     private Boolean isCompany;
+    private List<String> role;
 
     @OneToMany
     private List<Order> orders;
@@ -34,13 +35,14 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password, Boolean isCompany) {
+    public User(String username, String email, String password, Boolean isCompany, List<String> role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.isCompany = isCompany;
         this.orders = new ArrayList<>();
         this.reviews = new ArrayList<>();
+        this.role = role;
     }
 
     // ----------------- Methods -----------------
@@ -65,8 +67,13 @@ public class User {
         return password;
     }
 
+
     public boolean getIsCompany() {
         return isCompany;
+    }
+
+    public List<String> getRole() {
+        return role;
     }
 
     public List<Review> getReviews() {
@@ -86,6 +93,10 @@ public class User {
         this.email = email;
     }
 
+    public void setRole(List<String> role) {
+        this.role = role;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -97,6 +108,11 @@ public class User {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
+
+    public void setIsCompany(Boolean isCompany) {
+        this.isCompany = isCompany;
+    }
+
 
     public void addReview(Review review) {
         this.reviews.add(review);
