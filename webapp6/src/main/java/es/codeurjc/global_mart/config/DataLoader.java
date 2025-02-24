@@ -5,6 +5,8 @@ import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.service.ReviewService;
 import jakarta.annotation.PostConstruct;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +52,7 @@ public class DataLoader {
                 productService.createProduct("Electronica", "Producto15", "Newegg", 160.0, "Muy avanzado",
                                 "String image");
 
-                userService.createUser("user1", "user1", "user1", false);
+                userService.createUser("user1", "user1", "user1", Arrays.asList("ROLE_user"));
 
                 reviewService.createReview("user1", "Muy bueno", 5);
 

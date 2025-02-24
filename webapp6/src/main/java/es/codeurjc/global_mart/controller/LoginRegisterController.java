@@ -3,6 +3,7 @@ package es.codeurjc.global_mart.controller;
 import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,11 @@ public class LoginRegisterController {
     public String registerUser(@RequestParam String username, // Recibe los datos del formulario
             @RequestParam String mail,
             @RequestParam String password,
-            @RequestParam boolean isCompany) {
+            @RequestParam List<String> role) {
         // Imprime en consola para comprobar los datos
         System.out.println(
-                "Registro recibido - username: " + username + ", email: " + mail + ", isCompany: " + isCompany);
-        userService.createUser(username, mail, password, isCompany); // Llama al método createUser del servicio
+                "Registro recibido - username: " + username + ", email: " + mail + ", role: " + role);
+        userService.createUser(username, mail, password, role); // Llama al método createUser del servicio
         return "redirect:/"; // Redirecciona a la página de login tras el registro
     }
 
