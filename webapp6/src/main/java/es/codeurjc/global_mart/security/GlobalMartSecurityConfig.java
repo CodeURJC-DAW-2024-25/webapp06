@@ -78,11 +78,21 @@ public class GlobalMartSecurityConfig {
                     .requestMatchers("/allProducts").permitAll()
                     .requestMatchers("/product/{id}").permitAll()
                     .requestMatchers("/descriptionProduct").permitAll()
-                    // PRIVATE PAGES
-                    .requestMatchers("/uploadProducts").hasAnyRole("COMPANY")
-                    .requestMatchers("/administrator").hasAnyRole("ADMIN")
-                    .requestMatchers("/shoppingcart").hasAnyRole("USER")
-                    .requestMatchers("/user").hasAnyRole("USER"))
+                    .requestMatchers("/search").permitAll()
+                    .requestMatchers("/{type}").permitAll()
+
+
+                    // acceso a los css
+                    .requestMatchers("/css/**").permitAll()
+                    // acceso a los js
+                    .requestMatchers("/js/**").permitAll()
+                    // acceso a las imagenes
+                    .requestMatchers("/images/**").permitAll()
+                    // PRIVATE PAGES ESTA ROTO HAY Q ARREGLARLO 
+                    // .requestMatchers("/uploadProducts").hasAnyRole("COMPANY")
+                    // .requestMatchers("/administrator").hasAnyRole("ADMIN")
+                    .requestMatchers("/shoppingcart").authenticated())
+                    // .requestMatchers("/user").hasAnyRole("USER"))
                 .formLogin(formLogin -> formLogin
                     .loginPage("/login")
                     .defaultSuccessUrl("/")
@@ -90,7 +100,14 @@ public class GlobalMartSecurityConfig {
                 .logout(logout -> logout
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/")
-                    .permitAll());
+                    .permitAll())
+                    
+                 // Configurar manejo de excepciones para redirigir a la página de login si no se está autenticado
+                .exceptionHandling(exception -> exception
+                    .authenticationEntryPoint((request, response, authException) -> 
+                        response.sendRedirect("/login"))
+                );
+            
         return http.build();
             
     }
