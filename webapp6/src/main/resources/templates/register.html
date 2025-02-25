@@ -35,15 +35,16 @@
 
             <div class="type_users_div">
                 <label>
-                    <input type="radio" name="isCompany" value="false" checked> Individual
+                    <input type="radio" name="role" value="false" checked> Individual
                 </label>
                 <label>
-                    <input type="radio" name="isCompany" value="true"> Empresa
+                    <input type="radio" name="role" value="true"> Empresa
                 </label>
             </div>
 
             <div class="buttons_div">
                 <button type="submit">Register</button>
+                <input type="hidden" name="_csrf" value="{{token}}">
             </div>
 
         </form>

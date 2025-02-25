@@ -14,24 +14,21 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
-
-
 @Configuration
 @EnableWebSecurity
 public class GlobalMartSecurityConfig {
-	
+
     @Autowired
-	RepositoryUserDetailsService userDetailsService;
+    RepositoryUserDetailsService userDetailsService;
 
     // encode user password
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 
         authenticationProvider.setUserDetailsService(userDetailsService);
@@ -43,76 +40,71 @@ public class GlobalMartSecurityConfig {
 
     // @Bean
     // public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
-    //     UserDetails user = User.builder()
-    //             .username("user")
-    //             .password(passwordEncoder().encode("password"))
-    //             .roles("USER")
-    //             .build();
+    // UserDetails user = User.builder()
+    // .username("user")
+    // .password(passwordEncoder().encode("password"))
+    // .roles("USER")
+    // .build();
 
-    //     UserDetails company = User.builder()
-    //             .username("company")
-    //             .password(passwordEncoder().encode("password"))
-    //             .roles("COMPANY")
-    //             .build();
-    //     UserDetails admin = User.builder()
-    //             .username("admin")
-    //             .password(passwordEncoder().encode("password"))
-    //             .roles("ADMIN")
-    //             .build();
-    //     return new InMemoryUserDetailsManager(user, company, admin);
+    // UserDetails company = User.builder()
+    // .username("company")
+    // .password(passwordEncoder().encode("password"))
+    // .roles("COMPANY")
+    // .build();
+    // UserDetails admin = User.builder()
+    // .username("admin")
+    // .password(passwordEncoder().encode("password"))
+    // .roles("ADMIN")
+    // .build();
+    // return new InMemoryUserDetailsManager(user, company, admin);
     // }
 
-
-    
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.authenticationProvider(authenticationProvider());
         http.authorizeHttpRequests(authorize -> authorize
-                    // PUBLIC PAGES
-                    .requestMatchers("/").permitAll()
-                    .requestMatchers("/about").permitAll()
-                    .requestMatchers("/choose_login_option").permitAll()
-                    .requestMatchers("/register").permitAll()
-                    .requestMatchers("/login").permitAll()
-                    .requestMatchers("/allProducts").permitAll()
-                    .requestMatchers("/product/{id}").permitAll()
-                    .requestMatchers("/descriptionProduct").permitAll()
-                    .requestMatchers("/search").permitAll()
-                    .requestMatchers("/{type}").permitAll()
+                // PUBLIC PAGES
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/about").permitAll()
+                .requestMatchers("/choose_login_option").permitAll()
+                .requestMatchers("/register").permitAll()
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/allProducts").permitAll()
+                .requestMatchers("/product/{id}").permitAll()
+                .requestMatchers("/descriptionProduct").permitAll()
+                .requestMatchers("/search").permitAll()
+                .requestMatchers("/{type}").permitAll()
+                .requestMatchers("/error").permitAll()
 
-
-                    // acceso a los css
-                    .requestMatchers("/css/**").permitAll()
-                    // acceso a los js
-                    .requestMatchers("/js/**").permitAll()
-                    // acceso a las imagenes
-                    .requestMatchers("/images/**").permitAll()
-                    // PRIVATE PAGES ESTA ROTO HAY Q ARREGLARLO 
-                    // .requestMatchers("/uploadProducts").hasAnyRole("COMPANY")
-                    // .requestMatchers("/administrator").hasAnyRole("ADMIN")
-                    .requestMatchers("/shoppingcart").authenticated())
-                    // .requestMatchers("/user").hasAnyRole("USER"))
+                // acceso a los css
+                .requestMatchers("/css/**").permitAll()
+                // acceso a los js
+                .requestMatchers("/js/**").permitAll()
+                // acceso a las imagenes
+                .requestMatchers("/images/**").permitAll()
+                // PRIVATE PAGES ESTA ROTO HAY Q ARREGLARLO
+                // .requestMatchers("/uploadProducts").hasAnyRole("COMPANY")
+                // .requestMatchers("/administrator").hasAnyRole("ADMIN")
+                .requestMatchers("/shoppingcart").authenticated())
+                // .requestMatchers("/user").hasAnyRole("USER"))
                 .formLogin(formLogin -> formLogin
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/")
-                    .permitAll())
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
+                        .permitAll())
                 .logout(logout -> logout
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/")
-                    .permitAll())
-                    
-                 // Configurar manejo de excepciones para redirigir a la página de login si no se está autenticado
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll())
+
+                // Configurar manejo de excepciones para redirigir a la página de login si no se
+                // está autenticado
                 .exceptionHandling(exception -> exception
-                    .authenticationEntryPoint((request, response, authException) -> 
-                        response.sendRedirect("/login"))
-                );
-            
+                        .authenticationEntryPoint(
+                                (request, response, authException) -> response.sendRedirect("/login")));
+
         return http.build();
-            
+
     }
 
-    
-
 }
-

@@ -9,7 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
+
 import es.codeurjc.global_mart.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
@@ -34,18 +37,6 @@ public class MainController {
 	@GetMapping("/choose_login_option")
 	public String choose_login(Model model) {
 		return "choose_login_option";
-	}
-
-	// Redirection to the register page
-	@GetMapping("/register")
-	public String register(Model model) {
-		return "register";
-	}
-
-	// Redirection to the login page
-	@GetMapping("/login")
-	public String login(Model model) {
-		return "login";
 	}
 
 	// Redirection to the about us page
@@ -82,7 +73,6 @@ public class MainController {
 		return "products";
 	}
 
-
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
@@ -106,7 +96,6 @@ public class MainController {
 		model.addAttribute("productImage", productService.getProductImage(product.get()));
 		return "descriptionProduct";
 	}
-
 
 	// Redirection to the descriprion of a produdct
 	@GetMapping("/descriptionProduct")
