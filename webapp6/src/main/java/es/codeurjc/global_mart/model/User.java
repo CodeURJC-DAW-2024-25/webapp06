@@ -19,6 +19,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String image;
+    private String name;
     private String username;
     private String email;
     private String password;
@@ -34,7 +36,9 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password, List<String> role) {
+    public User(String image, String name, String username, String email, String password, List<String> role) {
+        this.image = image;
+        this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -73,6 +77,14 @@ public class User {
         return reviews;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;
@@ -102,6 +114,15 @@ public class User {
         this.reviews = reviews;
     }
 
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Reviews
     public void addReview(Review review) {
         this.reviews.add(review);
     }
@@ -109,5 +130,4 @@ public class User {
     public void removeReview(Review review) {
         this.reviews.remove(review);
     }
-
 }

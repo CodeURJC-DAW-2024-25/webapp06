@@ -31,13 +31,15 @@ public class LoginRegisterController {
 
     // Procesa el registro del usuario
     @PostMapping("/register")
-    public String registerUser(@RequestParam String username, // Recibe los datos del formulario
+    public String registerUser(@RequestParam String name, @RequestParam String username, // Recibe los datos del
+                                                                                         // formulario
             @RequestParam String mail,
             @RequestParam String password,
+            @RequestParam String image,
             @RequestParam String role,
             HttpServletRequest request, Model model) {
-        logger.info("Registro recibido - username: {}, email: {}, role: {}", username, mail, role);
-        userService.createUser(username, mail, password, List.of(role)); // Llama al método createUser del servicio
+        userService.createUser(image, name, username, mail, password, List.of(role)); // Llama al método createUser del
+                                                                                      // servicio
 
         return "redirect:/"; // Redirecciona a la página de login tras el registro
     }
@@ -49,7 +51,6 @@ public class LoginRegisterController {
         Optional<User> userOpt = userService.login(username, password); // Llama al método login del servicio
         if (userOpt.isPresent()) {
             loggedUser.setUser(userOpt.get());
-            logger.info("Login recibido correctamente para el usuario: {}", username);
             return "redirect:/";
         } else {
             logger.warn("Login fallido para el usuario: {}", username);

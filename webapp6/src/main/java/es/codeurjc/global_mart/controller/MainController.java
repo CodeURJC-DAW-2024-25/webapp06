@@ -64,6 +64,9 @@ public class MainController {
 	public String profile(Model model) {
 		User user = loggedUser.getUser();
 		if (user != null && user.getUsername() != null) {
+			model.addAttribute("profile_image", user.getImage());
+			System.out.println(user.getImage());
+			model.addAttribute("name", user.getName());
 			model.addAttribute("username", user.getUsername());
 			model.addAttribute("email", user.getEmail());
 		}

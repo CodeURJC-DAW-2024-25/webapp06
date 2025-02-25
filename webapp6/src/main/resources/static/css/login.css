@@ -31,7 +31,8 @@ body {
 }
 
 .form_div input[type="text"],
-.form_div input[type="password"] {
+.form_div input[type="password"],
+.form_input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;

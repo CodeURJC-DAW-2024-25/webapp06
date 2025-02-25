@@ -4,6 +4,7 @@ import es.codeurjc.global_mart.repository.UserRepository;
 import es.codeurjc.global_mart.model.User;
 
 import org.springframework.stereotype.Service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +15,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(String username, String email, String password,List<String> role) {
-        User user = new User(username, email, password,role);
+    public User createUser(String image, String name, String username, String email, String password,
+            List<String> role) {
+        User user = new User(image, name, username, email, password, role);
         return userRepository.save(user);
     }
 
