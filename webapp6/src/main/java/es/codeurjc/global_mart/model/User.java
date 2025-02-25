@@ -102,7 +102,6 @@ public class User {
         this.reviews = reviews;
     }
 
-
     public void addReview(Review review) {
         this.reviews.add(review);
     }

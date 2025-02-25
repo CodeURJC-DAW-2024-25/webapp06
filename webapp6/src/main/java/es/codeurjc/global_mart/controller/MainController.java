@@ -11,6 +11,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.csrf.CsrfToken;
 
+import es.codeurjc.global_mart.model.LoggedUser;
+import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -20,10 +22,17 @@ public class MainController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private LoggedUser loggedUser;
+
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
 	@GetMapping("/")
 	public String greeting(Model model) {
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+		}
 		return "index";
 	}
 
@@ -39,10 +48,26 @@ public class MainController {
 		return "choose_login_option";
 	}
 
+	@GetMapping("/login_error")
+	public String login_error(Model model) {
+		return "login_error";
+	}
+
 	// Redirection to the about us page
 	@GetMapping("/about")
 	public String about_us(Model model) {
 		return "about";
+	}
+
+	// Redirection to the user page
+	@GetMapping("/profile")
+	public String profile(Model model) {
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("email", user.getEmail());
+		}
+		return "user";
 	}
 
 	// Redirection to see all products

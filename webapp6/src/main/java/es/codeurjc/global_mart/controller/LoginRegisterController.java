@@ -3,6 +3,7 @@ package es.codeurjc.global_mart.controller;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.model.LoggedUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,9 @@ public class LoginRegisterController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LoggedUser loggedUser;
+
     // Procesa el registro del usuario
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, // Recibe los datos del formulario
@@ -32,9 +36,6 @@ public class LoginRegisterController {
             @RequestParam String password,
             @RequestParam String role,
             HttpServletRequest request, Model model) {
-        // Imprime en consola para comprobar los datos
-        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-        model.addAttribute("token", token.getToken());
         logger.info("Registro recibido - username: {}, email: {}, role: {}", username, mail, role);
         userService.createUser(username, mail, password, List.of(role)); // Llama al método createUser del servicio
 
@@ -43,25 +44,16 @@ public class LoginRegisterController {
 
     // Procesa el login del usuario
     @PostMapping("/login")
-    public String login(@RequestParam String username_mail,
+    public String login(@RequestParam String username,
             @RequestParam String password, HttpServletRequest request, Model model) {
-        CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-        model.addAttribute("token", token.getToken());
-        userService.login(username_mail, password); // Llama al método login del servicio
-        return "redirect:/";
+        Optional<User> userOpt = userService.login(username, password); // Llama al método login del servicio
+        if (userOpt.isPresent()) {
+            loggedUser.setUser(userOpt.get());
+            logger.info("Login recibido correctamente para el usuario: {}", username);
+            return "redirect:/";
+        } else {
+            logger.warn("Login fallido para el usuario: {}", username);
+            return "redirect:/login_error";
+        }
     }
-
-    // !NO BORRAR LO ESTOY INTENTANDO HACER
-    // // Procesa el login del usuario
-    // @PostMapping("/login")
-    // public String login(@RequestParam String username_mail,
-    // @RequestParam String password,
-    // HttpSession session) {
-    // Optional<User> userOptional = userService.login(username_mail, password);
-    // if (userOptional.isPresent()) {
-    // // Guarda el nombre en la sesión para mostrarlo en la vista
-    // session.setAttribute("loggedUsername", userOptional.get().getUsername());
-    // }
-    // return "redirect:/";
-    // }
 }

@@ -28,41 +28,32 @@ public class GlobalMartSecurityConfig {
     }
 
     @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        UserDetails user = User.builder()
+                .username("user")
+                .password(passwordEncoder().encode("pass"))
+                .roles("USER")
+                .build();
+        return new InMemoryUserDetailsManager(user);
+    }
+
+    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 
-        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return authenticationProvider;
 
     }
 
-    // @Bean
-    // public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
-    // UserDetails user = User.builder()
-    // .username("user")
-    // .password(passwordEncoder().encode("password"))
-    // .roles("USER")
-    // .build();
-
-    // UserDetails company = User.builder()
-    // .username("company")
-    // .password(passwordEncoder().encode("password"))
-    // .roles("COMPANY")
-    // .build();
-    // UserDetails admin = User.builder()
-    // .username("admin")
-    // .password(passwordEncoder().encode("password"))
-    // .roles("ADMIN")
-    // .build();
-    // return new InMemoryUserDetailsManager(user, company, admin);
-    // }
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
+                                                                                         // publicas y privadas
 
-        http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la función
+                                                               // anterior
         http.authorizeHttpRequests(authorize -> authorize
                 // PUBLIC PAGES
                 .requestMatchers("/").permitAll()
@@ -75,7 +66,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/descriptionProduct").permitAll()
                 .requestMatchers("/search").permitAll()
                 .requestMatchers("/{type}").permitAll()
-                .requestMatchers("/error").permitAll()
+                // .requestMatchers("/error").permitAll()
 
                 // acceso a los css
                 .requestMatchers("/css/**").permitAll()
@@ -88,10 +79,14 @@ public class GlobalMartSecurityConfig {
                 // .requestMatchers("/administrator").hasAnyRole("ADMIN")
                 .requestMatchers("/shoppingcart").authenticated())
                 // .requestMatchers("/user").hasAnyRole("USER"))
+
+                // Configurar el formulario de login
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
+                        .loginProcessingUrl("/")
+                        .failureUrl("/login_error")
                         .defaultSuccessUrl("/")
                         .permitAll())
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
