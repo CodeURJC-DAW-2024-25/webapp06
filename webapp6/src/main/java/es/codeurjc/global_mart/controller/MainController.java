@@ -57,28 +57,7 @@ public class MainController {
 	// Redirection to see all products
 	@GetMapping("/allProducts")
 	public String seeAllProds(Model model) {
-		Map<String, Object> data = new HashMap<>(); // Creation of a map to pass the boolean values to the mustache
-													// template
-		data.put("Hogar", true);
-		data.put("Electronica", true);
-		data.put("Libros", true);
-		data.put("Educacion", true);
-		data.put("Electrodomesticos", true);
-		data.put("Deporte", true);
-		data.put("Musica", true);
-		data.put("Cine", true);
-		data.put("Otros", true);
-		// Add all the products scanning them by type of product
-		model.addAttribute("HogarProds", productService.getProductsByType("Hogar"));
-		model.addAttribute("ElectronicaProds", productService.getProductsByType("Electronica"));
-		model.addAttribute("LibrosProds", productService.getProductsByType("Libros"));
-		model.addAttribute("EducacionProds", productService.getProductsByType("Educación"));
-		model.addAttribute("ElectrodomesticosProds", productService.getProductsByType("Electrodomesticos"));
-		model.addAttribute("DeporteProds", productService.getProductsByType("Deporte"));
-		model.addAttribute("MusicaProds", productService.getProductsByType("Musica"));
-		model.addAttribute("CineProds", productService.getProductsByType("Cine"));
-		model.addAttribute("OtrosProds", productService.getProductsByType("Otros"));
-		model.addAttribute("boolean", data);
+		model.addAttribute("products", productService.getAllProducts());
 		return "products";
 	}
 
@@ -86,11 +65,8 @@ public class MainController {
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-		Map<String, Object> data = new HashMap<>(); // Creation of a map to pass the boolean (make dissapear the titles
-													// of the other types)
-		data.put(type, true);
-		model.addAttribute(type + "Prods", productService.getProductsByType(type));
-		model.addAttribute("boolean", data);
+		model.addAttribute("categorized", true);
+		model.addAttribute("products", productService.getProductsByType(type));
 		return "products";
 	}
 
