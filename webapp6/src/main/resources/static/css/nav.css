@@ -108,20 +108,22 @@ a {
 }
 
 .login,
-.register {
+.register,
+.logout {
     text-decoration: none;
     color: rgba(0, 0, 0, 0.6);
     font-size: 1rem;
+    font-family: "Itim", serif;
 }
 
 .login {
     background-color: transparent;
     border: none;
-    font-family: "Itim", serif;
     cursor: pointer;
 }
 
-.register {
+.register,
+.logout {
     background-color: black;
     color: white;
     padding: 5px 10px;
@@ -129,12 +131,7 @@ a {
     cursor: pointer;
 }
 
-/* !NO BORRAR LO ESTOY INTENTANDO HACER */
-/* .login_user {
-    display: none;
-}
-
-.login_user .active {
+.login_user {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -163,7 +160,20 @@ a {
     cursor: pointer;
     text-decoration: none;
     color: black;
-} */
+}
+
+.add_product_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add_product_link {
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: black;
+}
 
 /* ------------------- Categories ------------------- */
 .categories_div {

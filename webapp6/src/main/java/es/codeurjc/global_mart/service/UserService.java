@@ -4,7 +4,12 @@ import es.codeurjc.global_mart.repository.UserRepository;
 import es.codeurjc.global_mart.model.User;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,10 +17,21 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
-    public User createUser(String username, String email, String password, Boolean isCompany) {
-        User user = new User(username, email, password, isCompany);
+    public User createUser(MultipartFile image, String name, String username, String email, String password,
+            List<String> role) throws IOException {
+        User user = new User(name, username, email, password, role);
+        if (image != null && !image.isEmpty()) {
+            user.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
+        } else {
+            user.setImage(BlobProxy.generateProxy(
+                    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+                            .getBytes()));
+        }
         return userRepository.save(user);
     }
 
@@ -33,7 +49,7 @@ public class UserService {
             User user = optionalUser.get();
             user.setUsername(username);
             user.setEmail(email);
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
             return userRepository.save(user);
         } else {
             throw new RuntimeException("User not found with id " + id);
@@ -55,7 +71,7 @@ public class UserService {
             User user = userOpt.get(); // Obtiene el usuario
             System.out.println("Login correcto: " + user.getUsername() + " - " + user.getEmail());
             // Se asume que la contraseña se almacena en texto plano
-            if (user.getPassword().equals(password)) { // Si la contraseña es correcta
+            if (passwordEncoder.matches(password, user.getPassword())) { // Si la contraseña es correcta
                 return Optional.of(user); // Devuelve el usuario
             }
         }

@@ -28,23 +28,24 @@
     <!-- ----------------- Upload Product Form ----------------- -->
     <div class="container mt-5">
         <h2 class="text-center mb-4">Upload Product</h2>
-        <form>
+        <form action="/newproduct" method="POST">
             <div class="form-group">
                 <label for="productName">Product Name</label>
-                <input type="text" class="form-control" id="productName" placeholder="Enter product name" required>
+                <input type="text" name="product_name" class="form-control" id="productName"
+                    placeholder="Enter product name" required>
             </div>
             <div class="form-group">
                 <label for="productImage">Product Image URL</label>
-                <input type="url" class="form-control" id="productImage" placeholder="Enter image URL" required>
+                <input type="file" id="image" name="product_image" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="productDescription">Product Description</label>
-                <textarea class="form-control" id="productDescription" rows="3" placeholder="Enter product description"
-                    required></textarea>
+                <textarea name="product_description" class="form-control" id="productDescription" rows="3"
+                    placeholder="Enter product description" required></textarea>
             </div>
             <div class="form-group">
                 <label for="productType">Product Type</label>
-                <select class="form-control" id="productType" required>
+                <select name="product_type" class="form-control" id="productType" required>
                     <option value="electronics">Electronics</option>
                     <option value="fashion">Fashion</option>
                     <option value="home">Home</option>
@@ -53,8 +54,15 @@
             </div>
             <div class="form-group">
                 <label for="productQuantity">Quantity</label>
-                <input type="number" class="form-control" id="productQuantity" placeholder="Enter quantity" required>
+                <input name="product_stock" type="number" class="form-control" id="productQuantity"
+                    placeholder="Enter quantity" required>
             </div>
+            <div class="form-group">
+                <label for="productPrice">Price</label>
+                <input name="product_price" type="number" class="form-control" id="productPrice"
+                    placeholder="Enter price" required>
+            </div>
+            <input type="hidden" name="_csrf" value="{{token}}">
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>

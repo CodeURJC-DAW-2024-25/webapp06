@@ -1,14 +1,19 @@
 package es.codeurjc.global_mart.model;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import java.sql.Blob;
 
 @Entity
 @Table(name = "USERS")
@@ -19,10 +24,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
+    private Blob image;
+
+    private String name;
     private String username;
     private String email;
-    private String password;
-    private Boolean isCompany;
+    private String encodedPassword;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> role;
 
     @OneToMany
     private List<Order> orders;
@@ -34,13 +45,14 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password, Boolean isCompany) {
+    public User(String name, String username, String email, String password, List<String> role) {
+        this.name = name;
         this.username = username;
         this.email = email;
-        this.password = password;
-        this.isCompany = isCompany;
+        this.encodedPassword = password;
         this.orders = new ArrayList<>();
         this.reviews = new ArrayList<>();
+        this.role = role;
     }
 
     // ----------------- Methods -----------------
@@ -62,15 +74,23 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return encodedPassword;
     }
 
-    public boolean getIsCompany() {
-        return isCompany;
+    public List<String> getRole() {
+        return role;
     }
 
     public List<Review> getReviews() {
         return reviews;
+    }
+
+    public Blob getImage() {
+        return image;
+    }
+
+    public String getName() {
+        return name;
     }
 
     // !Setters
@@ -86,8 +106,12 @@ public class User {
         this.email = email;
     }
 
+    public void setRole(List<String> role) {
+        this.role = role;
+    }
+
     public void setPassword(String password) {
-        this.password = password;
+        this.encodedPassword = password;
     }
 
     public void setOrders(List<Order> orders) {
@@ -98,6 +122,15 @@ public class User {
         this.reviews = reviews;
     }
 
+    public void setImage(Blob image) {
+        this.image = image;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Reviews
     public void addReview(Review review) {
         this.reviews.add(review);
     }
@@ -105,5 +138,4 @@ public class User {
     public void removeReview(Review review) {
         this.reviews.remove(review);
     }
-
 }

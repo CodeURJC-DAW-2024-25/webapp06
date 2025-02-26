@@ -6,7 +6,7 @@ body {
     display: none;
     position: absolute;
     width: 40%;
-    top: 45%;
+    top: 50%;
     left: 50%;
     /* Inicio fuera del centro para lograr un efecto de movimiento */
     transform: translate(-50%, -70%);
@@ -31,7 +31,8 @@ body {
 }
 
 .form_div input[type="text"],
-.form_div input[type="password"] {
+.form_div input[type="password"],
+.form_input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;

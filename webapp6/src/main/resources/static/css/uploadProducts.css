@@ -16,3 +16,8 @@ body {
 .footer_text {
     color: #6c757d;
 }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
