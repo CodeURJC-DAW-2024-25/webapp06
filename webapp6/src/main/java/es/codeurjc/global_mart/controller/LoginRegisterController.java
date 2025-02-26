@@ -7,7 +7,7 @@ import es.codeurjc.global_mart.model.LoggedUser;
 
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,15 @@ public class LoginRegisterController {
     private static final Logger logger = LoggerFactory.getLogger(LoginRegisterController.class);
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
     private LoggedUser loggedUser;
+
+    
 
     // Procesa el registro del usuario
     @PostMapping("/register")
@@ -36,7 +41,7 @@ public class LoginRegisterController {
             @RequestParam String password,
             @RequestParam MultipartFile image,
             @RequestParam String role) throws Exception {
-        userService.createUser(image, name, username, mail, password, List.of(role)); // Llama al método createUser del
+        userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role)); // Llama al método createUser del
                                                                                       // servicio
 
         return "redirect:/"; // Redirecciona a la página de login tras el registro

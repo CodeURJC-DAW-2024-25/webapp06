@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.config;
 
+import es.codeurjc.global_mart.repository.UserRepository;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.service.ReviewService;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Component
 public class DataLoader {
@@ -20,6 +22,10 @@ public class DataLoader {
 
         @Autowired
         private ReviewService reviewService;
+
+
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
         @PostConstruct
         public void loadData() throws IOException {
@@ -43,7 +49,7 @@ public class DataLoader {
                                 10);
                 productService.createProduct("Electronica", "Producto15", "Newegg", 160.0, "Muy avanzado", null, 10);
 
-                userService.createUser(null, "User 1", "user1", "user1@gmail.com", "user1",
+                userService.createUser(null, "User 1", "user1", "user1@gmail.com", passwordEncoder.encode("user1"),
                                 Arrays.asList("ROLE_COMPANY"));
 
                 reviewService.createReview("user1", "Muy bueno", 5);

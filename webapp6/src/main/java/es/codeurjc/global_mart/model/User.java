@@ -30,7 +30,7 @@ public class User {
     private String name;
     private String username;
     private String email;
-    private String password;
+    private String encodedPassword;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> role;
@@ -49,7 +49,7 @@ public class User {
         this.name = name;
         this.username = username;
         this.email = email;
-        this.password = password;
+        this.encodedPassword = password;
         this.orders = new ArrayList<>();
         this.reviews = new ArrayList<>();
         this.role = role;
@@ -74,7 +74,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return encodedPassword;
     }
 
     public List<String> getRole() {
@@ -111,7 +111,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.encodedPassword = password;
     }
 
     public void setOrders(List<Order> orders) {
