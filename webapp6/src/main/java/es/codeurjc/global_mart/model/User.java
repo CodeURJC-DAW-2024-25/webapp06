@@ -1,6 +1,8 @@
 package es.codeurjc.global_mart.model;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
@@ -29,6 +31,8 @@ public class User {
     private String username;
     private String email;
     private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> role;
 
     @OneToMany

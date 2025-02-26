@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import es.codeurjc.global_mart.model.LoggedUser;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 
 import java.sql.Blob;
 import java.util.Base64;
@@ -62,6 +63,12 @@ public class MainController {
 	// Redirection to the about us page
 	@GetMapping("/about")
 	public String about_us(Model model) {
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
+		}
 		return "about";
 	}
 
@@ -117,6 +124,13 @@ public class MainController {
 		model.addAttribute("CineProds", productService.getProductsByType("Cine"));
 		model.addAttribute("OtrosProds", productService.getProductsByType("Otros"));
 		model.addAttribute("boolean", data);
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
+		}
+		
 		return "products";
 	}
 
@@ -128,6 +142,12 @@ public class MainController {
 		data.put(type, true);
 		model.addAttribute(type + "Prods", productService.getProductsByType(type));
 		model.addAttribute("boolean", data);
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
+		}
 		return "products";
 	}
 
@@ -141,17 +161,35 @@ public class MainController {
 		model.addAttribute("productPrice", productService.getProductPrice(product.get()));
 		model.addAttribute("productDescription", productService.getProductDescription(product.get()));
 		model.addAttribute("productImage", productService.getProductImage(product.get()));
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
+		}
 		return "descriptionProduct";
 	}
 
 	// Redirection to the descriprion of a produdct
 	@GetMapping("/descriptionProduct")
 	public String descriptionProduct(Model model) {
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
+		}
 		return "descriptionProduct";
 	}
 
 	@GetMapping("/new_product")
 	public String new_product(Model model) {
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
+		}
 		return "uploadProducts";
 	}
 

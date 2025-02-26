@@ -44,7 +44,7 @@ public class DataLoader {
                 productService.createProduct("Electronica", "Producto15", "Newegg", 160.0, "Muy avanzado", null, 10);
 
                 userService.createUser(null, "User 1", "user1", "user1@gmail.com", "user1",
-                                Arrays.asList("Company"));
+                                Arrays.asList("ROLE_COMPANY"));
 
                 reviewService.createReview("user1", "Muy bueno", 5);
 
