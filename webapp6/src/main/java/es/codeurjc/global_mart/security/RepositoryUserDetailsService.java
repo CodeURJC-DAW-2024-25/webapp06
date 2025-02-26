@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import es.codeurjc.global_mart.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,8 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Service
-public class RepositoryUserDetailsService implements UserDetailsService{
-    
+public class RepositoryUserDetailsService implements UserDetailsService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -27,18 +26,13 @@ public class RepositoryUserDetailsService implements UserDetailsService{
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("User not found"));
-               
+
         List<GrantedAuthority> roles = new ArrayList<>();
-		for (String role : user.getRole()) {
-			roles.add(new SimpleGrantedAuthority("ROLE_" + role));
-        }   
+        for (String role : user.getRole()) {
+            roles.add(new SimpleGrantedAuthority("ROLE_" + role));
+        }
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(), roles);
     }
-
-
-
-
-
 
 }

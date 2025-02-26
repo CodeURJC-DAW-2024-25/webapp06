@@ -25,7 +25,6 @@ public class UserService {
         if (image != null && !image.isEmpty()) {
             user.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize()));
         } else {
-            System.out.println("No se ha proporcionado imagen, utilizando imagen por defecto");
             user.setImage(BlobProxy.generateProxy(
                     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
                             .getBytes()));

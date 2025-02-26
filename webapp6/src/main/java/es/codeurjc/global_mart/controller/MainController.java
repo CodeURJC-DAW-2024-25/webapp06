@@ -9,15 +9,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.csrf.CsrfToken;
 
 import es.codeurjc.global_mart.model.LoggedUser;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.Blob;
 import java.util.Base64;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class MainController {
@@ -35,6 +36,8 @@ public class MainController {
 		User user = loggedUser.getUser();
 		if (user != null && user.getUsername() != null) {
 			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
 		}
 		return "index";
 	}
@@ -146,4 +149,23 @@ public class MainController {
 	public String descriptionProduct(Model model) {
 		return "descriptionProduct";
 	}
+
+	@GetMapping("/new_product")
+	public String new_product(Model model) {
+		return "uploadProducts";
+	}
+
+	@PostMapping("/newproduct")
+	public String newproduct(@RequestParam String product_name, @RequestParam MultipartFile product_image,
+			@RequestParam String product_description, @RequestParam String product_type,
+			@RequestParam Integer product_stock, @RequestParam Double product_price) throws Exception {
+		User user = loggedUser.getUser(); // Obtiene el usuario logueado
+		if (user != null && user.getUsername() != null) {
+			String product_business = user.getUsername();
+			productService.createProduct(product_type, product_name, product_business, product_price,
+					product_description, product_image, product_stock);
+		}
+		return "redirect:/allProducts";
+	}
+
 }

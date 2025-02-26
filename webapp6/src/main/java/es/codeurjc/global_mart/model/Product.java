@@ -1,6 +1,6 @@
 package es.codeurjc.global_mart.model;
 
-
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,8 @@ public class Product {
     private String company;
     private Double price;
     private String description;
-    private String image;
+    private Blob image;
+    private Integer stock;
 
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
@@ -38,13 +39,13 @@ public class Product {
     public Product() {
     }
 
-    public Product(String type, String name, String company, Double price, String description, String image) {
+    public Product(String type, String name, String company, Double price, String description, Integer stock) {
         this.type = type;
         this.name = name;
         this.company = company;
         this.price = price;
         this.description = description;
-        this.image = image;
+        this.stock = stock;
         this.reviews = new ArrayList<>();
     }
 
@@ -74,11 +75,22 @@ public class Product {
         return description;
     }
 
-    public String getImage() {
+    public Blob getImage() {
         return image;
     }
 
-    
+    public Integer getStock() {
+        return stock;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;
@@ -104,20 +116,16 @@ public class Product {
         this.description = description;
     }
 
-    public void setImage(String image) {
+    public void setImage(Blob image) {
         this.image = image;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
     }
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
 
-    public List<Review> getReviews() {
-        return reviews;
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public void setReviews(List<Review> reviews) {
@@ -131,4 +139,5 @@ public class Product {
     public void removeReview(Review review) {
         this.reviews.remove(review);
     }
+
 }
