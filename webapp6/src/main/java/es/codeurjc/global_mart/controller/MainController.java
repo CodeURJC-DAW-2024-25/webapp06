@@ -16,6 +16,9 @@ import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.sql.Blob;
+import java.util.Base64;
+
 @Controller
 public class MainController {
 
@@ -62,10 +65,23 @@ public class MainController {
 	// Redirection to the user page
 	@GetMapping("/profile")
 	public String profile(Model model) {
-		User user = loggedUser.getUser();
+		User user = loggedUser.getUser(); // Obtiene el usuario logueado
 		if (user != null && user.getUsername() != null) {
-			model.addAttribute("profile_image", user.getImage());
-			System.out.println(user.getImage());
+			if (user.getImage() != null) { // Si el usuario tiene una imagen de perfil
+				try {
+					Blob blob = user.getImage(); // Obtiene la imagen
+					byte[] imageBytes = blob.getBytes(1, (int) blob.length()); // Convierte la imagen a bytes
+					String base64Image = Base64.getEncoder().encodeToString(imageBytes); // Codifica la imagen en base64
+																							// en base64 ya que el
+																							// navegador no permite
+																							// representar archivos Blob
+					model.addAttribute("profile_image", "data:image/jpeg;base64," + base64Image);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				model.addAttribute("profile_image", "ruta/a/imagen/por/defecto.png");
+			}
 			model.addAttribute("name", user.getName());
 			model.addAttribute("username", user.getUsername());
 			model.addAttribute("email", user.getEmail());

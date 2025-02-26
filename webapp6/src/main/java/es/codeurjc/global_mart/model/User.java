@@ -3,12 +3,17 @@ package es.codeurjc.global_mart.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.sql.Blob;
 
 @Entity
 @Table(name = "USERS")
@@ -19,7 +24,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String image;
+    @Lob
+    private Blob image;
+
     private String name;
     private String username;
     private String email;
@@ -36,8 +43,7 @@ public class User {
     public User() {
     }
 
-    public User(String image, String name, String username, String email, String password, List<String> role) {
-        this.image = image;
+    public User(String name, String username, String email, String password, List<String> role) {
         this.name = name;
         this.username = username;
         this.email = email;
@@ -77,7 +83,7 @@ public class User {
         return reviews;
     }
 
-    public String getImage() {
+    public Blob getImage() {
         return image;
     }
 
@@ -114,7 +120,7 @@ public class User {
         this.reviews = reviews;
     }
 
-    public void setImage(String image) {
+    public void setImage(Blob image) {
         this.image = image;
     }
 

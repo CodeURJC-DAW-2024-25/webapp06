@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class LoginRegisterController {
@@ -35,9 +36,8 @@ public class LoginRegisterController {
                                                                                          // formulario
             @RequestParam String mail,
             @RequestParam String password,
-            @RequestParam String image,
-            @RequestParam String role,
-            HttpServletRequest request, Model model) {
+            @RequestParam MultipartFile image,
+            @RequestParam String role) throws Exception {
         userService.createUser(image, name, username, mail, password, List.of(role)); // Llama al método createUser del
                                                                                       // servicio
 

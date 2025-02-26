@@ -4,9 +4,10 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.service.ReviewService;
 import jakarta.annotation.PostConstruct;
-
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,7 @@ public class DataLoader {
         private ReviewService reviewService;
 
         @PostConstruct
-        public void loadData() {
+        public void loadData() throws IOException {
 
                 productService.createProduct("Libros", "Producto1", "Amazon", 20.0, "Muy chulo", "String image");
                 productService.createProduct("Electronica", "Producto2", "eBay", 30.0, "Muy útil",
@@ -52,9 +53,8 @@ public class DataLoader {
                 productService.createProduct("Electronica", "Producto15", "Newegg", 160.0, "Muy avanzado",
                                 "String image");
 
-                userService.createUser(
-                                "https://static.wikia.nocookie.net/disney/images/3/38/Mike1.png/revision/latest?cb=20230314012719&path-prefix=es",
-                                "User 1", "user1", "user1@gmail.com", "user1", Arrays.asList("ROLE_user"));
+                userService.createUser(null, "User 1", "user1", "user1@gmail.com", "user1",
+                                Arrays.asList("ROLE_user"));
 
                 reviewService.createReview("user1", "Muy bueno", 5);
 

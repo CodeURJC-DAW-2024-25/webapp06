@@ -28,12 +28,15 @@
 
         <h3>Register</h3>
 
-        <form action="/register" method="POST">
-            <input class="form_input" type="text" name="name" placeholder="Full Name"><br>
-            <input class="form_input" type="text" name="username" placeholder="Username"><br>
-            <input class="form_input" type="email" name="mail" placeholder="Email"><br>
-            <input class="form_input" type="password" name="password" placeholder="Password"><br>
-            <input class="form_input" type="url" name="image" placeholder="Profile Image"><br>
+        <form action="/register" method="POST" enctype="multipart/form-data">
+            <strong>Enter your Full name</strong><input class="form_input" type="text" name="name"
+                placeholder="Full Name"><br>
+            <strong>Enter your Username</strong><input class="form_input" type="text" name="username"
+                placeholder="Username"><br>
+            <strong>Enter your email</strong><input class="form_input" type="email" name="mail" placeholder="Email"><br>
+            <strong>Enter your password</strong><input class="form_input" type="password" name="password"
+                placeholder="Password"><br>
+            <strong>Choose a profile image</strong> <input type="file" id="image" name="image" accept="image/*"><br>
 
             <div class="type_users_div">
                 <label>
