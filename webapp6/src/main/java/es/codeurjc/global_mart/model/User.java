@@ -3,7 +3,6 @@ package es.codeurjc.global_mart.model;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
@@ -15,8 +14,7 @@ import java.util.List;
 
 import java.sql.Blob;
 
-@Entity
-@Table(name = "USERS")
+@Entity(name = "Users")
 public class User {
 
     // ----------------- Atributes -----------------

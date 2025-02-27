@@ -27,7 +27,7 @@
         <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
     </form>
 
-    {{#username}}
+    {{#logged}}
     <div class="login_user">
         <div class="add_product_div">
             <a href="/new_product" class="add_product_link"><i class="bi bi-plus-circle"
@@ -44,14 +44,14 @@
             <button type="submit" class="logout">Log Out</button>
         </form>
     </div>
-    {{/username}}
+    {{/logged}}
 
-    {{^username}}
+    {{^logged}}
     <div class="login_register_div">
         <button class="login">Login</button>
         <button class="register">Register</button>
     </div>
-    {{/username}}
+    {{/logged}}
 </nav>
 
 <div class="categories_div">

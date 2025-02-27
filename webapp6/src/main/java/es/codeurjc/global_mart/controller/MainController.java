@@ -3,6 +3,7 @@ package es.codeurjc.global_mart.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
@@ -10,16 +11,17 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import es.codeurjc.global_mart.model.LoggedUser;
-import es.codeurjc.global_mart.model.User;
+// import es.codeurjc.global_mart.model.LoggedUser;
+// import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 
-import java.sql.Blob;
-import java.util.Base64;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
+import java.security.Principal;
+// import java.sql.Blob;
+// import java.util.Base64;
+// import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class MainController {
@@ -27,19 +29,26 @@ public class MainController {
 	@Autowired
 	private ProductService productService;
 
-	@Autowired
-	private LoggedUser loggedUser;
+	// @Autowired
+	// private LoggedUser loggedUser;
+
+	@ModelAttribute
+	public void addAtributes(Model model, HttpServletRequest request) {
+
+		Principal principal = request.getUserPrincipal();
+
+		if (principal != null) {
+			model.addAttribute("logged", true);
+			model.addAttribute("username", principal.getName());
+		} else {
+			model.addAttribute("logged", false);
+		}
+	}
 
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
 	@GetMapping("/")
 	public String greeting(Model model) {
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
 		return "index";
 	}
 
@@ -63,39 +72,12 @@ public class MainController {
 	// Redirection to the about us page
 	@GetMapping("/about")
 	public String about_us(Model model) {
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
 		return "about";
 	}
 
 	// Redirection to the user page
 	@GetMapping("/profile")
 	public String profile(Model model) {
-		User user = loggedUser.getUser(); // Obtiene el usuario logueado
-		if (user != null && user.getUsername() != null) {
-			if (user.getImage() != null) { // Si el usuario tiene una imagen de perfil
-				try {
-					Blob blob = user.getImage(); // Obtiene la imagen
-					byte[] imageBytes = blob.getBytes(1, (int) blob.length()); // Convierte la imagen a bytes
-					String base64Image = Base64.getEncoder().encodeToString(imageBytes); // Codifica la imagen en base64
-																							// en base64 ya que el
-																							// navegador no permite
-																							// representar archivos Blob
-					model.addAttribute("profile_image", "data:image/jpeg;base64," + base64Image);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				model.addAttribute("profile_image", "ruta/a/imagen/por/defecto.png");
-			}
-			model.addAttribute("name", user.getName());
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("email", user.getEmail());
-		}
 		return "user";
 	}
 
@@ -124,13 +106,7 @@ public class MainController {
 		model.addAttribute("CineProds", productService.getProductsByType("Cine"));
 		model.addAttribute("OtrosProds", productService.getProductsByType("Otros"));
 		model.addAttribute("boolean", data);
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
-		
+
 		return "products";
 	}
 
@@ -142,12 +118,6 @@ public class MainController {
 		data.put(type, true);
 		model.addAttribute(type + "Prods", productService.getProductsByType(type));
 		model.addAttribute("boolean", data);
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
 		return "products";
 	}
 
@@ -161,60 +131,39 @@ public class MainController {
 		model.addAttribute("productPrice", productService.getProductPrice(product.get()));
 		model.addAttribute("productDescription", productService.getProductDescription(product.get()));
 		model.addAttribute("productImage", productService.getProductImage(product.get()));
-		model.addAttribute("productId", productService.getProductId(product.get()));
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
+		model.addAttribute("productId", productService.getProductId(product.get())); // productos solo si el usuario es
+																						// una empresa
+
 		return "descriptionProduct";
 	}
 
 	// Redirection to the descriprion of a produdct
 	@GetMapping("/descriptionProduct")
 	public String descriptionProduct(Model model) {
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
 		return "descriptionProduct";
 	}
 
 	@GetMapping("/new_product")
 	public String new_product(Model model) {
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
 		return "uploadProducts";
 	}
 
-	@PostMapping("/newproduct")
-	public String newproduct(@RequestParam String product_name, @RequestParam MultipartFile product_image,
-			@RequestParam String product_description, @RequestParam String product_type,
-			@RequestParam Integer product_stock, @RequestParam Double product_price) throws Exception {
-		User user = loggedUser.getUser(); // Obtiene el usuario logueado
-		if (user != null && user.getUsername() != null) {
-			String product_business = user.getUsername();
-			productService.createProduct(product_type, product_name, product_business, product_price,
-					product_description, product_image, product_stock);
-		}
-		return "redirect:/allProducts";
-	}
+	// @PostMapping("/newproduct")
+	// public String newproduct(@RequestParam String product_name, @RequestParam
+	// MultipartFile product_image,
+	// @RequestParam String product_description, @RequestParam String product_type,
+	// @RequestParam Integer product_stock, @RequestParam Double product_price)
+	// throws Exception {
 
-	@GetMapping("shoppingCart/{id}")
-	public String shoppingCart(@PathVariable Long id, Model model) {
-		User user = loggedUser.getUser();
-		if (user != null && user.getUsername() != null) {
-			model.addAttribute("username", user.getUsername());
-			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
-																	// productos solo si el usuario es una empresa
-		}
+	// productService.createProduct(product_type, product_name, product_business,
+	// product_price,
+	// product_description, product_image, product_stock);
+
+	// return "redirect:/allProducts";
+	// }
+
+	@GetMapping("/shoppingcart")
+	public String shoppingCart(Model model) {
 		return "shoppingCart";
 
 	}
