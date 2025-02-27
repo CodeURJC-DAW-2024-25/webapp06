@@ -98,4 +98,8 @@ public class ProductService {
         return reviewService.getAllReviews();
     }
 
+    public Long getProductId(Product product) {
+        return product.getId();
+    }
+
 }

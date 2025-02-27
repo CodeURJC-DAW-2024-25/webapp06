@@ -161,6 +161,7 @@ public class MainController {
 		model.addAttribute("productPrice", productService.getProductPrice(product.get()));
 		model.addAttribute("productDescription", productService.getProductDescription(product.get()));
 		model.addAttribute("productImage", productService.getProductImage(product.get()));
+		model.addAttribute("productId", productService.getProductId(product.get()));
 		User user = loggedUser.getUser();
 		if (user != null && user.getUsername() != null) {
 			model.addAttribute("username", user.getUsername());
@@ -206,4 +207,15 @@ public class MainController {
 		return "redirect:/allProducts";
 	}
 
+	@GetMapping("shoppingCart/{id}")
+	public String shoppingCart(@PathVariable Long id, Model model) {
+		User user = loggedUser.getUser();
+		if (user != null && user.getUsername() != null) {
+			model.addAttribute("username", user.getUsername());
+			model.addAttribute("company", loggedUser.isCompany()); // para que en la vista se muestre el botón de subir
+																	// productos solo si el usuario es una empresa
+		}
+		return "shoppingCart";
+
+	}
 }

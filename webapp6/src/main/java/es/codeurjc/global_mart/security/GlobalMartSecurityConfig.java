@@ -76,7 +76,7 @@ public class GlobalMartSecurityConfig {
                 // PRIVATE PAGES ESTA ROTO HAY Q ARREGLARLO
                 // .requestMatchers("/uploadProducts").hasAnyRole("COMPANY")
                 // .requestMatchers("/administrator").hasAnyRole("ADMIN")
-                .requestMatchers("/shoppingcart").authenticated())
+                .requestMatchers("/shoppingcart/{id}").authenticated())
                 // .requestMatchers("/user").hasAnyRole("USER"))
 
                 // Configurar el formulario de login

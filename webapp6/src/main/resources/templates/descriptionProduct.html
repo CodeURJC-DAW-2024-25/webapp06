@@ -37,8 +37,9 @@
                 <p class="product-type">Type: {{productType}}</p>
                 <p class="product-price">${{productPrice}}</p>
                 <p class="product-description">{{productDescription}}</p>
+                <p>{{productId}}</p>
                 
-                <a href="/shoppingcart" class="btn btn-primary btn-lg mt-3">Add to cart</a>
+                <a href="/shoppingcart/{{productId}}" class="btn btn-primary btn-lg mt-3">Add to cart</a>
                 <a href="/allProducts" class="btn btn-secondary btn-lg mt-3">Back to Products</a>
             </div>
         </div>
