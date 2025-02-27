@@ -108,6 +108,7 @@ public class MainController {
 
 		}else {
 			model.addAttribute("categorized", true);
+			model.addAttribute("categoryTitle", type);
 			model.addAttribute("products", productService.getProductsByType(type));
 		}
 		return "products";
