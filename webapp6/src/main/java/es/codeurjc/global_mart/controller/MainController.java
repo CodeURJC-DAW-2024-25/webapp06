@@ -99,18 +99,17 @@ public class MainController {
 		return "user";
 	}
 
-	// Redirection to see all products
-	@GetMapping("/allProducts")
-	public String seeAllProds(Model model) {
-		model.addAttribute("products", productService.getAllProducts());
-		return "products";
-	}
 
-	// Redirection to see ONLY the products of a specific type
-	@GetMapping("/{type}")
+	// Redirection to the products page
+	@GetMapping("/products/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-		model.addAttribute("categorized", true);
-		model.addAttribute("products", productService.getProductsByType(type));
+		if (type.equals("allProducts")) {
+			model.addAttribute("products", productService.getAllProducts());
+
+		}else {
+			model.addAttribute("categorized", true);
+			model.addAttribute("products", productService.getProductsByType(type));
+		}
 		return "products";
 	}
 

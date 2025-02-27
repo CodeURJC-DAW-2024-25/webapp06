@@ -60,11 +60,10 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/choose_login_option").permitAll()
                 .requestMatchers("/register").permitAll()
                 .requestMatchers("/login").permitAll()
-                .requestMatchers("/allProducts").permitAll()
+                .requestMatchers("/products/{type}").permitAll()
                 .requestMatchers("/product/{id}").permitAll()
                 .requestMatchers("/descriptionProduct").permitAll()
                 .requestMatchers("/search").permitAll()
-                .requestMatchers("/{type}").permitAll()
                 // .requestMatchers("/error").permitAll()
 
                 // acceso a los css
