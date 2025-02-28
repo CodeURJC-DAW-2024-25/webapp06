@@ -53,6 +53,7 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/descriptionProduct").permitAll()
                                 .requestMatchers("/search").permitAll()
                                 .requestMatchers("/{type}").permitAll()
+                                .requestMatchers("/new_product").permitAll()
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
