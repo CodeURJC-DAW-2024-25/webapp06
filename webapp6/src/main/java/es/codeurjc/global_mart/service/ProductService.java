@@ -118,6 +118,17 @@ public class ProductService {
         return acceptedProducts;
     }
 
+    public List<Product> getAcceptedProducts() {
+        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> acceptedProducts = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (product.getIsAccepted()) {
+                acceptedProducts.add(product);
+            }
+        }
+        return acceptedProducts;
+    }
+
     public List<Product> getNotAcceptedProducts() {
         List<Product> allProducts = productRepository.findAll() ;
         List<Product> notacceptedProducts = new ArrayList<>();

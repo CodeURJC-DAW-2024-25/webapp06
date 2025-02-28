@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -97,11 +96,13 @@ public class MainController {
 		String username = principal.getName();
 
 		// Assuming you have a UserService to fetch user details
-		User user = userService.findByUsername(username);
+		Optional<User> user = userService.findByUsername(username);
 
-		model.addAttribute("username", user.getUsername());
-		model.addAttribute("email", user.getEmail());
-		model.addAttribute("profile_image", user.getImage());
+		if (user.isPresent()) {
+			model.addAttribute("username", user.get().getUsername());
+			model.addAttribute("email", user.get().getEmail());
+			model.addAttribute("profile_image", user.get().getImage());
+		}
 
 		return "user";
 	}
@@ -109,40 +110,19 @@ public class MainController {
 	// Redirection to see all products
 	@GetMapping("/allProducts")
 	public String seeAllProds(Model model) {
-		Map<String, Object> data = new HashMap<>(); // Creation of a map to pass the boolean values to the mustache
-													// template
-		data.put("Hogar", true);
-		data.put("Electronica", true);
-		data.put("Libros", true);
-		data.put("Educacion", true);
-		data.put("Electrodomesticos", true);
-		data.put("Deporte", true);
-		data.put("Musica", true);
-		data.put("Cine", true);
-		data.put("Otros", true);
-		// Add all the products scanning them by type of product
-		model.addAttribute("HogarProds", productService.getAcceptedProductsByType("Hogar"));
-		model.addAttribute("ElectronicaProds", productService.getAcceptedProductsByType("Electronica"));
-		model.addAttribute("LibrosProds", productService.getAcceptedProductsByType("Libros"));
-		model.addAttribute("EducacionProds", productService.getAcceptedProductsByType("Educación"));
-		model.addAttribute("ElectrodomesticosProds", productService.getAcceptedProductsByType("Electrodomesticos"));
-		model.addAttribute("DeporteProds", productService.getAcceptedProductsByType("Deporte"));
-		model.addAttribute("MusicaProds", productService.getAcceptedProductsByType("Musica"));
-		model.addAttribute("CineProds", productService.getAcceptedProductsByType("Cine"));
-		model.addAttribute("OtrosProds", productService.getAcceptedProductsByType("Otros"));
-		model.addAttribute("boolean", data);
-
+		model.addAttribute("allProds", productService.getAcceptedProducts());
+		model.addAttribute("tittle", false);
 		return "products";
 	}
 
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-		Map<String, Object> data = new HashMap<>(); // Creation of a map to pass the boolean (make dissapear the titles
-													// of the other types)
-		data.put(type, true);
-		model.addAttribute(type + "Prods", productService.getProductsByType(type));
-		model.addAttribute("boolean", data);
+								
+		model.addAttribute("allProds", productService.getAcceptedProductsByType(type));
+		model.addAttribute("type", type);
+		model.addAttribute("tittle", true);
+
 		return "products";
 	}
 

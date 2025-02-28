@@ -1,8 +1,11 @@
 package es.codeurjc.global_mart.controller;
 
+import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller; // Asegurarse de importar Controller
@@ -27,20 +30,15 @@ public class LoginRegisterController {
             @RequestParam String password,
             @RequestParam MultipartFile image,
             @RequestParam String role) throws Exception {
-        System.out.println("Registering user: " + name + " " + username + " " + mail + " " + password + " " + role); // Imprime
-                                                                                                                     // los
-                                                                                                                     // datos
-                                                                                                                     // del
-                                                                                                                     // usuario
-                                                                                                                     // en
-                                                                                                                     // la
-                                                                                                                     // consola
-        userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role)); // Llama
-                                                                                                              // al
-                                                                                                              // método
-                                                                                                              // createUser
-                                                                                                              // del
-        // servicio
+
+
+        Optional<User> user = userService.findByUsername(username);
+        if (user.isPresent()) {
+            return "errors";
+        }else{
+            userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role));
+        }
+        
 
         return "redirect:/"; // Redirecciona a la página de login tras el registro
     }
