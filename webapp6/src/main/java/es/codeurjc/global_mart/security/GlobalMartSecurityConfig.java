@@ -70,7 +70,24 @@ public class GlobalMartSecurityConfig {
                                 .formLogin(formLogin -> formLogin
                                                 .loginPage("/login")
                                                 .failureUrl("/login_error")
-                                                .defaultSuccessUrl("/")
+                                                .successHandler((request, response, authentication) -> {
+                                                        authentication.getAuthorities().forEach(grantedAuthority -> {
+                                                                try {
+                                                                        if (grantedAuthority.getAuthority()
+                                                                                        .equals("ROLE_ADMIN")) {
+                                                                                response.sendRedirect("/adminPage");
+                                                                        } else if (grantedAuthority.getAuthority()
+                                                                                        .equals("ROLE_COMPANY")) {
+                                                                                response.sendRedirect("/new_product");
+                                                                        } else if (grantedAuthority.getAuthority()
+                                                                                        .equals("ROLE_USER")) {
+                                                                                response.sendRedirect("/");
+                                                                        }
+                                                                } catch (Exception e) {
+                                                                        e.printStackTrace();
+                                                                }
+                                                        });
+                                                })
                                                 .permitAll())
 
                                 .logout(logout -> logout
