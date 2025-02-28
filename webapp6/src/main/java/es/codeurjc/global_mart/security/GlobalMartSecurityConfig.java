@@ -53,6 +53,7 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/descriptionProduct").permitAll()
                                 .requestMatchers("/search").permitAll()
                                 .requestMatchers("/{type}").permitAll()
+                                .requestMatchers("/profile").permitAll()
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
@@ -64,7 +65,7 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/images/**").permitAll()
 
                                 // -------------- PRIVATE PAGES ----------------
-                                .requestMatchers("/shoppingcart", "/profile").hasAnyRole("USER"))
+                                .requestMatchers("/shoppingcart").hasRole("USER"))
 
                                 // Configurar el formulario de login
                                 .formLogin(formLogin -> formLogin

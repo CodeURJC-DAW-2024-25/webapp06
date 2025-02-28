@@ -11,9 +11,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import es.codeurjc.global_mart.model.User;
 // import es.codeurjc.global_mart.model.LoggedUser;
 // import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
+import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.security.Principal;
@@ -29,6 +31,9 @@ public class MainController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private UserService userService;
+	
 	// @Autowired
 	// private LoggedUser loggedUser;
 
@@ -77,7 +82,17 @@ public class MainController {
 
 	// Redirection to the user page
 	@GetMapping("/profile")
-	public String profile(Model model) {
+	public String profile(Model model, HttpServletRequest request) {
+		Principal principal = request.getUserPrincipal();
+		String username = principal.getName();
+
+		// Assuming you have a UserService to fetch user details
+		User user = userService.findByUsername(username);
+
+		model.addAttribute("username", user.getUsername());
+		model.addAttribute("email", user.getEmail());
+		model.addAttribute("profile_image", user.getImage());
+
 		return "user";
 	}
 
