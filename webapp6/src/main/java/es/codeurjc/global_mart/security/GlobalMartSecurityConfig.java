@@ -53,7 +53,11 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/descriptionProduct").permitAll()
                                 .requestMatchers("/search").permitAll()
                                 .requestMatchers("/{type}").permitAll()
+<<<<<<< HEAD
                                 .requestMatchers("/new_product").permitAll()
+=======
+                                .requestMatchers("/profile").permitAll()
+>>>>>>> a48f5954db2682325d8d1b309c22634551df1620
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
@@ -65,13 +69,30 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/images/**").permitAll()
 
                                 // -------------- PRIVATE PAGES ----------------
-                                .requestMatchers("/shoppingcart", "/profile").hasAnyRole("USER"))
+                                .requestMatchers("/shoppingcart").hasRole("USER"))
 
                                 // Configurar el formulario de login
                                 .formLogin(formLogin -> formLogin
                                                 .loginPage("/login")
                                                 .failureUrl("/login_error")
-                                                .defaultSuccessUrl("/")
+                                                .successHandler((request, response, authentication) -> {
+                                                        authentication.getAuthorities().forEach(grantedAuthority -> {
+                                                                try {
+                                                                        if (grantedAuthority.getAuthority()
+                                                                                        .equals("ROLE_ADMIN")) {
+                                                                                response.sendRedirect("/adminPage");
+                                                                        } else if (grantedAuthority.getAuthority()
+                                                                                        .equals("ROLE_COMPANY")) {
+                                                                                response.sendRedirect("/new_product");
+                                                                        } else if (grantedAuthority.getAuthority()
+                                                                                        .equals("ROLE_USER")) {
+                                                                                response.sendRedirect("/");
+                                                                        }
+                                                                } catch (Exception e) {
+                                                                        e.printStackTrace();
+                                                                }
+                                                        });
+                                                })
                                                 .permitAll())
 
                                 .logout(logout -> logout
