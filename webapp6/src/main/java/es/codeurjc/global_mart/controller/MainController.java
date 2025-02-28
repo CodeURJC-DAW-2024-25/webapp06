@@ -5,13 +5,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+<<<<<<< HEAD
+import es.codeurjc.global_mart.model.LoggedUser;
+import es.codeurjc.global_mart.repository.UserRepository;
+=======
 import es.codeurjc.global_mart.model.User;
+>>>>>>> a48f5954db2682325d8d1b309c22634551df1620
 // import es.codeurjc.global_mart.model.LoggedUser;
 // import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
@@ -19,11 +27,6 @@ import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.security.Principal;
-// import java.sql.Blob;
-// import java.util.Base64;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.RequestParam;
-// import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class MainController {
@@ -37,10 +40,15 @@ public class MainController {
 	// @Autowired
 	// private LoggedUser loggedUser;
 
+	// @Autowired
+	// private UserRepository userRepository;
+
+	private Principal principal;
+
 	@ModelAttribute
 	public void addAtributes(Model model, HttpServletRequest request) {
 
-		Principal principal = request.getUserPrincipal();
+		principal = request.getUserPrincipal();
 
 		if (principal != null) {
 			model.addAttribute("logged", true);
@@ -169,19 +177,19 @@ public class MainController {
 		return "uploadProducts";
 	}
 
-	// @PostMapping("/newproduct")
-	// public String newproduct(@RequestParam String product_name, @RequestParam
-	// MultipartFile product_image,
-	// @RequestParam String product_description, @RequestParam String product_type,
-	// @RequestParam Integer product_stock, @RequestParam Double product_price)
-	// throws Exception {
+	@PostMapping("/newproduct")
+	public String newproduct(@RequestParam String product_name, @RequestParam MultipartFile product_image,
+			@RequestParam String product_description, @RequestParam String product_type,
+			@RequestParam Integer product_stock, @RequestParam Double product_price)
+			throws Exception {
 
-	// productService.createProduct(product_type, product_name, product_business,
-	// product_price,
-	// product_description, product_image, product_stock);
+		// Usamos el parámetro Principal para obtener el nombre del usuario logueado
+		productService.createProduct(product_type, product_name, principal.getName(),
+				product_price,
+				product_description, product_image, product_stock);
 
-	// return "redirect:/allProducts";
-	// }
+		return "redirect:/allProducts";
+	}
 
 	@GetMapping("/shoppingcart")
 	public String shoppingCart(Model model) {

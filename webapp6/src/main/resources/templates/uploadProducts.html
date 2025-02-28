@@ -28,7 +28,7 @@
     <!-- ----------------- Upload Product Form ----------------- -->
     <div class="container mt-5">
         <h2 class="text-center mb-4">Upload Product</h2>
-        <form action="/newproduct" method="POST">
+        <form action="/newproduct" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="productName">Product Name</label>
                 <input type="text" name="product_name" class="form-control" id="productName"
@@ -46,10 +46,10 @@
             <div class="form-group">
                 <label for="productType">Product Type</label>
                 <select name="product_type" class="form-control" id="productType" required>
-                    <option value="electronics">Electronics</option>
-                    <option value="fashion">Fashion</option>
-                    <option value="home">Home</option>
-                    <option value="books">Books</option>
+                    <option value="Electronica">Electronica</option>
+                    <option value="Libros">Libros</option>
+                    <option value="Educacion">Educacion</option>
+                    <option value="Deporte">Deporte</option>
                 </select>
             </div>
             <div class="form-group">

@@ -58,10 +58,18 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/descriptionProduct").permitAll()
                                 .requestMatchers("/search").permitAll()
                                 .requestMatchers("/{type}").permitAll()
+<<<<<<< HEAD
                                 //----------------- PRIVATE PAGES ----------------
                                 //----------------- ADMIN PAGES ----------------
                                 .requestMatchers("/adminPage").hasAnyRole("ADMIN")
                                 .requestMatchers("/profile").authenticated()
+=======
+<<<<<<< HEAD
+                                .requestMatchers("/new_product").permitAll()
+=======
+                                .requestMatchers("/profile").permitAll()
+>>>>>>> a48f5954db2682325d8d1b309c22634551df1620
+>>>>>>> 2dafb2fd7aa3f3301563964137592588d362cff0
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
