@@ -62,6 +62,7 @@ public class ProductService {
             Product product = optionalProduct.get();
             product.setName(name);
             product.setPrice(price);
+            product.setIsAccepted(true);
             return productRepository.save(product);
         } else {
             throw new RuntimeException("Product not found with id " + id);

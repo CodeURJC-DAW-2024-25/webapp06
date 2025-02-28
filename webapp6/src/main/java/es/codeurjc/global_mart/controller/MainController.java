@@ -14,9 +14,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-import es.codeurjc.global_mart.model.LoggedUser;
-import es.codeurjc.global_mart.repository.UserRepository;
 import es.codeurjc.global_mart.model.User;
 
 // import es.codeurjc.global_mart.model.LoggedUser;
@@ -125,14 +122,14 @@ public class MainController {
 		data.put("Otros", true);
 		// Add all the products scanning them by type of product
 		model.addAttribute("HogarProds", productService.getAcceptedProductsByType("Hogar"));
-		model.addAttribute("ElectronicaProds", productService.getProductsByType("Electronica"));
-		model.addAttribute("LibrosProds", productService.getProductsByType("Libros"));
-		model.addAttribute("EducacionProds", productService.getProductsByType("Educación"));
-		model.addAttribute("ElectrodomesticosProds", productService.getProductsByType("Electrodomesticos"));
-		model.addAttribute("DeporteProds", productService.getProductsByType("Deporte"));
-		model.addAttribute("MusicaProds", productService.getProductsByType("Musica"));
-		model.addAttribute("CineProds", productService.getProductsByType("Cine"));
-		model.addAttribute("OtrosProds", productService.getProductsByType("Otros"));
+		model.addAttribute("ElectronicaProds", productService.getAcceptedProductsByType("Electronica"));
+		model.addAttribute("LibrosProds", productService.getAcceptedProductsByType("Libros"));
+		model.addAttribute("EducacionProds", productService.getAcceptedProductsByType("Educación"));
+		model.addAttribute("ElectrodomesticosProds", productService.getAcceptedProductsByType("Electrodomesticos"));
+		model.addAttribute("DeporteProds", productService.getAcceptedProductsByType("Deporte"));
+		model.addAttribute("MusicaProds", productService.getAcceptedProductsByType("Musica"));
+		model.addAttribute("CineProds", productService.getAcceptedProductsByType("Cine"));
+		model.addAttribute("OtrosProds", productService.getAcceptedProductsByType("Otros"));
 		model.addAttribute("boolean", data);
 
 		return "products";
@@ -188,6 +185,22 @@ public class MainController {
 				product_description, product_image, product_stock,false);
 
 		return "redirect:/allProducts";
+	}
+
+
+	@GetMapping("/acceptProduct/{id}")
+	public String acceptProduct(@PathVariable Long id) {
+		var product = productService.getProductById(id);
+		if (product.isPresent()) {
+			productService.updateProduct(id, productService.getProductName(product.get()), productService.getProductPrice(product.get()));
+		}
+		return "redirect:/adminPage";
+	}
+
+	@GetMapping("/deleteProduct/{id}")
+	public String deleteProduct(@PathVariable Long id) {
+		productService.deleteProduct(id);
+		return "redirect:/adminPage";
 	}
 
 	@GetMapping("/shoppingcart")
