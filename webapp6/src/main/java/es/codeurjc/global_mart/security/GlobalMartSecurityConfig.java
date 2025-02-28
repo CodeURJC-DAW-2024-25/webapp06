@@ -78,7 +78,7 @@ public class GlobalMartSecurityConfig {
                                 // Configurar el formulario de login
                                 .formLogin(formLogin -> formLogin
                                                 .loginPage("/login")
-                                                .failureUrl("/errors")
+                                                .failureUrl("/login_error")
                                                 .successHandler((request, response, authentication) -> {
                                                         authentication.getAuthorities().forEach(grantedAuthority -> {
                                                                 try {
