@@ -42,6 +42,11 @@ public class GlobalMartSecurityConfig {
                                                                        // función
                                                                        // anterior
                 http.authorizeHttpRequests(authorize -> authorize
+
+                                // -------------- STYLE PAGES ----------------
+                                .requestMatchers("/css/**").permitAll()
+                                .requestMatchers("/js/**").permitAll()
+                                .requestMatchers("/images/**").permitAll()
                                 // -------------- PUBLIC PAGES ----------------
                                 .requestMatchers("/").permitAll()
                                 .requestMatchers("/about").permitAll()
@@ -53,16 +58,14 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/descriptionProduct").permitAll()
                                 .requestMatchers("/search").permitAll()
                                 .requestMatchers("/{type}").permitAll()
+                                //----------------- PRIVATE PAGES ----------------
+                                //----------------- ADMIN PAGES ----------------
+                                .requestMatchers("/adminPage").hasRole("ADMIN")
                                 .requestMatchers("/profile").permitAll()
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
-                                // acceso a los css
-                                .requestMatchers("/css/**").permitAll()
-                                // acceso a los js
-                                .requestMatchers("/js/**").permitAll()
-                                // acceso a las imagenes
-                                .requestMatchers("/images/**").permitAll()
+                                
 
                                 // -------------- PRIVATE PAGES ----------------
                                 .requestMatchers("/shoppingcart").hasRole("USER"))
