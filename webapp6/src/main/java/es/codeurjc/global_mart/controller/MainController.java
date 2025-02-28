@@ -80,6 +80,12 @@ public class MainController {
 		return "about";
 	}
 
+	@GetMapping("/adminPage")
+	public String admin(Model model) {
+		model.addAttribute("productsNotAccepted", productService.getNotAcceptedProducts());
+		return "administrator";
+	}
+
 	// Redirection to the user page
 	@GetMapping("/profile")
 	public String profile(Model model, HttpServletRequest request) {
@@ -111,7 +117,7 @@ public class MainController {
 		data.put("Cine", true);
 		data.put("Otros", true);
 		// Add all the products scanning them by type of product
-		model.addAttribute("HogarProds", productService.getProductsByType("Hogar"));
+		model.addAttribute("HogarProds", productService.getAcceptedProductsByType("Hogar"));
 		model.addAttribute("ElectronicaProds", productService.getProductsByType("Electronica"));
 		model.addAttribute("LibrosProds", productService.getProductsByType("Libros"));
 		model.addAttribute("EducacionProds", productService.getProductsByType("Educación"));
@@ -179,7 +185,7 @@ public class MainController {
 
 	@GetMapping("/shoppingcart")
 	public String shoppingCart(Model model) {
-		return "shoppingCart";
+		return "shoppingcart";
 
 	}
 }

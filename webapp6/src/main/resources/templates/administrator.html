@@ -27,28 +27,9 @@
 
 
     
-    <div class="requests_container">
-
-        <div class="requests">
-            <img src="/images/1.jpg" alt="request_name">
-            <h3>IKEA</h3>
-            <p>Perchas de madera</p>
-            <p>10.99</p>
-
-            <div class="request_buttons">
-                <button class="accepted_button">Aceptar</button>
-                <button class="decline_button">Rechazar</button>
-                <button class="view_more_button">Ver más</button>
-            </div>
-            
-        </div>
-
-        
-
-        
-
-
-    </div>
+    {{#productsNotAccepted}}
+        {{>./components/addProd}}
+    {{/productsNotAccepted}}
 
     <!-- ------------Footer ------------ -->
     {{>./components/footer}}

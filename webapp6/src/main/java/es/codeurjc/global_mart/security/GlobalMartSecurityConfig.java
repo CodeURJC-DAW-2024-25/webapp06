@@ -60,15 +60,15 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/{type}").permitAll()
                                 //----------------- PRIVATE PAGES ----------------
                                 //----------------- ADMIN PAGES ----------------
-                                .requestMatchers("/adminPage").hasRole("ADMIN")
-                                .requestMatchers("/profile").permitAll()
+                                .requestMatchers("/adminPage").hasAnyRole("ADMIN")
+                                .requestMatchers("/profile").authenticated()
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
                                 
 
                                 // -------------- PRIVATE PAGES ----------------
-                                .requestMatchers("/shoppingcart").hasRole("USER"))
+                                .requestMatchers("/shoppingcart").authenticated())
 
                                 // Configurar el formulario de login
                                 .formLogin(formLogin -> formLogin

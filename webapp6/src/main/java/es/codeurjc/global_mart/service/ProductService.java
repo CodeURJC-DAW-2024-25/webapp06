@@ -12,6 +12,8 @@ import java.sql.Blob;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +27,8 @@ public class ProductService {
     private ReviewService reviewService;
 
     public Product createProduct(String type, String name, String business, Double price, String description,
-            MultipartFile image, Integer stock) throws IOException {
-        Product product = new Product(type, name, business, price, description, stock);
+            MultipartFile image, Integer stock,Boolean isAccepted) throws IOException {
+        Product product = new Product(type, name, business, price, description, stock,isAccepted);
 
         if (image != null && !image.isEmpty()) {
             product.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize())); // como se sube una
@@ -102,4 +104,27 @@ public class ProductService {
         return product.getId();
     }
 
+    
+
+    public List<Product> getAcceptedProductsByType(String type) {
+        List<Product> filterType = productRepository.findByType(type);
+        List<Product> acceptedProducts = new ArrayList<>();
+        for (Product product : filterType) {
+            if (product.getIsAccepted()) {
+                acceptedProducts.add(product);
+            }
+        }
+        return acceptedProducts;
+    }
+
+    public List<Product> getNotAcceptedProducts() {
+        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> notacceptedProducts = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (!product.getIsAccepted()) {
+                notacceptedProducts.add(product);
+            }
+        }
+        return notacceptedProducts;
+    }
 }

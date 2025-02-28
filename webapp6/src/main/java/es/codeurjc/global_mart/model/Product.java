@@ -28,6 +28,7 @@ public class Product {
     private String description;
     private Blob image;
     private Integer stock;
+    private Boolean isAccepted;
 
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
@@ -39,7 +40,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String type, String name, String company, Double price, String description, Integer stock) {
+    public Product(String type, String name, String company, Double price, String description, Integer stock,Boolean isAccepted) {
         this.type = type;
         this.name = name;
         this.company = company;
@@ -47,10 +48,15 @@ public class Product {
         this.description = description;
         this.stock = stock;
         this.reviews = new ArrayList<>();
+        this.isAccepted = isAccepted;
     }
 
     // ----------------- Methods -----------------
     // !Getters
+    public Boolean getIsAccepted() {
+        return isAccepted;
+    }
+
     public Long getId() {
         return id;
     }
@@ -92,6 +98,10 @@ public class Product {
     }
 
     // !Setters
+    public void setIsAccepted(Boolean isAccepted) {
+        this.isAccepted = isAccepted;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
