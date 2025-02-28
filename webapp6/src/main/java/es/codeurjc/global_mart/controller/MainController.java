@@ -14,12 +14,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-<<<<<<< HEAD
+
 import es.codeurjc.global_mart.model.LoggedUser;
 import es.codeurjc.global_mart.repository.UserRepository;
-=======
 import es.codeurjc.global_mart.model.User;
->>>>>>> a48f5954db2682325d8d1b309c22634551df1620
+
 // import es.codeurjc.global_mart.model.LoggedUser;
 // import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
@@ -186,7 +185,7 @@ public class MainController {
 		// Usamos el parámetro Principal para obtener el nombre del usuario logueado
 		productService.createProduct(product_type, product_name, principal.getName(),
 				product_price,
-				product_description, product_image, product_stock);
+				product_description, product_image, product_stock,false);
 
 		return "redirect:/allProducts";
 	}
