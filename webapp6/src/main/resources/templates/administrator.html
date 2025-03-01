@@ -31,6 +31,12 @@
         {{>./components/addProd}}
     {{/productsNotAccepted}}
 
+
+    {{^productsNotAccepted}}
+        <div>
+            <h1 class="messageAllProcessed">Todos los productos procesados</h1>
+        </div>
+    {{/productsNotAccepted}}
     <!-- ------------Footer ------------ -->
     {{>./components/footer}}
 

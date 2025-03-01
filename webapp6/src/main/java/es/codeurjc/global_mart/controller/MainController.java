@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.util.Collections;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +49,28 @@ public class MainController {
 		if (principal != null) {
 			model.addAttribute("logged", true);
 			model.addAttribute("username", principal.getName());
+
+			Optional<User> user = userService.findByUsername(principal.getName());
+			if (user.isPresent()&&user.get().isAdmin()) {
+				model.addAttribute("isAdmin", true);
+				model.addAttribute("isCompany", false);
+				model.addAttribute("isUser", false);
+			} else if (user.isPresent()&&user.get().isCompany()) {
+				model.addAttribute("isAdmin", false);
+				model.addAttribute("isCompany", true);
+				model.addAttribute("isUser", false);
+			} else {
+				model.addAttribute("isAdmin", false);
+				model.addAttribute("isCompany", false);
+				model.addAttribute("isUser", true);
+			}
+		
 		} else {
 			model.addAttribute("logged", false);
 		}
 	}
+	
+
 
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
@@ -110,10 +128,22 @@ public class MainController {
 
 	// Redirection to see all products
 	@GetMapping("/allProducts")
-	public String seeAllProds(Model model) {
+	public String seeAllProds(Model model, HttpServletRequest request) {
 		model.addAttribute("allProds", productService.getAcceptedProducts());
 		model.addAttribute("tittle", false);
-		return "products";
+		
+		Principal principal = request.getUserPrincipal();
+		if (principal == null) {
+			model.addAttribute("allCompanyProds", Collections.emptyList());
+			return "products";
+		} else {
+			Optional<User> user = userService.findByUsername(principal.getName());
+			if (user.isPresent() && user.get().isCompany()) {
+				model.addAttribute("allCompanyProds", productService.getAcceptedCompanyProducts(user.get().getUsername()));
+				return "products";
+			}
+		
+		return "products";}
 	}
 
 	// Redirection to see ONLY the products of a specific type
