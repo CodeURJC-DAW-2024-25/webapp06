@@ -132,7 +132,7 @@ public class MainController {
 	}
 
 	// Redirection to see all products
-	@GetMapping("/allProducts")
+	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
 		model.addAttribute("allProds", productService.getAcceptedProducts());
 		model.addAttribute("tittle", false);
@@ -154,7 +154,6 @@ public class MainController {
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/products/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-								
 		model.addAttribute("allProds", productService.getAcceptedProductsByType(type));
 		model.addAttribute("type", type);
 		model.addAttribute("tittle", true);
@@ -164,7 +163,7 @@ public class MainController {
 
 	@GetMapping("/product/{id}")
 	public String productDescription(@PathVariable Long id, Model model) {
-		var product = productService.getProductById(id); // Extract the product by its id
+		Optional<Product> product = productService.getProductById(id); // Extract the product by its id
 		// Extract all the info of the product to use it in the musctache template
 		model.addAttribute("productName", productService.getProductName(product.get()));
 		model.addAttribute("productType", productService.getProductType(product.get()));
@@ -207,7 +206,7 @@ public class MainController {
 
 	@GetMapping("/acceptProduct/{id}")
 	public String acceptProduct(@PathVariable Long id) {
-		var product = productService.getProductById(id);
+		Optional<Product> product = productService.getProductById(id);
 		if (product.isPresent()) {
 			productService.updateProduct(id, productService.getProductName(product.get()), productService.getProductPrice(product.get()));
 		}
@@ -236,7 +235,7 @@ public class MainController {
 		userService.addProductToCart(user, product);
 
 		
-		return "shoppingcart";
+		return "redirect:/shoppingcart";
 	}
 	
 
