@@ -117,7 +117,7 @@ public class MainController {
 	}
 
 	// Redirection to see ONLY the products of a specific type
-	@GetMapping("/{type}")
+	@GetMapping("/products/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
 								
 		model.addAttribute("allProds", productService.getAcceptedProductsByType(type));
