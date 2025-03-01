@@ -59,31 +59,6 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/search").permitAll()
                                 .requestMatchers("/products/{type}").permitAll()
 
-<<<<<<< HEAD
-        http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la función
-                                                               // anterior
-        http.authorizeHttpRequests(authorize -> authorize
-                // PUBLIC PAGES
-                .anyRequest().permitAll()
-                )
-                // .requestMatchers("/").permitAll()
-                // .requestMatchers("/about").permitAll()
-                // .requestMatchers("/choose_login_option").permitAll()
-                // .requestMatchers("/register").permitAll()
-                // .requestMatchers("/login").permitAll()
-                // .requestMatchers("/products/{type}").permitAll()
-                // .requestMatchers("/product/{id}").permitAll()
-                // .requestMatchers("/descriptionProduct").permitAll()
-                // .requestMatchers("/search").permitAll()
-                // .requestMatchers("/error").permitAll()
-
-                // Configurar el formulario de login
-                .formLogin(formLogin -> formLogin
-                        .loginProcessingUrl("/")
-                        .failureUrl("/login_error")
-                        .defaultSuccessUrl("/")
-                        .permitAll())
-=======
                                 // -------------- PRIVATE PAGES ----------------
                                 .requestMatchers("/profile").authenticated()
                                 .requestMatchers("/shoppingcart").authenticated()
@@ -122,7 +97,6 @@ public class GlobalMartSecurityConfig {
                                                     }
                                                 })
                                                 .permitAll())
->>>>>>> main
 
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
