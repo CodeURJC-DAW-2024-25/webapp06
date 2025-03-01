@@ -23,24 +23,16 @@ public class GlobalMartSecurityConfig {
                 return new BCryptPasswordEncoder();
         }
 
-<<<<<<< HEAD
-=======
         @Bean
         public DaoAuthenticationProvider authenticationProvider() {
                 
                 DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
                 authenticationProvider.setUserDetailsService(userDetailsService);
                 authenticationProvider.setPasswordEncoder(passwordEncoder());
->>>>>>> main
 
                 return authenticationProvider;
 
-<<<<<<< HEAD
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-=======
         }
->>>>>>> main
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
