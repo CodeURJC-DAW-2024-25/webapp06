@@ -60,6 +60,16 @@ public class User {
 
     }
 
+    public boolean isAdmin() {
+        return role.contains("ADMIN");
+    }
+    public boolean isCompany() {
+        return role.contains("COMPANY");
+    }
+    public boolean isUser() {
+        return role.contains("USER");
+    }
+
     // ----------------- Methods -----------------
     // !Getters
     public Long getId() {

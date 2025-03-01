@@ -23,6 +23,7 @@
     {{>./components/nav}}
 
     <!-- ----------------- Products ----------------- -->
+    {{^isCompany}}
     <div class="main_products_div">
         <div class="product_section_container">
             {{#tittle}}
@@ -33,7 +34,7 @@
                 {{>./components/individualProduct}}
                 {{/allProds}}
                 {{^allProds}}
-                <h3>No Products Found</h3>
+                <h3>No se han encontrado productos</h3>
                 {{/allProds}}
 
             </div>
@@ -41,6 +42,28 @@
 
         
     </div>
+    {{/isCompany}}
+    {{#isCompany}}
+    <div class="main_products_div">
+        <div class="product_section_container">
+            {{#tittle}}
+            <h2 class="section_title">{{type}}</h2>
+            {{/tittle}}
+            <div class="products_container">
+                {{#allCompanyProds}}
+                {{>./components/individualProduct}}
+                {{/allCompanyProds}}
+                {{^allCompanyProds}}
+                <h3>No hay productos de la compañía registrados</h3>
+                {{/allCompanyProds}}
+    
+            </div>
+        </div>
+    
+    
+    </div>
+    {{/isCompany}}
+    
 
         
 

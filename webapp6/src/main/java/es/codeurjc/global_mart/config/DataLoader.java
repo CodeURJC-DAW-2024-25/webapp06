@@ -4,11 +4,16 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.service.ReviewService;
 import jakarta.annotation.PostConstruct;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class DataLoader {
@@ -25,10 +30,13 @@ public class DataLoader {
         @Autowired
         private PasswordEncoder passwordEncoder;
 
+
+
         @PostConstruct
         public void loadData() throws IOException {
 
-                productService.createProduct("Libros", "Producto1", "Amazon", 20.0, "Muy chulo", null, 10,true);
+                productService.createProduct("Libros", "Libro El Quijote", "LaCasaDelLibro", 20.0, "Una versión abreviada de las aventuras de un excéntrico caballero rural y su fiel compañero, quienes partieron como caballero y escudero de antaño para corregir los errores y castigar el mal.", null, 10,true);
+                
                 productService.createProduct("Electronica", "Producto2", "eBay", 30.0, "Muy útil", null, 10,true);
                 productService.createProduct("Electronica", "Producto3", "Walmart", 40.0, "Muy práctico", null, 10,true);
                 productService.createProduct("Deporte", "Producto4", "Decathlon", 50.0, "Muy resistente", null, 10,true);
@@ -56,4 +64,11 @@ public class DataLoader {
                 reviewService.createReview("user1", "Muy bueno", 5);
 
         }
+
+
+
+
+
+
+        
 }
