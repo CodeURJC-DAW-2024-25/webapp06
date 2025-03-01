@@ -64,10 +64,14 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/shoppingcart").authenticated()
                                 .requestMatchers("/new_product").hasRole("COMPANY")
                                 //----------------- ADMIN PAGES ----------------
-                                .requestMatchers("/adminPage").hasRole("ADMIN")
-                                .requestMatchers("/acceptProduct/{id}").hasRole("ADMIN")     //aqui si que funciona lo del rol de admin, si no esta esto no se puede aceptar un producto
-                                .requestMatchers("/deleteProduct/{id}").hasRole("ADMIN")
-
+                                .requestMatchers("/adminPage").hasAnyRole("ADMIN")
+                                .requestMatchers("/profile").authenticated()
+                                .requestMatchers("/new_product").permitAll()
+                                .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN")     //aqui si que funciona lo del rol de admin, si no esta esto no se puede aceptar un producto
+                                .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
+                                .requestMatchers("/profile").permitAll()
+                                // .requestMatchers("/shoppingcart").permitAll()
+                                // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
                                 .anyRequest().authenticated()                           

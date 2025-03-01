@@ -24,13 +24,16 @@
 <!-- ----------------- Nav ----------------- -->
 {{>./components/nav}}
 
+
+
     <div class="cart-container">
         <h2>Cesta</h2>
+        {{#products}}
         <div class="cart-item">
             <img src="/images/placeholder.png" alt="Producto">
             <div class="details">
-                <p><strong>Nombre producto</strong></p>
-                <p>Precio</p>
+                <p><strong>{{name}}</strong></p>
+                <p>{{price}}</p>
                 <div>
                     <input type="checkbox" checked> Es un regalo
                 </div>
@@ -39,20 +42,10 @@
                 </div>
             </div>
         </div>
-        <div class="cart-item">
-            <img src="/images/placeholder.png" alt="Producto">
-            <div class="details">
-                <p><strong>Nombre producto</strong></p>
-                <p>Precio</p>
-                <div>
-                    <input type="checkbox" checked> Es un regalo
-                </div>
-                <div>
-                    <input type="number" value="1" min="1" style="width: 40px;">
-                </div>
-            </div>
-        </div>
-        <div class="subtotal">Subtotal (2 productos): 17.99€</div>
+        {{/products}}
+
+        <p>NOMBRE DEL USUARIO REGISTRADO {{nombre}}</p>
+        <!-- <div class="subtotal">Subtotal (2 productos): 17.99€</div> -->
     </div>
 
 

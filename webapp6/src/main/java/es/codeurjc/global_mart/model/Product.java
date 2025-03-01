@@ -8,6 +8,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +27,10 @@ public class Product {
     private String company;
     private Double price;
     private String description;
+
+    @Lob
     private Blob image;
+    
     private Integer stock;
     private Boolean isAccepted;
 

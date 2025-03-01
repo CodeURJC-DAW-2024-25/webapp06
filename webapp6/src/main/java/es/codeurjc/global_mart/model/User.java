@@ -1,11 +1,13 @@
 package es.codeurjc.global_mart.model;
 
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -39,6 +41,9 @@ public class User {
     @OneToMany
     private List<Review> reviews;
 
+    @OneToMany
+    private List<Product> cart;
+
     // ----------------- Constructor -----------------
     public User() {
     }
@@ -51,6 +56,18 @@ public class User {
         this.orders = new ArrayList<>();
         this.reviews = new ArrayList<>();
         this.role = role;
+        this.cart = new ArrayList<>();
+
+    }
+
+    public boolean isAdmin() {
+        return role.contains("ADMIN");
+    }
+    public boolean isCompany() {
+        return role.contains("COMPANY");
+    }
+    public boolean isUser() {
+        return role.contains("USER");
     }
 
     // ----------------- Methods -----------------
@@ -89,6 +106,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public List<Product> getCart() {
+        return cart;
     }
 
     // !Setters
@@ -136,4 +157,19 @@ public class User {
     public void removeReview(Review review) {
         this.reviews.remove(review);
     }
+
+    // Cart methods
+
+    public void addProductToCart(Product product) {
+        this.cart.add(product);
+    }
+
+    public void removeProductFromCart(Product product) {
+        this.cart.remove(product);
+    }
+
+    public void emptyCart() {
+        this.cart.clear();
+    }  
 }
+
