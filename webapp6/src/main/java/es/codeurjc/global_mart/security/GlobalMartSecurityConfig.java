@@ -26,21 +26,12 @@ public class GlobalMartSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("pass"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
-    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return authenticationProvider;
@@ -55,28 +46,18 @@ public class GlobalMartSecurityConfig {
                                                                // anterior
         http.authorizeHttpRequests(authorize -> authorize
                 // PUBLIC PAGES
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/about").permitAll()
-                .requestMatchers("/choose_login_option").permitAll()
-                .requestMatchers("/register").permitAll()
-                .requestMatchers("/login").permitAll()
-                .requestMatchers("/products/{type}").permitAll()
-                .requestMatchers("/product/{id}").permitAll()
-                .requestMatchers("/descriptionProduct").permitAll()
-                .requestMatchers("/search").permitAll()
+                .anyRequest().permitAll()
+                )
+                // .requestMatchers("/").permitAll()
+                // .requestMatchers("/about").permitAll()
+                // .requestMatchers("/choose_login_option").permitAll()
+                // .requestMatchers("/register").permitAll()
+                // .requestMatchers("/login").permitAll()
+                // .requestMatchers("/products/{type}").permitAll()
+                // .requestMatchers("/product/{id}").permitAll()
+                // .requestMatchers("/descriptionProduct").permitAll()
+                // .requestMatchers("/search").permitAll()
                 // .requestMatchers("/error").permitAll()
-
-                // acceso a los css
-                .requestMatchers("/css/**").permitAll()
-                // acceso a los js
-                .requestMatchers("/js/**").permitAll()
-                // acceso a las imagenes
-                .requestMatchers("/images/**").permitAll()
-                // PRIVATE PAGES ESTA ROTO HAY Q ARREGLARLO
-                // .requestMatchers("/uploadProducts").hasAnyRole("COMPANY")
-                // .requestMatchers("/administrator").hasAnyRole("ADMIN")
-                .requestMatchers("/shoppingcart").authenticated())
-                // .requestMatchers("/user").hasAnyRole("USER"))
 
                 // Configurar el formulario de login
                 .formLogin(formLogin -> formLogin
