@@ -13,7 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.User;
 
 // import es.codeurjc.global_mart.model.LoggedUser;
@@ -21,8 +23,11 @@ import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.experimental.var;
 
 import java.security.Principal;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class MainController {
@@ -146,6 +151,7 @@ public class MainController {
 	// Redirection to the descriprion of a produdct
 	@GetMapping("/descriptionProduct")
 	public String descriptionProduct(Model model) {
+		// model.addAttribute("token", ); // take token for the post method
 		return "descriptionProduct";
 	}
 
@@ -186,7 +192,23 @@ public class MainController {
 
 	@GetMapping("/shoppingcart")
 	public String shoppingCart(Model model) {
+		model.addAttribute("nombre", principal.getName());
+		// System.out.println("Nombre del usuario autenticado: " + principal.getName());
+		model.addAttribute("products", userService.getCartProducts(userService.findByUsername(principal.getName()).get()));
 		return "shoppingcart";
-
 	}
+
+	@PostMapping("/shoppingcart/{productId}")
+	public String addProductToCart(@PathVariable Long productId){
+		
+		User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+		Product product = productService.getProductById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+		userService.addProductToCart(user, product);
+
+		
+		return "shoppingcart";
+	}
+	
+
+
 }

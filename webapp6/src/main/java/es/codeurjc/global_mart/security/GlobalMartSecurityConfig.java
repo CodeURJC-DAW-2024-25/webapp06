@@ -66,7 +66,7 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN")     //aqui si que funciona lo del rol de admin, si no esta esto no se puede aceptar un producto
                                 .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
                                 .requestMatchers("/profile").permitAll()
-
+                                // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
@@ -74,6 +74,7 @@ public class GlobalMartSecurityConfig {
 
                                 // -------------- PRIVATE PAGES ----------------
                                 .requestMatchers("/shoppingcart").authenticated())
+                                // .requestMatchers("/shoppingcart/{productId}").a)
 
                                 // Configurar el formulario de login
                                 .formLogin(formLogin -> formLogin
