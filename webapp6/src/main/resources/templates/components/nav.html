@@ -3,70 +3,69 @@
 
 <nav class="main_nav_div">
     <div class="title_sections_div">
-        <a href="/redir">
+        <a href="{{^isCompany}}{{^isAdmin}}/redir{{/isAdmin}}{{/isCompany}}{{#isCompany}}/allProducts{{/isCompany}}{{#isAdmin}}/adminPage{{/isAdmin}}">
             <h1 class="title_sections">GlobalMart</h1>
         </a>
 
         <div class="sections_list">
-            <a href="/allProducts" class="section">Products</a>
-            <a href="/offers" class="section">Offers</a>
+            <a href="{{^isAdmin}}/products/allProducts{{/isAdmin}}{{#isAdmin}}/adminPage{{/isAdmin}}" class="section">Products</a>
             <a href="/about" class="section">About us</a>
         </div>
     </div>
 
-
+    {{^isAdmin}}{{^isCompany}}
     <form class="search_form" role="search">
-        <select class="search_category">
-            <option value="all">All</option>
-            <option value="electronics">Electronics</option>
-            <option value="fashion">Fashion</option>
-            <option value="home">Home</option>
-            <option value="books">Books</option>
-        </select>
         <input class="search_input" type="search" placeholder="Search" aria-label="Search">
         <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
     </form>
+    {{/isCompany}}{{/isAdmin}}
 
-    {{#username}}
+    {{#logged}}
     <div class="login_user">
+        {{#isCompany}}
         <div class="add_product_div">
             <a href="/new_product" class="add_product_link"><i class="bi bi-plus-circle"
                     id="add_product_button"></i></a>
         </div>
+        {{/isCompany}}
         <div class="user_div">
             <a href="/profile" class="user"><i class="bi bi-person"></i></a>
             <h3 class="username">{{username}}</h3>
         </div>
-        <a href="/cart" class="cart"><i class="bi bi-cart"></i></a>
+        {{#isUser}}
+        <a href="/shoppingcart" class="cart"><i class="bi bi-cart"></i></a>
+        {{/isUser}}
         <form action="/logout" method="post" style="display:inline;">
             <!-- Si CSRF está habilitado, añade el token -->
             <input type="hidden" name="_csrf" value="{{token}}">
             <button type="submit" class="logout">Log Out</button>
         </form>
     </div>
-    {{/username}}
+    {{/logged}}
 
-    {{^username}}
+    {{^logged}}
     <div class="login_register_div">
         <button class="login">Login</button>
         <button class="register">Register</button>
     </div>
-    {{/username}}
+    {{/logged}}
 </nav>
-
+{{^isAdmin}}
+{{^isCompany}}
 <div class="categories_div">
     <a href="/products/allProducts" class="category">All</a>
-    <a href="/products/Electronica" class="category">Electronica</a>
-    <a href="/products/Libros" class="category">Libros</a>
-    <a href="/products/Educacion" class="category">Educacion</a>
-    <a href="/products/Electrodomesticos" class="category">Electrodomesticos</a>
-    <a href="/products/Deporte" class="category">Deporte</a>
-    <a href="/products/Hogar" class="category">Hogar</a>
-    <a href="/products/Musica" class="category">Musica</a>
-    <a href="/products/Cine" class="category">Cine</a>
-    <a href="/products/Otros" class="category">Otros</a>
+    <a href="/products/Technology" class="category">Technology</a>
+    <a href="/products/Books" class="category">Books</a>
+    <a href="/products/Education" class="category">Education</a>
+    <a href="/products/Appliances" class="category">Appliances</a>
+    <a href="/products/Sports" class="category">Sports</a>
+    <a href="/products/Home" class="category">Home</a>
+    <a href="/products/Music" class="category">Music</a>
+    <a href="/products/Cinema" class="category">Cinema</a>
+    <a href="/products/Others" class="category">Others</a>
 </div>
-
+{{/isCompany}}
+{{/isAdmin}}
 
 <!--  Para mostrar el pop-up -->
 {{ > choose_login-register_option}}

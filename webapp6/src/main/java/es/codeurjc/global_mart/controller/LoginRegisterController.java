@@ -1,18 +1,14 @@
 package es.codeurjc.global_mart.controller;
 
-import es.codeurjc.global_mart.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import es.codeurjc.global_mart.model.User;
-import es.codeurjc.global_mart.model.LoggedUser;
+import es.codeurjc.global_mart.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller; // Asegurarse de importar Controller
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,18 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class LoginRegisterController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginRegisterController.class);
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private LoggedUser loggedUser;
-
-    
 
     // Procesa el registro del usuario
     @PostMapping("/register")
@@ -41,23 +30,16 @@ public class LoginRegisterController {
             @RequestParam String password,
             @RequestParam MultipartFile image,
             @RequestParam String role) throws Exception {
-        userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role)); // Llama al método createUser del
-                                                                                      // servicio
+
+
+        Optional<User> user = userService.findByUsername(username);
+        if (user.isPresent()) {
+            return "errors";
+        }else{
+            userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role));
+        }
+        
 
         return "redirect:/"; // Redirecciona a la página de login tras el registro
-    }
-
-    // Procesa el login del usuario
-    @PostMapping("/login")
-    public String login(@RequestParam String username,
-            @RequestParam String password, HttpServletRequest request, Model model) {
-        Optional<User> userOpt = userService.login(username, password); // Llama al método login del servicio
-        if (userOpt.isPresent()) {
-            loggedUser.setUser(userOpt.get());
-            return "redirect:/";
-        } else {
-            logger.warn("Login fallido para el usuario: {}", username);
-            return "redirect:/login_error";
-        }
     }
 }

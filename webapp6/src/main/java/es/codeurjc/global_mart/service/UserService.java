@@ -2,6 +2,7 @@ package es.codeurjc.global_mart.service;
 
 import es.codeurjc.global_mart.repository.UserRepository;
 import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.model.Product;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,25 +57,29 @@ public class UserService {
         }
     }
 
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
-    public Optional<User> login(String usernameOrEmail, String password) {
-        Optional<User> userOpt = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail); // Busca el
-                                                                                                         // ussuario por
-                                                                                                         // nombre de
-                                                                                                         // usuario o
-                                                                                                         // email
-        System.out.println("Login recibido - username/email: " + usernameOrEmail + ", password: " + password);
-        if (userOpt.isPresent()) { // Si el usuario existe
-            User user = userOpt.get(); // Obtiene el usuario
-            System.out.println("Login correcto: " + user.getUsername() + " - " + user.getEmail());
-            // Se asume que la contraseña se almacena en texto plano
-            if (passwordEncoder.matches(password, user.getPassword())) { // Si la contraseña es correcta
-                return Optional.of(user); // Devuelve el usuario
-            }
-        }
-        return Optional.empty();
+    public void save (User user){
+        userRepository.save(user);
     }
+
+    public List<Product> getCartProducts(User user){
+        return user.getCart();
+    }
+
+    public void addProductToCart(User user, Product product){
+        user.addProductToCart(product);
+        userRepository.save(user);
+    }
+
+    public double getTotalPrice(User user){
+        return user.getTotalPrice();
+    }
+
 }

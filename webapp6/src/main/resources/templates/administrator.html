@@ -27,29 +27,16 @@
 
 
     
-    <div class="requests_container">
+    {{#productsNotAccepted}}
+        {{>./components/addProd}}
+    {{/productsNotAccepted}}
 
-        <div class="requests">
-            <img src="/images/1.jpg" alt="request_name">
-            <h3>IKEA</h3>
-            <p>Perchas de madera</p>
-            <p>10.99</p>
 
-            <div class="request_buttons">
-                <button class="accepted_button">Aceptar</button>
-                <button class="decline_button">Rechazar</button>
-                <button class="view_more_button">Ver más</button>
-            </div>
-            
+    {{^productsNotAccepted}}
+        <div>
+            <h1 class="messageAllProcessed">Todos los productos procesados</h1>
         </div>
-
-        
-
-        
-
-
-    </div>
-
+    {{/productsNotAccepted}}
     <!-- ------------Footer ------------ -->
     {{>./components/footer}}
 

@@ -5,6 +5,7 @@ import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.sql.Blob;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +27,11 @@ public class ProductService {
     @Autowired
     private ReviewService reviewService;
 
-    public Product createProduct(String type, String name, String business, Double price, String description,
-            MultipartFile image, Integer stock) throws IOException {
-        Product product = new Product(type, name, business, price, description, stock);
+
+    
+    public Product createProduct(@RequestParam String type, @RequestParam String name, @RequestParam String business,  @RequestParam Double price, @RequestParam String description,
+            @RequestParam MultipartFile image, @RequestParam Integer stock, @RequestParam Boolean isAccepted) throws IOException {
+        Product product = new Product(type, name, business, price, description, stock,isAccepted);
 
         if (image != null && !image.isEmpty()) {
             product.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize())); // como se sube una
@@ -60,6 +65,7 @@ public class ProductService {
             Product product = optionalProduct.get();
             product.setName(name);
             product.setPrice(price);
+            product.setIsAccepted(true);
             return productRepository.save(product);
         } else {
             throw new RuntimeException("Product not found with id " + id);
@@ -98,4 +104,53 @@ public class ProductService {
         return reviewService.getAllReviews();
     }
 
+    public Long getProductId(Product product) {
+        return product.getId();
+    }
+
+    
+
+    public List<Product> getAcceptedProductsByType(String type) {
+        List<Product> filterType = productRepository.findByType(type);
+        List<Product> acceptedProducts = new ArrayList<>();
+        for (Product product : filterType) {
+            if (product.getIsAccepted()) {
+                acceptedProducts.add(product);
+            }
+        }
+        return acceptedProducts;
+    }
+
+    public List<Product> getAcceptedProducts() {
+        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> acceptedProducts = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (product.getIsAccepted()) {
+                acceptedProducts.add(product);
+            }
+        }
+        return acceptedProducts;
+    }
+
+    public List<Product> getNotAcceptedProducts() {
+        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> notacceptedProducts = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (!product.getIsAccepted()) {
+                notacceptedProducts.add(product);
+            }
+        }
+        return notacceptedProducts;
+    }
+
+    public List<Product> getAcceptedCompanyProducts(String company) {
+        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> acceptedCompanyProducts = new ArrayList<>();
+        for (Product product : allProducts) {
+            if (product.getIsAccepted() && product.getCompany().equals(company)) {
+                acceptedCompanyProducts.add(product);
+            }
+        }
+        return acceptedCompanyProducts;
+    }
 }
