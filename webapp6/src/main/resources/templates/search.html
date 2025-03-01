@@ -25,44 +25,41 @@
     <!-- ----------------- Search Results ----------------- -->
     <div class="main_search_div">
         <div class="search_results_div">
-            <h2 class="title_search_results">Resultados de la búsqueda: </h2>
+            <h2 class="title_search_results">
+                Search Results:
+                {{#query}}
+                "{{query}}"
+                {{#type}}
+                in category: {{type}}
+                {{/type}}
+                {{/query}}
+                {{^query}}
+                {{#type}}
+                Category: {{type}}
+                {{/type}}
+                {{^type}}
+                All products
+                {{/type}}
+                {{/query}}
+            </h2>
             <div class="results_div">
+                {{#products}}
                 <div class="product_div">
-                    <img src="/images/products/1.jpg" alt="product" class="product_img">
-                    <h3 class="product_name">Product name</h3>
-                    <p class="product_price">$100.00</p>
-                    <a href="descriptionProduct" class="product_button">View</a>
+                    <!-- Aquí debe ir el contenido de cada producto -->
+                    <a href="/product/{{id}}">
+                        <h3>{{name}}</h3>
+                        <p>{{description}}</p>
+                        <p>Price: ${{price}}</p>
+                        <p>Category: {{type}}</p>
+                    </a>
                 </div>
-                <div class="product_div">
-                    <img src="/images/products/2.jpg" alt="product" class="product_img">
-                    <h3 class="product_name">Product name</h3>
-                    <p class="product_price">$100.00</p>
-                    <a href="descriptionProduct" class="product_button">View</a>
+                {{/products}}
+
+                {{^products}}
+                <div class="no_results">
+                    <p>No products found matching your search criteria.</p>
                 </div>
-                <div class="product_div">
-                    <img src="/images/products/3.jpg" alt="product" class="product_img">
-                    <h3 class="product_name">Product name</h3>
-                    <p class="product_price">$100.00</p>
-                    <a href="descriptionProduct" class="product_button">View</a>
-                </div>
-                <div class="product_div">
-                    <img src="/images/products/4.jpg" alt="product" class="product_img">
-                    <h3 class="product_name">Product name</h3>
-                    <p class="product_price">$100.00</p>
-                    <a href="descriptionProduct" class="product_button">View</a>
-                </div>
-                <div class="product_div">
-                    <img src="/images/products/5.jpg" alt="product" class="product_img">
-                    <h3 class="product_name">Product name</h3>
-                    <p class="product_price">$100.00</p>
-                    <a href="descriptionProduct" class="product_button">View</a>
-                </div>
-                <div class="product_div">
-                    <img src="/images/products/6.jpg" alt="product" class="product_img">
-                    <h3 class="product_name">Product name</h3>
-                    <p class="product_price">$100.00</p>
-                    <a href="descriptionProduct" class="product_button">View</a>
-                </div>
+                {{/products}}
             </div>
         </div>
     </div>

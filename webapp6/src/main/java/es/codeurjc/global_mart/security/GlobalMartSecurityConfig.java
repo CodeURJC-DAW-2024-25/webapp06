@@ -54,23 +54,24 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/login").permitAll()
                                 .requestMatchers("/allProducts").permitAll()
-                                .requestMatchers("/product/{id}").permitAll()
+                                .requestMatchers("/product/**").permitAll()
                                 .requestMatchers("/descriptionProduct").permitAll()
                                 .requestMatchers("/search").permitAll()
                                 .requestMatchers("/{type}").permitAll()
-                                //----------------- PRIVATE PAGES ----------------
-                                //----------------- ADMIN PAGES ----------------
+                                // ----------------- PRIVATE PAGES ----------------
+                                // ----------------- ADMIN PAGES ----------------
                                 .requestMatchers("/adminPage").hasAnyRole("ADMIN")
                                 .requestMatchers("/profile").authenticated()
                                 .requestMatchers("/new_product").permitAll()
-                                .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN")     //aqui si que funciona lo del rol de admin, si no esta esto no se puede aceptar un producto
+                                .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN") // aqui si que funciona lo
+                                                                                            // del rol de admin, si no
+                                                                                            // esta esto no se puede
+                                                                                            // aceptar un producto
                                 .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
                                 .requestMatchers("/profile").permitAll()
 
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
-
-                                
 
                                 // -------------- PRIVATE PAGES ----------------
                                 .requestMatchers("/shoppingcart").authenticated())

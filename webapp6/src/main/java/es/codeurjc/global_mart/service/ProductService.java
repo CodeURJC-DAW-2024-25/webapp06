@@ -27,8 +27,8 @@ public class ProductService {
     private ReviewService reviewService;
 
     public Product createProduct(String type, String name, String business, Double price, String description,
-            MultipartFile image, Integer stock,Boolean isAccepted) throws IOException {
-        Product product = new Product(type, name, business, price, description, stock,isAccepted);
+            MultipartFile image, Integer stock, Boolean isAccepted) throws IOException {
+        Product product = new Product(type, name, business, price, description, stock, isAccepted);
 
         if (image != null && !image.isEmpty()) {
             product.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize())); // como se sube una
@@ -105,8 +105,6 @@ public class ProductService {
         return product.getId();
     }
 
-    
-
     public List<Product> getAcceptedProductsByType(String type) {
         List<Product> filterType = productRepository.findByType(type);
         List<Product> acceptedProducts = new ArrayList<>();
@@ -119,7 +117,7 @@ public class ProductService {
     }
 
     public List<Product> getAcceptedProducts() {
-        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> allProducts = productRepository.findAll();
         List<Product> acceptedProducts = new ArrayList<>();
         for (Product product : allProducts) {
             if (product.getIsAccepted()) {
@@ -130,7 +128,7 @@ public class ProductService {
     }
 
     public List<Product> getNotAcceptedProducts() {
-        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> allProducts = productRepository.findAll();
         List<Product> notacceptedProducts = new ArrayList<>();
         for (Product product : allProducts) {
             if (!product.getIsAccepted()) {
@@ -138,5 +136,26 @@ public class ProductService {
             }
         }
         return notacceptedProducts;
+    }
+
+    public List<Product> searchProductsByName(String query) {
+        System.out.println("Buscando productos con nombre que contenga: '" + query + "'");
+        List<Product> allProducts = productRepository.findAll();
+        List<Product> matchedProducts = new ArrayList<>();
+
+        for (Product product : allProducts) {
+            if (product.getName() != null &&
+                    product.getName().toLowerCase().contains(query.toLowerCase())) {
+                System.out.println("Coincidencia encontrada: " + product.getName());
+                matchedProducts.add(product);
+            }
+        }
+
+        System.out.println("Total de coincidencias: " + matchedProducts.size());
+        return matchedProducts;
+    }
+
+    public List<Product> searchProductsByNameAndType(String query, String type) {
+        return productRepository.findByNameContainingIgnoreCaseAndType(query, type);
     }
 }
