@@ -5,7 +5,7 @@ import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+// import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Blob;
@@ -27,14 +27,14 @@ public class ProductService {
     private ReviewService reviewService;
 
     public Product createProduct(String type, String name, String business, Double price, String description,
-            MultipartFile image, Integer stock, Boolean isAccepted) throws IOException {
+            Blob image, Integer stock, Boolean isAccepted) throws IOException {
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
 
-        if (image != null && !image.isEmpty()) {
-            product.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize())); // como se sube una
-                                                                                                // imagen con blob a
-                                                                                                // partir de
-                                                                                                // multipartfile
+        if (image != null) {
+            product.setImage(image); // como se sube una
+                                     // imagen con blob a
+                                     // partir de
+                                     // multipartfile
         } else {
             product.setImage(BlobProxy.generateProxy(
                     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"

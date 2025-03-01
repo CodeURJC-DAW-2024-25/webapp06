@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import java.util.Base64;
 import java.util.Optional;
 
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.codeurjc.global_mart.model.User;
@@ -19,10 +20,12 @@ import es.codeurjc.global_mart.model.User;
 // import es.codeurjc.global_mart.model.LoggedUser;
 // import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
+import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.security.Principal;
+import java.sql.Blob;
 
 @Controller
 public class MainController {
@@ -32,7 +35,7 @@ public class MainController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	// @Autowired
 	// private LoggedUser loggedUser;
 
@@ -119,7 +122,7 @@ public class MainController {
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-								
+
 		model.addAttribute("allProds", productService.getAcceptedProductsByType(type));
 		model.addAttribute("type", type);
 		model.addAttribute("tittle", true);
@@ -128,19 +131,33 @@ public class MainController {
 	}
 
 	@GetMapping("/product/{id}")
-	public String productDescription(@PathVariable Long id, Model model) {
-		var product = productService.getProductById(id); // Extract the product by its id
-		// Extract all the info of the product to use it in the musctache template
-		model.addAttribute("productName", productService.getProductName(product.get()));
-		model.addAttribute("productType", productService.getProductType(product.get()));
-		model.addAttribute("productCompany", productService.getProductCompany(product.get()));
-		model.addAttribute("productPrice", productService.getProductPrice(product.get()));
-		model.addAttribute("productDescription", productService.getProductDescription(product.get()));
-		model.addAttribute("productImage", productService.getProductImage(product.get()));
-		model.addAttribute("productId", productService.getProductId(product.get())); // productos solo si el usuario es
-																						// una empresa
+	public String productDescription(@PathVariable Long id, Model model) throws Exception {
+		Optional<Product> product = productService.getProductById(id); // Extract the product by its id
 
-		return "descriptionProduct";
+		if (product.isPresent()) {
+			// Extract all the info of the product to use it in the musctache template
+			model.addAttribute("productName", productService.getProductName(product.get()));
+			model.addAttribute("productType", productService.getProductType(product.get()));
+			model.addAttribute("productCompany", productService.getProductCompany(product.get()));
+			model.addAttribute("productPrice", productService.getProductPrice(product.get()));
+			model.addAttribute("productDescription", productService.getProductDescription(product.get()));
+
+			// Convert Blob to Base64 encoded string
+			String imageBase64 = null;
+			Blob imageBlob = product.get().getImage();
+			if (imageBlob != null) {
+				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+			}
+			model.addAttribute("productImage", imageBase64);
+
+			model.addAttribute("productId", productService.getProductId(product.get()));
+			model.addAttribute("productStock", product.get().getStock());
+
+			return "descriptionProduct";
+		} else {
+			return "redirect:/allProducts";
+		}
 	}
 
 	// Redirection to the descriprion of a produdct
@@ -163,17 +180,18 @@ public class MainController {
 		// Usamos el parámetro Principal para obtener el nombre del usuario logueado
 		productService.createProduct(product_type, product_name, principal.getName(),
 				product_price,
-				product_description, product_image, product_stock,false);
+				product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
+				product_stock, false);
 
 		return "redirect:/allProducts";
 	}
-
 
 	@GetMapping("/acceptProduct/{id}")
 	public String acceptProduct(@PathVariable Long id) {
 		var product = productService.getProductById(id);
 		if (product.isPresent()) {
-			productService.updateProduct(id, productService.getProductName(product.get()), productService.getProductPrice(product.get()));
+			productService.updateProduct(id, productService.getProductName(product.get()),
+					productService.getProductPrice(product.get()));
 		}
 		return "redirect:/adminPage";
 	}
