@@ -29,6 +29,7 @@ public class Product {
     private Blob image;
     private Integer stock;
     private Boolean isAccepted;
+    private String imageBase64;
 
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
@@ -40,7 +41,8 @@ public class Product {
     public Product() {
     }
 
-    public Product(String type, String name, String company, Double price, String description, Integer stock,Boolean isAccepted) {
+    public Product(String type, String name, String company, Double price, String description, Integer stock,
+            Boolean isAccepted) {
         this.type = type;
         this.name = name;
         this.company = company;
@@ -148,6 +150,14 @@ public class Product {
 
     public void removeReview(Review review) {
         this.reviews.remove(review);
+    }
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
 }

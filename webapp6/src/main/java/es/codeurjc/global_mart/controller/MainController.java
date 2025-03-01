@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
@@ -114,7 +115,9 @@ public class MainController {
 	// Redirection to see all products
 	@GetMapping("/allProducts")
 	public String seeAllProds(Model model) {
-		model.addAttribute("allProds", productService.getAcceptedProducts());
+		List<Product> products = productService.getAcceptedProducts();
+		addImageDataToProducts(products);
+		model.addAttribute("allProds", products);
 		model.addAttribute("tittle", false);
 		return "products";
 	}
@@ -122,12 +125,27 @@ public class MainController {
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-
-		model.addAttribute("allProds", productService.getAcceptedProductsByType(type));
+		List<Product> products = productService.getAcceptedProductsByType(type);
+		addImageDataToProducts(products);
+		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
 		model.addAttribute("tittle", true);
-
 		return "products";
+	}
+
+	private void addImageDataToProducts(List<Product> products) {
+		for (Product product : products) {
+			try {
+				Blob imageBlob = product.getImage();
+				if (imageBlob != null) {
+					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+					product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@GetMapping("/product/{id}")
