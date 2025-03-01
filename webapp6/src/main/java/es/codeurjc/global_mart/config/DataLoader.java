@@ -61,6 +61,7 @@ public class DataLoader {
                 userService.createUser(null, "comp", "comp", "user1@gmail.com", passwordEncoder.encode("comp"),
                                 Arrays.asList("COMPANY"));
                 
+                userService.createUser(null, "a", "a", "a@gmail.com", passwordEncoder.encode("a"), Arrays.asList("USER"));
                 reviewService.createReview("user1", "Muy bueno", 5);
 
         }
