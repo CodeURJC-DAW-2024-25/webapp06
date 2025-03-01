@@ -112,6 +112,14 @@ public class User {
         return cart;
     }
 
+    public double getTotalPrice() {
+        double totalPrice = 0;
+        for (Product product : cart) {
+            totalPrice += product.getPrice();
+        }
+        return totalPrice;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;

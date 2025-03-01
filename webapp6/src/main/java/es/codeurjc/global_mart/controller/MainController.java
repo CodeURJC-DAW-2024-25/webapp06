@@ -224,6 +224,7 @@ public class MainController {
 		model.addAttribute("nombre", principal.getName());
 		// System.out.println("Nombre del usuario autenticado: " + principal.getName());
 		model.addAttribute("products", userService.getCartProducts(userService.findByUsername(principal.getName()).get()));
+		model.addAttribute("totalPrice", userService.getTotalPrice(userService.findByUsername(principal.getName()).get()));
 		return "shoppingcart";
 	}
 

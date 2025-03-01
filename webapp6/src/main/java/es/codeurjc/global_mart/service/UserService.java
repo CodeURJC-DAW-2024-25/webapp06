@@ -78,4 +78,8 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public double getTotalPrice(User user){
+        return user.getTotalPrice();
+    }
+
 }
