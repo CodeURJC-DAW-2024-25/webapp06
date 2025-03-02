@@ -13,9 +13,19 @@
         </div>
     </div>
 
-    {{^isAdmin}}{{^isCompany}}
-    <form class="search_form" role="search">
-        <input class="search_input" type="search" placeholder="Search" aria-label="Search">
+    <form class="search_form" action="/search" method="get" role="search">
+        <select class="search_category" name="type">
+            <option value="all">All</option>
+            <option value="Electronica">Electronica</option>
+            <option value="Libros">Libros</option>
+            <option value="Educacion">Educacion</option>
+            <option value="Electrodomesticos">Electrodomesticos</option>
+            <option value="Deporte">Deporte</option>
+            <option value="Hogar">Hogar</option>
+            <option value="Musica">Musica</option>
+            <option value="Cine">Cine</option>
+        </select>
+        <input name="search_text" class="search_input" type="search" placeholder="Search" aria-label="Search">
         <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
     </form>
     {{/isCompany}}{{/isAdmin}}

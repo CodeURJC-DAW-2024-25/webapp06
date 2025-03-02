@@ -5,8 +5,10 @@ import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 
 import org.springframework.stereotype.Service;
+// import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.IOException;
 import java.sql.Blob;
@@ -27,17 +29,15 @@ public class ProductService {
     @Autowired
     private ReviewService reviewService;
 
+    public Product createProduct(String type, String name, String business, Double price, String description,
+            Blob image, Integer stock, Boolean isAccepted) throws IOException {
+        Product product = new Product(type, name, business, price, description, stock, isAccepted);
 
-    
-    public Product createProduct(@RequestParam String type, @RequestParam String name, @RequestParam String business,  @RequestParam Double price, @RequestParam String description,
-            @RequestParam MultipartFile image, @RequestParam Integer stock, @RequestParam Boolean isAccepted) throws IOException {
-        Product product = new Product(type, name, business, price, description, stock,isAccepted);
-
-        if (image != null && !image.isEmpty()) {
-            product.setImage(BlobProxy.generateProxy(image.getInputStream(), image.getSize())); // como se sube una
-                                                                                                // imagen con blob a
-                                                                                                // partir de
-                                                                                                // multipartfile
+        if (image != null) {
+            product.setImage(image); // como se sube una
+                                     // imagen con blob a
+                                     // partir de
+                                     // multipartfile
         } else {
             product.setImage(BlobProxy.generateProxy(
                     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
@@ -108,8 +108,6 @@ public class ProductService {
         return product.getId();
     }
 
-    
-
     public List<Product> getAcceptedProductsByType(String type) {
         List<Product> filterType = productRepository.findByType(type);
         List<Product> acceptedProducts = new ArrayList<>();
@@ -122,7 +120,7 @@ public class ProductService {
     }
 
     public List<Product> getAcceptedProducts() {
-        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> allProducts = productRepository.findAll();
         List<Product> acceptedProducts = new ArrayList<>();
         for (Product product : allProducts) {
             if (product.getIsAccepted()) {
@@ -133,7 +131,7 @@ public class ProductService {
     }
 
     public List<Product> getNotAcceptedProducts() {
-        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> allProducts = productRepository.findAll();
         List<Product> notacceptedProducts = new ArrayList<>();
         for (Product product : allProducts) {
             if (!product.getIsAccepted()) {
@@ -142,6 +140,26 @@ public class ProductService {
         }
         return notacceptedProducts;
     }
+
+    public List<Product> searchProductsByName(String query) {
+        System.out.println("Buscando productos con nombre que contenga: '" + query + "'");
+        List<Product> allProducts = productRepository.findAll();
+        List<Product> matchedProducts = new ArrayList<>();
+
+        for (Product product : allProducts) {
+            if (product.getName() != null &&
+                    product.getName().toLowerCase().contains(query.toLowerCase())) {
+                System.out.println("Coincidencia encontrada: " + product.getName());
+                matchedProducts.add(product);
+            }
+        }
+
+        System.out.println("Total de coincidencias: " + matchedProducts.size());
+        return matchedProducts;
+    }
+
+    public List<Product> searchProductsByNameAndType(String query, String type) {
+        return productRepository.findByNameContainingIgnoreCaseAndType(query, type);
 
     public List<Product> getAcceptedCompanyProducts(String company) {
         List<Product> allProducts = productRepository.findAll() ;
@@ -152,5 +170,6 @@ public class ProductService {
             }
         }
         return acceptedCompanyProducts;
+
     }
 }
