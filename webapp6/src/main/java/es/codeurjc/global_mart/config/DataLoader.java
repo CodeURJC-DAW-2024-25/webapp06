@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -34,13 +34,11 @@ public class DataLoader {
         @PostConstruct
         public void loadData() throws IOException {
 
-                String imageDir = "src/main/resources/static/images/products/";
-
-                byte[] image1 = Files.readAllBytes(Paths.get(imageDir + "diariogreg.jpg"));
-                byte[] image2 = Files.readAllBytes(Paths.get(imageDir + "iphone16.jpg"));
-                byte[] image3 = Files.readAllBytes(Paths.get(imageDir + "macbook.jpg"));
-                byte[] image4 = Files.readAllBytes(Paths.get(imageDir + "at10.jpg"));
-                byte[] image5 = Files.readAllBytes(Paths.get(imageDir + "disco.jpg"));
+                byte[] image1 = Files.readAllBytes(new ClassPathResource("static/images/products/diariogreg.jpg").getFile().toPath());
+                byte[] image2 = Files.readAllBytes(new ClassPathResource("static/images/products/iphone16.jpg").getFile().toPath());
+                byte[] image3 = Files.readAllBytes(new ClassPathResource("static/images/products/macbook.jpg").getFile().toPath());
+                byte[] image4 = Files.readAllBytes(new ClassPathResource("static/images/products/at10.jpg").getFile().toPath());
+                byte[] image5 = Files.readAllBytes(new ClassPathResource("static/images/products/disco.jpg").getFile().toPath());
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
                                 BlobProxy.generateProxy(image1), 10, true);
