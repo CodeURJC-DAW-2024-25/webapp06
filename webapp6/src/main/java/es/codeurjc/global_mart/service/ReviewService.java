@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.service;
 
+import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,18 @@ import java.util.Optional;
 public class ReviewService {
 
     @Autowired
+    private ProductService productService;
+
+    @Autowired
     private ReviewRepository reviewRepository;
 
     // Crear una nueva reseña
     public Review createReview(String username, String comment, int calification) {
         Review review = new Review(username, comment, calification, LocalDateTime.now());
+        return reviewRepository.save(review);
+    }
+
+    public Review addReview(Review review) {
         return reviewRepository.save(review);
     }
 
@@ -47,5 +55,11 @@ public class ReviewService {
     // Eliminar una reseña por su ID
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
+    }
+
+    public List<Review> getReviewsByProductId(Long productId) {
+        Product product = productService.getProductById(productId)
+            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
+        return reviewRepository.findByProduct(product);
     }
 }
