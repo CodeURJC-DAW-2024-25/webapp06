@@ -38,7 +38,7 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
     // ----------------- Constructor -----------------

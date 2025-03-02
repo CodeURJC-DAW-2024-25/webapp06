@@ -23,6 +23,7 @@ import es.codeurjc.global_mart.model.User;
 // import es.codeurjc.global_mart.model.LoggedUser;
 // import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
+import es.codeurjc.global_mart.service.ReviewService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -31,6 +32,11 @@ import java.sql.Blob;
 
 @Controller
 public class MainController {
+
+
+
+	@Autowired
+	private ReviewService reviewService;
 
 	@Autowired
 	private ProductService productService;
@@ -203,7 +209,7 @@ public class MainController {
 
 			model.addAttribute("productId", productService.getProductId(product.get()));
 			model.addAttribute("productStock", product.get().getStock());
-			model.addAttribute("reviews", productService.getProductReviews(product.get()));
+			model.addAttribute("reviews", reviewService.getReviewsByProductId(product.get().getId()));
 
 
 			return "descriptionProduct";

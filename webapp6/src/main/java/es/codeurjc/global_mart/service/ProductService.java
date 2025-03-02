@@ -2,7 +2,6 @@ package es.codeurjc.global_mart.service;
 
 import es.codeurjc.global_mart.repository.ProductRepository;
 import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.Review;
 
 import org.springframework.stereotype.Service;
 
@@ -21,9 +20,6 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private ReviewService reviewService;
 
     public Product createProduct(String type, String name, String business, Double price, String description,
             Blob image, Integer stock, Boolean isAccepted) throws IOException {
@@ -99,10 +95,7 @@ public class ProductService {
     public Blob getProductImage(Product product) {
         return product.getImage();
     }
-
-    public List<Review> getProductReviews(Product product) {
-        return reviewService.getAllReviews();
-    }
+    
 
     public Long getProductId(Product product) {
         return product.getId();
