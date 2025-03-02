@@ -9,13 +9,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.util.Base64;
 import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.User;
 
 // import es.codeurjc.global_mart.model.LoggedUser;
@@ -24,9 +28,11 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.experimental.var;
 
 import java.security.Principal;
 import java.sql.Blob;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class MainController {
@@ -53,10 +59,28 @@ public class MainController {
 		if (principal != null) {
 			model.addAttribute("logged", true);
 			model.addAttribute("username", principal.getName());
+
+			Optional<User> user = userService.findByUsername(principal.getName());
+			if (user.isPresent()&&user.get().isAdmin()) {
+				model.addAttribute("isAdmin", true);
+				model.addAttribute("isCompany", false);
+				model.addAttribute("isUser", false);
+			} else if (user.isPresent()&&user.get().isCompany()) {
+				model.addAttribute("isAdmin", false);
+				model.addAttribute("isCompany", true);
+				model.addAttribute("isUser", false);
+			} else {
+				model.addAttribute("isAdmin", false);
+				model.addAttribute("isCompany", false);
+				model.addAttribute("isUser", true);
+			}
+		
 		} else {
 			model.addAttribute("logged", false);
 		}
 	}
+	
+
 
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
@@ -119,16 +143,28 @@ public class MainController {
 		addImageDataToProducts(products);
 		model.addAttribute("allProds", products);
 		model.addAttribute("tittle", false);
-		return "products";
+		
+// 		Principal principal = request.getUserPrincipal();
+// 		if (principal == null) {
+// 			model.addAttribute("allCompanyProds", Collections.emptyList());
+// 			return "products";
+// 		} else {
+// 			Optional<User> user = userService.findByUsername(principal.getName());
+// 			if (user.isPresent() && user.get().isCompany()) {
+// 				model.addAttribute("allCompanyProds", productService.getAcceptedCompanyProducts(user.get().getUsername()));
+// 				return "products";
+// 			}
+		
+		return "products";}
 	}
 
 	// Redirection to see ONLY the products of a specific type
-	@GetMapping("/{type}")
+	@GetMapping("/products/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
+
 		List<Product> products = productService.getAcceptedProductsByType(type);
 		addImageDataToProducts(products);
 		model.addAttribute("allProds", products);
-		model.addAttribute("type", type);
 		model.addAttribute("tittle", true);
 		return "products";
 	}
@@ -181,6 +217,7 @@ public class MainController {
 	// Redirection to the descriprion of a produdct
 	@GetMapping("/descriptionProduct")
 	public String descriptionProduct(Model model) {
+		// model.addAttribute("token", ); // take token for the post method
 		return "descriptionProduct";
 	}
 
@@ -206,7 +243,7 @@ public class MainController {
 
 	@GetMapping("/acceptProduct/{id}")
 	public String acceptProduct(@PathVariable Long id) {
-		var product = productService.getProductById(id);
+		Optional<Product> product = productService.getProductById(id);
 		if (product.isPresent()) {
 			productService.updateProduct(id, productService.getProductName(product.get()),
 					productService.getProductPrice(product.get()));
@@ -222,7 +259,24 @@ public class MainController {
 
 	@GetMapping("/shoppingcart")
 	public String shoppingCart(Model model) {
+		model.addAttribute("nombre", principal.getName());
+		// System.out.println("Nombre del usuario autenticado: " + principal.getName());
+		model.addAttribute("products", userService.getCartProducts(userService.findByUsername(principal.getName()).get()));
+		model.addAttribute("totalPrice", userService.getTotalPrice(userService.findByUsername(principal.getName()).get()));
 		return "shoppingcart";
-
 	}
+
+	@PostMapping("/shoppingcart/{productId}")
+	public String addProductToCart(@PathVariable Long productId){
+		
+		User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("User not found"));
+		Product product = productService.getProductById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+		userService.addProductToCart(user, product);
+
+		
+		return "redirect:/shoppingcart";
+	}
+	
+
+
 }

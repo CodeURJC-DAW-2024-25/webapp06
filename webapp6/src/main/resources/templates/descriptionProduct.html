@@ -37,9 +37,14 @@
                 <p class="product-type">Type: {{productType}}</p>
                 <p class="product-price">{{productPrice}}€</p>
                 <p class="product-description">{{productDescription}}</p>
-                <p class="product-stock">Stock: {{productStock}}</p>
 
-                <a href="/shoppingcart/{{productId}}" class="btn btn-primary btn-lg mt-3">Add to cart</a>
+                <p class="product-stock">Stock: {{productStock}}</p>
+                <form action="/shoppingcart/{{productId}}" method="POST">
+                    <input type="hidden" name="_csrf" value="{{token}}">
+                    <button type="submit">Añadir al carrito</button>
+                </form>
+                <!-- <a href="/shoppingcart/{{productId}}" class="btn btn-primary btn-lg mt-3">Add to cart</a> -->
+
                 <a href="/allProducts" class="btn btn-secondary btn-lg mt-3">Back to Products</a>
             </div>
         </div>

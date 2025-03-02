@@ -2,6 +2,7 @@ package es.codeurjc.global_mart.service;
 
 import es.codeurjc.global_mart.repository.UserRepository;
 import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.model.Product;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,4 +64,22 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    public void save (User user){
+        userRepository.save(user);
+    }
+
+    public List<Product> getCartProducts(User user){
+        return user.getCart();
+    }
+
+    public void addProductToCart(User user, Product product){
+        user.addProductToCart(product);
+        userRepository.save(user);
+    }
+
+    public double getTotalPrice(User user){
+        return user.getTotalPrice();
+    }
+
 }
