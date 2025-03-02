@@ -41,7 +41,10 @@
                 <p class="product-stock">Stock: {{productStock}}</p>
                 <form action="/shoppingcart/{{productId}}" method="POST">
                     <input type="hidden" name="_csrf" value="{{token}}">
+                    {{#logged}}
                     <button type="submit">Añadir al carrito</button>
+                    {{/logged}}
+                    
                 </form>
                 <!-- <a href="/shoppingcart/{{productId}}" class="btn btn-primary btn-lg mt-3">Add to cart</a> -->
 

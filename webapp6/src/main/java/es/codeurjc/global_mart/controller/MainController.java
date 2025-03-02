@@ -38,6 +38,8 @@ public class MainController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private SearchController searchController;
 	// @Autowired
 	// private LoggedUser loggedUser;
 
@@ -107,7 +109,9 @@ public class MainController {
 
 	@GetMapping("/adminPage")
 	public String admin(Model model) {
-		model.addAttribute("productsNotAccepted", productService.getNotAcceptedProducts());
+		List<Product> products = productService.getNotAcceptedProducts();
+		searchController.convertBlobToBase64(products);
+		model.addAttribute("productsNotAccepted", products);
 		return "administrator";
 	}
 

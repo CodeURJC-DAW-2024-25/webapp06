@@ -77,6 +77,7 @@ public class GlobalMartSecurityConfig {
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
+                                
                                 .anyRequest().authenticated()                           
 
                 )

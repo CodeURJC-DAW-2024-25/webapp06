@@ -39,6 +39,7 @@ public class DataLoader {
                 byte[] image3 = Files.readAllBytes(new ClassPathResource("static/images/products/macbook.jpg").getFile().toPath());
                 byte[] image4 = Files.readAllBytes(new ClassPathResource("static/images/products/at10.jpg").getFile().toPath());
                 byte[] image5 = Files.readAllBytes(new ClassPathResource("static/images/products/disco.jpg").getFile().toPath());
+                byte[] image6 = Files.readAllBytes(new ClassPathResource("static/images/products/lavadora.jpg").getFile().toPath());
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
                                 BlobProxy.generateProxy(image1), 10, true);
@@ -52,6 +53,11 @@ public class DataLoader {
                                 true);
                 productService.createProduct("Music", "Producto5", "Zara", 60.0, "Muy elegante",
                                 BlobProxy.generateProxy(image5), 10, true);
+                productService.createProduct("Appliances", "Producto6", "MediaMarkt", 300.0, "Muy útil",
+                                BlobProxy.generateProxy(image6), 10, false);
+                                
+
+
 
                 userService.createUser(null, "User 1", "user1", "user1@gmail.com", passwordEncoder.encode("user1"),
                                 Arrays.asList("ADMIN"));
