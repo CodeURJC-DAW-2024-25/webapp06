@@ -171,8 +171,10 @@ public class MainController {
 		model.addAttribute("productPrice", productService.getProductPrice(product.get()));
 		model.addAttribute("productDescription", productService.getProductDescription(product.get()));
 		model.addAttribute("productImage", productService.getProductImage(product.get()));
-		model.addAttribute("productId", productService.getProductId(product.get())); // productos solo si el usuario es
-																						// una empresa
+		model.addAttribute("productId", productService.getProductId(product.get())); // productos solo si el usuario es // una empresa
+		
+		model.addAttribute("reviews", productService.getProductReviews(product.get()));
+		
 
 		return "descriptionProduct";
 	}

@@ -26,11 +26,10 @@ public class ProductService {
 
     @Autowired
     private ReviewService reviewService;
-
-
     
-    public Product createProduct(@RequestParam String type, @RequestParam String name, @RequestParam String business,  @RequestParam Double price, @RequestParam String description,
-            @RequestParam MultipartFile image, @RequestParam Integer stock, @RequestParam Boolean isAccepted) throws IOException {
+
+    public Product createProduct(String type,String name, String business, Double price, String description,
+            MultipartFile image, Integer stock, Boolean isAccepted) throws IOException {
         Product product = new Product(type, name, business, price, description, stock,isAccepted);
 
         if (image != null && !image.isEmpty()) {
@@ -44,6 +43,10 @@ public class ProductService {
                             .getBytes()));
         }
 
+        return productRepository.save(product);
+    }
+
+    public Product addProduct(Product product) {
         return productRepository.save(product);
     }
 
