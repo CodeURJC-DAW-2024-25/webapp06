@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
+import java.util.List;
 import java.util.Collections;
 import java.util.Optional;
 
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.User;
@@ -23,11 +25,9 @@ import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.experimental.var;
 
 import java.security.Principal;
-import org.springframework.web.bind.annotation.RequestBody;
-
+import java.sql.Blob;
 
 @Controller
 public class MainController {
@@ -37,7 +37,7 @@ public class MainController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	// @Autowired
 	// private LoggedUser loggedUser;
 
@@ -56,11 +56,11 @@ public class MainController {
 			model.addAttribute("username", principal.getName());
 
 			Optional<User> user = userService.findByUsername(principal.getName());
-			if (user.isPresent()&&user.get().isAdmin()) {
+			if (user.isPresent() && user.get().isAdmin()) {
 				model.addAttribute("isAdmin", true);
 				model.addAttribute("isCompany", false);
 				model.addAttribute("isUser", false);
-			} else if (user.isPresent()&&user.get().isCompany()) {
+			} else if (user.isPresent() && user.get().isCompany()) {
 				model.addAttribute("isAdmin", false);
 				model.addAttribute("isCompany", true);
 				model.addAttribute("isUser", false);
@@ -69,13 +69,11 @@ public class MainController {
 				model.addAttribute("isCompany", false);
 				model.addAttribute("isUser", true);
 			}
-		
+
 		} else {
 			model.addAttribute("logged", false);
 		}
 	}
-	
-
 
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
@@ -131,52 +129,83 @@ public class MainController {
 		return "user";
 	}
 
-	// Redirection to see all products
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
+		List<Product> products = productService.getAcceptedProducts();
+		addImageDataToProducts(products);
 		model.addAttribute("allProds", productService.getAcceptedProducts());
 		model.addAttribute("tittle", false);
-		
+
 		Principal principal = request.getUserPrincipal();
 		if (principal == null) {
 			model.addAttribute("allCompanyProds", Collections.emptyList());
-			return "products";
 		} else {
 			Optional<User> user = userService.findByUsername(principal.getName());
 			if (user.isPresent() && user.get().isCompany()) {
-				model.addAttribute("allCompanyProds", productService.getAcceptedCompanyProducts(user.get().getUsername()));
-				return "products";
+				model.addAttribute("allCompanyProds",
+						productService.getAcceptedCompanyProducts(user.get().getUsername()));
 			}
-		
-		return "products";}
+		}
+		return "products";
 	}
 
 	// Redirection to see ONLY the products of a specific type
 	@GetMapping("/products/{type}")
 	public String getMethodName(@PathVariable String type, Model model) {
-		model.addAttribute("allProds", productService.getAcceptedProductsByType(type));
+
+		List<Product> products = productService.getAcceptedProductsByType(type);
+		addImageDataToProducts(products);
+		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
 		model.addAttribute("tittle", true);
-
 		return "products";
 	}
 
-	@GetMapping("/product/{id}")
-	public String productDescription(@PathVariable Long id, Model model) {
-		Optional<Product> product = productService.getProductById(id); // Extract the product by its id
-		// Extract all the info of the product to use it in the musctache template
-		model.addAttribute("productName", productService.getProductName(product.get()));
-		model.addAttribute("productType", productService.getProductType(product.get()));
-		model.addAttribute("productCompany", productService.getProductCompany(product.get()));
-		model.addAttribute("productPrice", productService.getProductPrice(product.get()));
-		model.addAttribute("productDescription", productService.getProductDescription(product.get()));
-		model.addAttribute("productImage", productService.getProductImage(product.get()));
-		model.addAttribute("productId", productService.getProductId(product.get())); // productos solo si el usuario es // una empresa
-		
-		model.addAttribute("reviews", productService.getProductReviews(product.get()));
-		
+	private void addImageDataToProducts(List<Product> products) {
+		for (Product product : products) {
+			try {
+				Blob imageBlob = product.getImage();
+				if (imageBlob != null) {
+					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+					product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-		return "descriptionProduct";
+	@GetMapping("/product/{id}")
+	public String productDescription(@PathVariable Long id, Model model) throws Exception {
+		Optional<Product> product = productService.getProductById(id); // Extract the product by its id
+
+		if (product.isPresent()) {
+			// Extract all the info of the product to use it in the musctache template
+			model.addAttribute("productName", productService.getProductName(product.get()));
+			model.addAttribute("productType", productService.getProductType(product.get()));
+			model.addAttribute("productCompany", productService.getProductCompany(product.get()));
+			model.addAttribute("productPrice", productService.getProductPrice(product.get()));
+			model.addAttribute("productDescription", productService.getProductDescription(product.get()));
+
+			// Convert Blob to Base64 encoded string
+			String imageBase64 = null;
+			Blob imageBlob = product.get().getImage();
+			if (imageBlob != null) {
+				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+			}
+			model.addAttribute("productImage", imageBase64);
+
+			model.addAttribute("productId", productService.getProductId(product.get()));
+			model.addAttribute("productStock", product.get().getStock());
+			model.addAttribute("reviews", productService.getProductReviews(product.get()));
+
+
+			return "descriptionProduct";
+		} else {
+			return "redirect:/products/allProducts";
+		}
 	}
 
 	// Redirection to the descriprion of a produdct
@@ -200,17 +229,18 @@ public class MainController {
 		// Usamos el parámetro Principal para obtener el nombre del usuario logueado
 		productService.createProduct(product_type, product_name, principal.getName(),
 				product_price,
-				product_description, product_image, product_stock,false);
+				product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
+				product_stock, false);
 
-		return "redirect:/allProducts";
+		return "redirect:/products/allProducts";
 	}
-
 
 	@GetMapping("/acceptProduct/{id}")
 	public String acceptProduct(@PathVariable Long id) {
 		Optional<Product> product = productService.getProductById(id);
 		if (product.isPresent()) {
-			productService.updateProduct(id, productService.getProductName(product.get()), productService.getProductPrice(product.get()));
+			productService.updateProduct(id, productService.getProductName(product.get()),
+					productService.getProductPrice(product.get()));
 		}
 		return "redirect:/adminPage";
 	}
@@ -225,22 +255,23 @@ public class MainController {
 	public String shoppingCart(Model model) {
 		model.addAttribute("nombre", principal.getName());
 		// System.out.println("Nombre del usuario autenticado: " + principal.getName());
-		model.addAttribute("products", userService.getCartProducts(userService.findByUsername(principal.getName()).get()));
-		model.addAttribute("totalPrice", userService.getTotalPrice(userService.findByUsername(principal.getName()).get()));
+		model.addAttribute("products",
+				userService.getCartProducts(userService.findByUsername(principal.getName()).get()));
+		model.addAttribute("totalPrice",
+				userService.getTotalPrice(userService.findByUsername(principal.getName()).get()));
 		return "shoppingcart";
 	}
 
 	@PostMapping("/shoppingcart/{productId}")
-	public String addProductToCart(@PathVariable Long productId){
-		
-		User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new RuntimeException("User not found"));
-		Product product = productService.getProductById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+	public String addProductToCart(@PathVariable Long productId) {
+
+		User user = userService.findByUsername(principal.getName())
+				.orElseThrow(() -> new RuntimeException("User not found"));
+		Product product = productService.getProductById(productId)
+				.orElseThrow(() -> new RuntimeException("Product not found"));
 		userService.addProductToCart(user, product);
 
-		
 		return "redirect:/shoppingcart";
 	}
-	
-
 
 }
