@@ -25,8 +25,8 @@ public class GlobalMartSecurityConfig {
 
         @Bean
         public DaoAuthenticationProvider authenticationProvider() {
+                
                 DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-
                 authenticationProvider.setUserDetailsService(userDetailsService);
                 authenticationProvider.setPasswordEncoder(passwordEncoder());
 
@@ -36,7 +36,7 @@ public class GlobalMartSecurityConfig {
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
-                                                                                             // publicas y privadas
+                
 
                 http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la
                                                                        // función
@@ -53,13 +53,17 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/choose_login_option").permitAll()
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/login").permitAll()
-                                .requestMatchers("/allProducts").permitAll()
-                                .requestMatchers("/product/**").permitAll()
+                                .requestMatchers("/products/allProducts").permitAll()
+                                .requestMatchers("/product/{id}").permitAll()
                                 .requestMatchers("/descriptionProduct").permitAll()
                                 .requestMatchers("/search").permitAll()
-                                .requestMatchers("/{type}").permitAll()
-                                // ----------------- PRIVATE PAGES ----------------
-                                // ----------------- ADMIN PAGES ----------------
+                                .requestMatchers("/products/{type}").permitAll()
+
+                                // -------------- PRIVATE PAGES ----------------
+                                .requestMatchers("/profile").authenticated()
+                                .requestMatchers("/shoppingcart").authenticated()
+                                .requestMatchers("/new_product").hasRole("COMPANY")
+                                //----------------- ADMIN PAGES ----------------
                                 .requestMatchers("/adminPage").hasAnyRole("ADMIN")
                                 .requestMatchers("/profile").authenticated()
                                 .requestMatchers("/new_product").permitAll()
@@ -69,34 +73,31 @@ public class GlobalMartSecurityConfig {
                                                                                             // aceptar un producto
                                 .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
                                 .requestMatchers("/profile").permitAll()
-
+                                // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
-                                // -------------- PRIVATE PAGES ----------------
-                                .requestMatchers("/shoppingcart").authenticated())
+                                .anyRequest().authenticated()                           
 
+                )
                                 // Configurar el formulario de login
                                 .formLogin(formLogin -> formLogin
                                                 .loginPage("/login")
                                                 .failureUrl("/login_error")
                                                 .successHandler((request, response, authentication) -> {
-                                                        authentication.getAuthorities().forEach(grantedAuthority -> {
-                                                                try {
-                                                                        if (grantedAuthority.getAuthority()
-                                                                                        .equals("ROLE_ADMIN")) {
-                                                                                response.sendRedirect("/adminPage");
-                                                                        } else if (grantedAuthority.getAuthority()
-                                                                                        .equals("ROLE_COMPANY")) {
-                                                                                response.sendRedirect("/new_product");
-                                                                        } else if (grantedAuthority.getAuthority()
-                                                                                        .equals("ROLE_USER")) {
-                                                                                response.sendRedirect("/");
-                                                                        }
-                                                                } catch (Exception e) {
-                                                                        e.printStackTrace();
-                                                                }
-                                                        });
+                                                    for (var authority : authentication.getAuthorities()) {
+                                                        String role = authority.getAuthority();
+                                                        if (role.equals("ROLE_ADMIN")) {
+                                                            response.sendRedirect("/adminPage");
+                                                            return;
+                                                        } else if (role.equals("ROLE_COMPANY")) {
+                                                            response.sendRedirect("/new_product");
+                                                            return;
+                                                        } else if (role.equals("ROLE_USER")) {
+                                                            response.sendRedirect("/");
+                                                            return;
+                                                        }
+                                                    }
                                                 })
                                                 .permitAll())
 
@@ -108,9 +109,9 @@ public class GlobalMartSecurityConfig {
                                 // Configurar manejo de excepciones para redirigir a la página de login si no se
                                 // está autenticado
                                 .exceptionHandling(exception -> exception
-                                                .authenticationEntryPoint(
-                                                                (request, response, authException) -> response
-                                                                                .sendRedirect("/")));
+                                .authenticationEntryPoint((request, response, authException) -> 
+                                response.sendRedirect("/"))
+                );
 
                 return http.build();
 

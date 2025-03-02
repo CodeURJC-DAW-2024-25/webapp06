@@ -4,6 +4,9 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.service.ReviewService;
 import jakarta.annotation.PostConstruct;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,8 +14,10 @@ import java.util.Arrays;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class DataLoader {
@@ -28,6 +33,8 @@ public class DataLoader {
 
         @Autowired
         private PasswordEncoder passwordEncoder;
+
+
 
         @PostConstruct
         public void loadData() throws IOException {
@@ -76,8 +83,17 @@ public class DataLoader {
 
                 userService.createUser(null, "comp", "comp", "user1@gmail.com", passwordEncoder.encode("comp"),
                                 Arrays.asList("COMPANY"));
+                
+                userService.createUser(null, "a", "a", "a@gmail.com", passwordEncoder.encode("a"), Arrays.asList("USER"));
 
                 reviewService.createReview("user1", "Muy bueno", 5);
 
         }
+
+
+
+
+
+
+        
 }
