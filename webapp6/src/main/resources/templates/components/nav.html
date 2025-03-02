@@ -3,27 +3,31 @@
 
 <nav class="main_nav_div">
     <div class="title_sections_div">
-        <a href="{{^isCompany}}{{^isAdmin}}/redir{{/isAdmin}}{{/isCompany}}{{#isCompany}}/allProducts{{/isCompany}}{{#isAdmin}}/adminPage{{/isAdmin}}">
+        <a
+            href="{{^isCompany}}{{^isAdmin}}/redir{{/isAdmin}}{{/isCompany}}{{#isCompany}}/products/allProducts{{/isCompany}}{{#isAdmin}}/adminPage{{/isAdmin}}">
             <h1 class="title_sections">GlobalMart</h1>
         </a>
 
         <div class="sections_list">
-            <a href="{{^isAdmin}}/products/allProducts{{/isAdmin}}{{#isAdmin}}/adminPage{{/isAdmin}}" class="section">Products</a>
+            <a href="{{^isAdmin}}/products/allProducts{{/isAdmin}}{{#isAdmin}}/adminPage{{/isAdmin}}"
+                class="section">Products</a>
             <a href="/about" class="section">About us</a>
         </div>
     </div>
 
+    {{^isAdmin}}{{^isCompany}}
     <form class="search_form" action="/search" method="get" role="search">
         <select class="search_category" name="type">
             <option value="all">All</option>
-            <option value="Electronica">Electronica</option>
-            <option value="Libros">Libros</option>
-            <option value="Educacion">Educacion</option>
-            <option value="Electrodomesticos">Electrodomesticos</option>
-            <option value="Deporte">Deporte</option>
-            <option value="Hogar">Hogar</option>
-            <option value="Musica">Musica</option>
-            <option value="Cine">Cine</option>
+            <option value="Technology">Technology</option>
+            <option value="Books">Books</option>
+            <option value="Education">Education</option>
+            <option value="Appliances">Appliances</option>
+            <option value="Sports">Deporte</option>
+            <option value="Home">Home</option>
+            <option value="Music">Music</option>
+            <option value="Cinema">Cinema</option>
+            <option value="Others">Others</option>
         </select>
         <input name="search_text" class="search_input" type="search" placeholder="Search" aria-label="Search">
         <button class="search_button" type="submit"><i class="bi bi-search"></i></button>

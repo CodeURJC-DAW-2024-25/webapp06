@@ -5,10 +5,6 @@ import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 
 import org.springframework.stereotype.Service;
-// import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
 
 import java.io.IOException;
 import java.sql.Blob;
@@ -160,9 +156,10 @@ public class ProductService {
 
     public List<Product> searchProductsByNameAndType(String query, String type) {
         return productRepository.findByNameContainingIgnoreCaseAndType(query, type);
+    }
 
     public List<Product> getAcceptedCompanyProducts(String company) {
-        List<Product> allProducts = productRepository.findAll() ;
+        List<Product> allProducts = productRepository.findAll();
         List<Product> acceptedCompanyProducts = new ArrayList<>();
         for (Product product : allProducts) {
             if (product.getIsAccepted() && product.getCompany().equals(company)) {

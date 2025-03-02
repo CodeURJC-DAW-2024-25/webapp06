@@ -1,13 +1,11 @@
 package es.codeurjc.global_mart.model;
 
 import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -63,9 +61,11 @@ public class User {
     public boolean isAdmin() {
         return role.contains("ADMIN");
     }
+
     public boolean isCompany() {
         return role.contains("COMPANY");
     }
+
     public boolean isUser() {
         return role.contains("USER");
     }
@@ -178,6 +178,5 @@ public class User {
 
     public void emptyCart() {
         this.cart.clear();
-    }  
+    }
 }
-
