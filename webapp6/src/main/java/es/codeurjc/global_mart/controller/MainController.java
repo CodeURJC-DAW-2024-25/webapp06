@@ -363,4 +363,9 @@ public class MainController {
 		}
 	}
 
+	@GetMapping("/payCart")
+	public String payCart(@RequestParam String param) {
+		return "payment";
+	}
+
 }
