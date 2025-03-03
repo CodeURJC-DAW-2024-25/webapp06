@@ -323,13 +323,21 @@ public String profile(Model model, Authentication authentication) {
 	}
 
 	@PostMapping("/shoppingcart/{productId}")
-	public String addProductToCart(@PathVariable Long productId) {
-
-		User user = userService.findByUsername(principal.getName())
-				.orElseThrow(() -> new RuntimeException("User not found"));
-		Product product = productService.getProductById(productId)
-				.orElseThrow(() -> new RuntimeException("Product not found"));
-		userService.addProductToCart(user, product);
+	public String addProductToCart(@PathVariable Long productId,Authentication autentication) {
+		Object principal = autentication.getPrincipal();
+		if (principal instanceof OAuth2User oAuth2User) {
+			User user = userService.findByUsername(oAuth2User.getAttribute("name"))
+					.orElseThrow(() -> new RuntimeException("User not found"));
+			Product product = productService.getProductById(productId)
+					.orElseThrow(() -> new RuntimeException("Product not found"));
+			userService.addProductToCart(user, product);
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			User user = userService.findByUsername(userDetails.getUsername())
+					.orElseThrow(() -> new RuntimeException("User not found"));
+			Product product = productService.getProductById(productId)
+					.orElseThrow(() -> new RuntimeException("Product not found"));
+			userService.addProductToCart(user, product);
+		}
 
 		return "redirect:/shoppingcart";
 	}
