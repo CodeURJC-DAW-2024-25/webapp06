@@ -9,12 +9,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.qos.logback.classic.Logger;
+
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.codeurjc.global_mart.model.Product;
@@ -32,6 +38,7 @@ import java.sql.Blob;
 @Controller
 public class MainController {
 
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MainController.class);
 	@Autowired
 	private ProductService productService;
 
@@ -272,6 +279,53 @@ public class MainController {
 		userService.addProductToCart(user, product);
 
 		return "redirect:/shoppingcart";
+	}
+
+	@GetMapping("/displayGraphs")
+	public String displayGraph(Model model) {
+	
+		User user = userService.findByUsername(principal.getName()).get();
+		// Map<String, Integer> productsRange = new HashMap<>();
+		// productsRange.put("Nombre" , 12);
+		// productsRange.put("Deportes", 15);
+		
+		Map<String, Integer> dataMap = new HashMap<>();
+		
+		// Initialize the dataMap with predefined keys and zero values
+		dataMap.put("Technologia", 0);
+		dataMap.put("Libros", 0);
+		dataMap.put("Educación", 0);
+		dataMap.put("Deportes", 0);
+		dataMap.put("Casa", 0);
+		dataMap.put("Musica", 0);
+		dataMap.put("Cine", 0);
+		dataMap.put("Otros", 0);
+
+		// iterate over the products of the company and count the number of products of each type and store it in the dataMap
+		List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.getUsername());
+		for (Product product : companyProducts) {
+			String type = product.getType();
+			dataMap.put(type, dataMap.getOrDefault(type, 0) + 1);
+		}
+
+		List<Map<String, Object>> dataList = new ArrayList<>();
+		for (Map.Entry<String, Integer> entry : dataMap.entrySet()) {
+			Map<String, Object> item = new HashMap<>();
+			item.put("key", entry.getKey());
+			item.put("value", entry.getValue());
+			dataList.add(item);
+		}
+		model.addAttribute("dataList", dataList);
+
+		// model.addAttribute("companyProducts", companyProducts);
+		model.addAttribute("productsRange", dataList);
+		model.addAttribute("books", 12);
+		model.addAttribute("username", principal.getName());
+		model.addAttribute("sports", 15);
+		
+		
+		
+		return "companyGraphs";
 	}
 
 }

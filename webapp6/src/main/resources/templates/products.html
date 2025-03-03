@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="ISO-8859-1">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products | Global Mart</title>
@@ -53,13 +54,14 @@
                 {{#allCompanyProds}}
                 {{>./components/individualProduct}}
                 {{/allCompanyProds}}
+                <p>kahsdhasdhjahsdasdh</p>
                 {{^allCompanyProds}}
                 <h3>No products registered</h3>
                 {{/allCompanyProds}}
-    
             </div>
         </div>
-    
+        
+        <a th:href="@{/displayGraph}" href="/displayGraphs">Mostrar gráfico de tipos</a><br>
     
     </div>
     {{/isCompany}}

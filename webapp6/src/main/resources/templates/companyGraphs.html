@@ -1,0 +1,81 @@
+	<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	<meta charset="ISO-8859-1" />
+	<title>PIE</title>
+
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+
+	</head>
+	<body>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+		<div id="container" style="height: 400px"></div>
+		<div>
+
+			{{#dataList}}
+				<div id="{{key}}-data" data-="{{value}}">{{key}}: {{value}}</div>
+			{{/dataList}}
+			
+			
+		</div>
+		<script th:inline="javascript">
+			const dataElements = document.querySelectorAll('[id$="-data"]'); // get all elements with id ending in -data
+			// console.log(dataElements); 
+			// console.log("Elemento deportes: ");
+			// console.log(dataElements[1].getAttribute('data-')); // get the value of the data- attribute of the second element
+			// console.log(typeof dataElements[1].getAttribute('data-')); // print the type of the data
+			// console.log("Elemento deportes: ");
+			// console.log(document.getElementById('Deportes-data').getAttribute('data-')); // get the value of the data- attribute of the second element
+
+			
+			
+			Highcharts.chart('container', {
+				chart : {
+					type : 'pie',
+					options3d : {
+						enabled : true,
+						alpha : 50,
+						beta : 0
+					}
+				},
+				title : {
+					text : 'Result Status'
+				},
+				tooltip : {
+					pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+				},
+				plotOptions : {
+					pie : {
+						allowPointSelect : true,
+						cursor : 'pointer',
+						depth : 35,
+						dataLabels : {
+							enabled : true,
+							format : '{point.name}'
+						}
+					}
+				},
+				series : [ {
+					type : 'pie',
+					name : 'Ratio',
+					data: [
+					[ 'Sports', parseInt(document.getElementById('Deportes-data').getAttribute('data-')) ], // take the value of the data- attribute of the element with id from the DOM
+					[ 'Books', parseInt(document.getElementById('Libros-data').getAttribute('data-')) ],
+
+
+
+					]
+				} ]
+			});
+		</script>
+		
+	</body>
+	</html>

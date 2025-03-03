@@ -63,6 +63,7 @@ public class GlobalMartSecurityConfig {
                                 .requestMatchers("/profile").authenticated()
                                 .requestMatchers("/shoppingcart").authenticated()
                                 .requestMatchers("/new_product").hasRole("COMPANY")
+                                .requestMatchers("/displayGraph").permitAll()
                                 //----------------- ADMIN PAGES ----------------
                                 .requestMatchers("/adminPage").hasAnyRole("ADMIN")
                                 .requestMatchers("/profile").authenticated()
