@@ -216,6 +216,10 @@ public class MainController {
 			productService.setViews_product_count(product.get());
 			model.addAttribute("count", productService.getViews_product_count(product.get()));
 
+			if (principal != null && principal.getName().equals(product.get().getCompany())) {
+				model.addAttribute("isOwner", true);
+			}
+
 			return "descriptionProduct";
 		} else {
 			return "redirect:/products/allProducts";
@@ -231,6 +235,7 @@ public class MainController {
 
 	@GetMapping("/new_product")
 	public String new_product(Model model) {
+		model.addAttribute("form_title", "New product");
 		return "uploadProducts";
 	}
 
@@ -286,6 +291,76 @@ public class MainController {
 		userService.addProductToCart(user, product);
 
 		return "redirect:/shoppingcart";
+	}
+
+	@GetMapping("/edit_product/{id}")
+	public String editProductForm(@PathVariable Long id, Model model) {
+		model.addAttribute("form_title", "Edit Product");
+
+		Optional<Product> optionalProduct = productService.getProductById(id);
+		if (optionalProduct.isPresent()) {
+			Product product = optionalProduct.get();
+
+			// Convertir la imagen Blob a Base64 para mostrarla
+			try {
+				Blob imageBlob = product.getImage();
+				if (imageBlob != null) {
+					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+					product.setImageBase64(imageBase64);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			// Añadir atributos para seleccionar el tipo correcto en el menú desplegable
+			model.addAttribute("type_" + product.getType(), true);
+			model.addAttribute("product", product);
+		} else {
+			return "redirect:/products/allProducts";
+		}
+
+		return "uploadProducts";
+	}
+
+	@PostMapping("/update_product/{id}")
+	public String updateProduct(
+			@PathVariable Long id,
+			@RequestParam String product_name,
+			@RequestParam(required = false) MultipartFile product_image,
+			@RequestParam String product_description,
+			@RequestParam String product_type,
+			@RequestParam Integer product_stock,
+			@RequestParam Double product_price)
+			throws Exception {
+
+		Optional<Product> optionalProduct = productService.getProductById(id);
+		if (optionalProduct.isPresent()) {
+			Product product = optionalProduct.get();
+			product.setName(product_name);
+			product.setDescription(product_description);
+			product.setType(product_type);
+			product.setStock(product_stock);
+			product.setPrice(product_price);
+
+			// Actualizar la imagen solo si se proporciona una nueva
+			if (product_image != null && !product_image.isEmpty()) {
+				product.setImage(BlobProxy.generateProxy(
+						product_image.getInputStream(),
+						product_image.getSize()));
+			}
+
+			productService.addProduct(product);
+
+			// Si el usuario es una empresa, redirigir a sus productos
+			if (userService.findByUsername(principal.getName()).get().isCompany()) {
+				return "redirect:/products/allProducts";
+			} else {
+				return "redirect:/adminPage";
+			}
+		} else {
+			return "redirect:/products/allProducts";
+		}
 	}
 
 }
