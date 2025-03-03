@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.service.ProductService;
-import es.codeurjc.global_mart.service.ReviewService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.annotation.PostConstruct;
 
@@ -29,9 +28,6 @@ public class DataLoader {
 
         @Autowired
         private UserService userService;
-
-        @Autowired
-        private ReviewService reviewService;
 
         @Autowired
         private PasswordEncoder passwordEncoder;

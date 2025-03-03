@@ -203,43 +203,18 @@ public class MainController {
 				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
 				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 			}
-
-			logger.info("Llega hasta aquí");
-
-			// Obtener la lista de reviews
-			List<Review> reviews = product.get().getReviews();
-
-			// Verificar si hay reviews y agregarlas al modelo
-			if (reviews != null && !reviews.isEmpty()) {
-				logger.info("Total reviews: " + reviews.size());
-				model.addAttribute("reviews", reviews);
-
-				if (reviews.size() > 0) {
-					logger.info("Primer comentario: " + reviews.get(0).getComment());
-				}
-				
-				if (reviews.size() > 1) {
-					logger.info("Segundo comentario: " + reviews.get(1).getComment());
-				}
-			} else {
-				logger.info("No hay reviews para este producto.");
-				model.addAttribute("reviews", Collections.emptyList()); // Enviar lista vacía al template
-			}
-
-
-			productService.setViews_product_count(product.get());
-			model.addAttribute("count", productService.getViews_product_count(product.get()));
-
-			if (principal != null && principal.getName().equals(product.get().getCompany())) {
-				model.addAttribute("isOwner", true);
-			}
+			model.addAttribute("productImage", imageBase64);
+			model.addAttribute("productId", productService.getProductId(product.get()));
+			model.addAttribute("productStock", product.get().getStock());
+			model.addAttribute("reviews", product.get().getReviews());
 
 			return "descriptionProduct";
 		} else {
-			return "redirect:/products/allProducts";
+			return "redirect:/allProducts";
 		}
 	}
 
+	
 	// Redirection to the descriprion of a produdct
 	@GetMapping("/descriptionProduct")
 	public String descriptionProduct(Model model) {

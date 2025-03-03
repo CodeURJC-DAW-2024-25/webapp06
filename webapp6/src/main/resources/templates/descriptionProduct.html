@@ -81,6 +81,10 @@
                             <p>{{comment}}</p>
                         </div>
                     {{/reviews}}
+            
+                    {{^reviews}}  <!-- Se ejecuta si NO hay reseñas -->
+                        <p>No hay reseñas para este producto.</p>
+                    {{/reviews}}
                 </div>
             </div>
         </div>
