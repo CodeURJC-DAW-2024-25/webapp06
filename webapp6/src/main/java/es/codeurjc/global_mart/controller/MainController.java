@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 import ch.qos.logback.classic.Logger;
+
+import org.springframework.security.core.Authentication;
 import org.hibernate.engine.jdbc.BlobProxy;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,12 +39,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
+
+    private final CSRFHandlerConfiguration CSRFHandlerConfiguration;
 
 	
 
@@ -56,16 +62,23 @@ public class MainController {
 
 	private Principal principal;
 
+    MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration) {
+        this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
+    }
+
 	@ModelAttribute
-	public void addAtributes(Model model, HttpServletRequest request) {
-
-		principal = request.getUserPrincipal();
-
-		if (principal != null) {
+	public void addAtributes(Model model, HttpServletRequest request,Authentication authentication) {
+		if (authentication!=null) {
+			Object principal = authentication.getPrincipal();
 			model.addAttribute("logged", true);
-			model.addAttribute("username", principal.getName());
+		
 
-			Optional<User> user = userService.findByUsername(principal.getName());
+		if (principal instanceof OAuth2User oAuth2User) {
+			model.addAttribute("username", oAuth2User.getAttribute("name"));
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			Optional<User> user = userService.findByUsername(userDetails.getUsername());
+			model.addAttribute("username", user.get().getUsername());
 			if (user.isPresent() && user.get().isAdmin()) {
 				model.addAttribute("isAdmin", true);
 				model.addAttribute("isCompany", false);
@@ -79,11 +92,18 @@ public class MainController {
 				model.addAttribute("isCompany", false);
 				model.addAttribute("isUser", true);
 			}
-
+		}
 		} else {
 			model.addAttribute("logged", false);
 		}
 	}
+
+
+
+	
+
+
+
 
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
@@ -134,21 +154,30 @@ public class MainController {
 
 	// Redirection to the user page
 	@GetMapping("/profile")
-	public String profile(Model model, HttpServletRequest request) {
-		Principal principal = request.getUserPrincipal();
-		String username = principal.getName();
+public String profile(Model model, Authentication authentication) {
+    if (authentication == null) {
+        return "redirect:/login"; // Redirigir si no hay usuario autenticado
+    }
 
-		// Assuming you have a UserService to fetch user details
-		Optional<User> user = userService.findByUsername(username);
+    Object principal = authentication.getPrincipal();
 
-		if (user.isPresent()) {
-			model.addAttribute("username", user.get().getUsername());
-			model.addAttribute("email", user.get().getEmail());
-			model.addAttribute("profile_image", user.get().getImage());
-		}
+    if (principal instanceof OAuth2User oAuth2User) {
+        model.addAttribute("username", oAuth2User.getAttribute("name"));
+        model.addAttribute("email", oAuth2User.getAttribute("email"));
+        model.addAttribute("profile_image", oAuth2User.getAttribute("picture"));
+    }
+    // Si el usuario ha iniciado sesión con usuario y contraseña
+    else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+        Optional<User> user = userService.findByUsername(userDetails.getUsername());
+        if (user.isPresent()) {
+            model.addAttribute("username", user.get().getUsername());
+            model.addAttribute("email", user.get().getEmail());
+            model.addAttribute("profile_image", user.get().getImage());
+        }
+    }
 
-		return "user";
-	}
+    return "user"; // Nombre del archivo HTML de la vista
+}
 
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
