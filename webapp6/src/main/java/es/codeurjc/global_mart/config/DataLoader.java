@@ -50,6 +50,19 @@ public class DataLoader {
                                 new ClassPathResource("static/images/products/disco.jpg").getFile().toPath());
                 byte[] image6 = Files.readAllBytes(
                                 new ClassPathResource("static/images/products/lavadora.jpg").getFile().toPath());
+                byte[] image7 = Files.readAllBytes(
+                                new ClassPathResource("static/images/products/don_quijote.jpg").getFile().toPath());
+
+
+                // Create and associate reviews before persisting
+                Review review1 = new Review("user1", "Muy bueno", 5, LocalDateTime.now());
+                Review review2 = new Review("user1", "Muy malo", 1, LocalDateTime.now());
+
+                // Create product
+                productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0, 
+                "Una versión abreviada de las aventuras de un excéntrico caballero rural y su fiel compañero...",
+                BlobProxy.generateProxy(image7),10, true, List.of(review1, review2));
+                
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
                                 BlobProxy.generateProxy(image1), 10, true);

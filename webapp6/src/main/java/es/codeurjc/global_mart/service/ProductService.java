@@ -2,6 +2,7 @@ package es.codeurjc.global_mart.service;
 
 import es.codeurjc.global_mart.repository.ProductRepository;
 import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.model.Review;
 
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,25 @@ public class ProductService {
                                      // imagen con blob a
                                      // partir de
                                      // multipartfile
+        } else {
+            product.setImage(BlobProxy.generateProxy(
+                    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+                            .getBytes()));
+        }
+
+        return productRepository.save(product);
+    }
+
+    public Product createProduct(String type, String name, String business, Double price, String description,
+    Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
+        Product product = new Product(type, name, business, price, description, stock, isAccepted);
+        product.setReviews(reviews);
+        
+        if (image != null) {
+            product.setImage(image); // como se sube una
+                                    // imagen con blob a
+                                    // partir de
+                                    // multipartfile
         } else {
             product.setImage(BlobProxy.generateProxy(
                     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
