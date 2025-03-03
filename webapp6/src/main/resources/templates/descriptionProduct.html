@@ -39,22 +39,51 @@
                 <p class="product-description">{{productDescription}}</p>
 
                 <p class="product-stock">Stock: {{productStock}}</p>
-                <form action="/shoppingcart/{{productId}}" method="POST">
-                    <input type="hidden" name="_csrf" value="{{token}}">
-                    <button type="submit">Añadir al carrito</button>
-                </form>
-                <!-- <a href="/shoppingcart/{{productId}}" class="btn btn-primary btn-lg mt-3">Add to cart</a> -->
 
-                <a href="/products/allProducts" class="btn btn-secondary btn-lg mt-3">Back to Products</a>
+                <div class="buttons_div">
+                    {{^isAdmin}}
+                    {{^isCompany}}
+                    <form action="/shoppingcart/{{productId}}" method="POST">
+                        <input type="hidden" name="_csrf" value="{{token}}">
+                        {{#logged}}
+                        <button class="add2cart_button" type="submit">Añadir al carrito</button>
+                        {{/logged}}
+                    </form>
+                    {{/isCompany}}
+                    {{/isAdmin}}
+
+                    {{#isAdmin}}
+
+                    <a href="/edit_product/{{productId}}" class="edit_product_button">Edit Product</a>
+                    <a href="/deleteProduct/{{productId}}" class="edit_product_button">Delete Product</a>
+
+                    {{/isAdmin}}
+
+
+                    {{#isCompany}}
+                    <!-- Solo mostrar el botón al propietario del producto -->
+                    {{#isOwner}}
+                    <a href="/edit_product/{{productId}}" class="edit_product_button">Edit Product</a>
+                    <a href="/deleteProduct/{{productId}}" class="edit_product_button">Delete Product</a>
+
+                    {{/isOwner}}
+                    {{/isCompany}}
+
+                    <a href="/products/allProducts" class="back2products_button">Back to Products</a>
+                </div>
             </div>
             <div>
                 <h2>Reviews</h2>
                 <div class="reviews">
                     {{#reviews}}
-                    <div class="review">
-                        <p>{{calification}}</p>
-                        <p>{{comment}}</p>
-                    </div>
+                        <div class="review">
+                            <p>{{calification}}</p>
+                            <p>{{comment}}</p>
+                        </div>
+                    {{/reviews}}
+            
+                    {{^reviews}}  <!-- Se ejecuta si NO hay reseñas -->
+                        <p>No hay reseñas para este producto.</p>
                     {{/reviews}}
                 </div>
             </div>

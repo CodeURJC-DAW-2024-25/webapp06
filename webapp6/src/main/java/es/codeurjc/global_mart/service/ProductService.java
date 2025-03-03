@@ -1,32 +1,33 @@
 package es.codeurjc.global_mart.service;
 
-import es.codeurjc.global_mart.repository.ProductRepository;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.Review;
-
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.sql.Blob;
-
-import org.hibernate.engine.jdbc.BlobProxy;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import org.hibernate.engine.jdbc.BlobProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.model.Review;
+import es.codeurjc.global_mart.repository.ProductRepository;
 
 @Service
 public class ProductService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private ReviewService reviewService;
-
     public Product createProduct(String type, String name, String business, Double price, String description,
             Blob image, Integer stock, Boolean isAccepted) throws IOException {
+        
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
 
         if (image != null) {
@@ -34,6 +35,27 @@ public class ProductService {
                                      // imagen con blob a
                                      // partir de
                                      // multipartfile
+        } else {
+            product.setImage(BlobProxy.generateProxy(
+                    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+                            .getBytes()));
+        }
+
+        return productRepository.save(product);
+    }
+
+    public Product createProduct(String type, String name, String business, Double price, String description,
+    Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
+        Product product = new Product(type, name, business, price, description, stock, isAccepted);
+        product.setReviews(reviews);
+
+        logger.info("Number of reviews: " + reviews.size());
+        
+        if (image != null) {
+            product.setImage(image); // como se sube una
+                                    // imagen con blob a
+                                    // partir de
+                                    // multipartfile
         } else {
             product.setImage(BlobProxy.generateProxy(
                     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
@@ -100,12 +122,17 @@ public class ProductService {
         return product.getImage();
     }
 
-    public List<Review> getProductReviews(Product product) {
-        return reviewService.getAllReviews();
-    }
-
     public Long getProductId(Product product) {
         return product.getId();
+    }
+
+    public Integer getViews_product_count(Product product) {
+        return product.getViews_count();
+    }
+
+    public void setViews_product_count(Product product) {
+        product.setViews_count(getViews_product_count(product) + 1);
+        productRepository.save(product);
     }
 
     public List<Product> getAcceptedProductsByType(String type) {
@@ -172,5 +199,16 @@ public class ProductService {
         }
         return acceptedCompanyProducts;
 
+    }
+
+    public List<Product> getMostViewedProducts(int limit) {
+        List<Product> acceptedProducts = getAcceptedProducts();
+
+        // Ordenar productos por número de vistas (de mayor a menor)
+        Collections.sort(acceptedProducts, (p1, p2) -> p2.getViews_count().compareTo(p1.getViews_count()));
+
+        // Tomar solo los primeros 'limit' productos
+        int size = Math.min(limit, acceptedProducts.size());
+        return acceptedProducts.subList(0, size);
     }
 }

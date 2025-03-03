@@ -6,13 +6,14 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "PRODUCTS")
@@ -27,10 +28,11 @@ public class Product {
     private String company;
     private Double price;
     private String description;
+    private Integer views_count;
 
     @Lob
     private Blob image;
-    
+
     private Integer stock;
     private Boolean isAccepted;
     private String imageBase64;
@@ -38,7 +40,7 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private List<Order> orders;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
     // ----------------- Constructor -----------------
@@ -55,6 +57,7 @@ public class Product {
         this.stock = stock;
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;
+        this.views_count = 0;
     }
 
     // ----------------- Methods -----------------
@@ -164,4 +167,11 @@ public class Product {
         this.imageBase64 = imageBase64;
     }
 
+    public Integer getViews_count() {
+        return views_count;
+    }
+
+    public void setViews_count(Integer views_count) {
+        this.views_count = views_count;
+    }
 }

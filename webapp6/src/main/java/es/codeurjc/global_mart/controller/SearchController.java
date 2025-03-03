@@ -54,7 +54,7 @@ public class SearchController {
         return "search"; // Template que mostrará los resultados
     }
 
-    private void convertBlobToBase64(List<Product> products) {
+    public void convertBlobToBase64(List<Product> products) {
         for (Product product : products) {
             try {
                 Blob imageBlob = product.getImage();

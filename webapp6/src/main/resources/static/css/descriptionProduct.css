@@ -38,3 +38,33 @@ body {
 .footer_text {
     color: #6c757d;
 }
+
+.buttons_div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.add2cart_button,
+.edit_product_button,
+.back2products_button {
+    text-align: center;
+    width: 200px;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    background-color: #d9d9d9;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+    color: black;
+}

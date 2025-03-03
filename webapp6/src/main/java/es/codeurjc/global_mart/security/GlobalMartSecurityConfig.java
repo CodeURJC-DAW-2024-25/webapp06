@@ -14,50 +14,50 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 @EnableWebSecurity
 public class GlobalMartSecurityConfig {
 
-        @Autowired
-        public RepositoryUserDetailsService userDetailsService;
+    @Autowired
+    public RepositoryUserDetailsService userDetailsService;
 
-        // encode user password
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
+    // encode user password
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-        @Bean
-        public DaoAuthenticationProvider authenticationProvider() {
-                
-                DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-                authenticationProvider.setUserDetailsService(userDetailsService);
-                authenticationProvider.setPasswordEncoder(passwordEncoder());
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
 
-                return authenticationProvider;
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
 
-        }
+        return authenticationProvider;
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
-                
+    }
 
-                http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la
-                                                                       // función
-                                                                       // anterior
-                http.authorizeHttpRequests(authorize -> authorize
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
 
-                                // -------------- STYLE PAGES ----------------
-                                .requestMatchers("/css/**").permitAll()
-                                .requestMatchers("/js/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
-                                // -------------- PUBLIC PAGES ----------------
-                                .requestMatchers("/").permitAll()
-                                .requestMatchers("/about").permitAll()
-                                .requestMatchers("/choose_login_option").permitAll()
-                                .requestMatchers("/register").permitAll()
-                                .requestMatchers("/login").permitAll()
-                                .requestMatchers("/products/allProducts").permitAll()
-                                .requestMatchers("/product/{id}").permitAll()
-                                .requestMatchers("/descriptionProduct").permitAll()
-                                .requestMatchers("/search").permitAll()
-                                .requestMatchers("/products/{type}").permitAll()
+        http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la
+                                                               // función
+                                                               // anterior
+        http.authorizeHttpRequests(authorize -> authorize
+
+                // -------------- STYLE PAGES ----------------
+                .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/js/**").permitAll()
+                .requestMatchers("/images/**").permitAll()
+                // -------------- PUBLIC PAGES ----------------
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/about").permitAll()
+                .requestMatchers("/choose_login_option").permitAll()
+                .requestMatchers("/register").permitAll()
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/products/allProducts").permitAll()
+                .requestMatchers("/product/{id}").permitAll()
+                .requestMatchers("/descriptionProduct").permitAll()
+                .requestMatchers("/search").permitAll()
+                .requestMatchers("/products/{type}").permitAll()
+                .requestMatchers("/payCart").permitAll()
 
                                 // -------------- PRIVATE PAGES ----------------
                                 .requestMatchers("/profile").authenticated()
@@ -78,44 +78,42 @@ public class GlobalMartSecurityConfig {
                                 // .requestMatchers("/shoppingcart").permitAll()
                                 // .requestMatchers("/error").permitAll()
 
-                                .anyRequest().authenticated()                           
+                .anyRequest().authenticated()
 
-                )
-                                // Configurar el formulario de login
-                                .formLogin(formLogin -> formLogin
-                                                .loginPage("/login")
-                                                .failureUrl("/login_error")
-                                                .successHandler((request, response, authentication) -> {
-                                                    for (var authority : authentication.getAuthorities()) {
-                                                        String role = authority.getAuthority();
-                                                        if (role.equals("ROLE_ADMIN")) {
-                                                            response.sendRedirect("/adminPage");
-                                                            return;
-                                                        } else if (role.equals("ROLE_COMPANY")) {
-                                                            response.sendRedirect("/new_product");
-                                                            return;
-                                                        } else if (role.equals("ROLE_USER")) {
-                                                            response.sendRedirect("/");
-                                                            return;
-                                                        }
-                                                    }
-                                                })
-                                                .permitAll())
+        )
+                // Configurar el formulario de login
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .failureUrl("/login_error")
+                        .successHandler((request, response, authentication) -> {
+                            for (var authority : authentication.getAuthorities()) {
+                                String role = authority.getAuthority();
+                                if (role.equals("ROLE_ADMIN")) {
+                                    response.sendRedirect("/adminPage");
+                                    return;
+                                } else if (role.equals("ROLE_COMPANY")) {
+                                    response.sendRedirect("/new_product");
+                                    return;
+                                } else if (role.equals("ROLE_USER")) {
+                                    response.sendRedirect("/");
+                                    return;
+                                }
+                            }
+                        })
+                        .permitAll())
 
-                                .logout(logout -> logout
-                                                .logoutUrl("/logout")
-                                                .logoutSuccessUrl("/")
-                                                .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll())
 
-                                // Configurar manejo de excepciones para redirigir a la página de login si no se
-                                // está autenticado
-                                .exceptionHandling(exception -> exception
-                                .authenticationEntryPoint((request, response, authException) -> 
-                                response.sendRedirect("/"))
-                );
+                // Configurar manejo de excepciones para redirigir a la página de login si no se
+                // está autenticado
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/")));
 
-                return http.build();
+        return http.build();
 
-        }
+    }
 
 }

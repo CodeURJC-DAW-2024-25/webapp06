@@ -1,5 +1,19 @@
 package es.codeurjc.global_mart.controller;
 
+import java.security.Principal;
+import java.sql.Blob;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import ch.qos.logback.classic.Logger;
+import org.hibernate.engine.jdbc.BlobProxy;
+
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,48 +22,37 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import ch.qos.logback.classic.Logger;
-
-import java.util.Base64;
-import java.util.List;
 import java.util.Map;
-import java.util.Collections;
-import java.util.Optional;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Base64;
+import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
-
-// import es.codeurjc.global_mart.model.LoggedUser;
-// import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.security.Principal;
-import java.sql.Blob;
-
 @Controller
 public class MainController {
 
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(MainController.class);
+	
+
 	@Autowired
 	private ProductService productService;
 
 	@Autowired
 	private UserService userService;
 
-	// @Autowired
-	// private LoggedUser loggedUser;
-
-	// @Autowired
-	// private UserRepository userRepository;
+	@Autowired
+	private SearchController searchController;
 
 	private Principal principal;
 
@@ -86,6 +89,15 @@ public class MainController {
 	// Initial page (index.html)
 	@GetMapping("/")
 	public String greeting(Model model) {
+		// Obtener los 4 productos más visitados
+		List<Product> mostViewedProducts = productService.getMostViewedProducts(4);
+
+		// Convertir las imágenes Blob a Base64 para cada producto
+		addImageDataToProducts(mostViewedProducts);
+
+		// Añadir la lista al modelo
+		model.addAttribute("mostViewedProducts", mostViewedProducts);
+
 		return "index";
 	}
 
@@ -114,7 +126,9 @@ public class MainController {
 
 	@GetMapping("/adminPage")
 	public String admin(Model model) {
-		model.addAttribute("productsNotAccepted", productService.getNotAcceptedProducts());
+		List<Product> products = productService.getNotAcceptedProducts();
+		searchController.convertBlobToBase64(products);
+		model.addAttribute("productsNotAccepted", products);
 		return "administrator";
 	}
 
@@ -203,18 +217,17 @@ public class MainController {
 				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 			}
 			model.addAttribute("productImage", imageBase64);
-
 			model.addAttribute("productId", productService.getProductId(product.get()));
 			model.addAttribute("productStock", product.get().getStock());
-			model.addAttribute("reviews", productService.getProductReviews(product.get()));
-
+			model.addAttribute("reviews", product.get().getReviews());
 
 			return "descriptionProduct";
 		} else {
-			return "redirect:/products/allProducts";
+			return "redirect:/allProducts";
 		}
 	}
 
+	
 	// Redirection to the descriprion of a produdct
 	@GetMapping("/descriptionProduct")
 	public String descriptionProduct(Model model) {
@@ -224,6 +237,7 @@ public class MainController {
 
 	@GetMapping("/new_product")
 	public String new_product(Model model) {
+		model.addAttribute("form_title", "New product");
 		return "uploadProducts";
 	}
 
@@ -279,6 +293,81 @@ public class MainController {
 		userService.addProductToCart(user, product);
 
 		return "redirect:/shoppingcart";
+	}
+
+	@GetMapping("/edit_product/{id}")
+	public String editProductForm(@PathVariable Long id, Model model) {
+		model.addAttribute("form_title", "Edit Product");
+
+		Optional<Product> optionalProduct = productService.getProductById(id);
+		if (optionalProduct.isPresent()) {
+			Product product = optionalProduct.get();
+
+			// Convertir la imagen Blob a Base64 para mostrarla
+			try {
+				Blob imageBlob = product.getImage();
+				if (imageBlob != null) {
+					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+					product.setImageBase64(imageBase64);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			// Añadir atributos para seleccionar el tipo correcto en el menú desplegable
+			model.addAttribute("type_" + product.getType(), true);
+			model.addAttribute("product", product);
+		} else {
+			return "redirect:/products/allProducts";
+		}
+
+		return "uploadProducts";
+	}
+
+	@PostMapping("/update_product/{id}")
+	public String updateProduct(
+			@PathVariable Long id,
+			@RequestParam String product_name,
+			@RequestParam(required = false) MultipartFile product_image,
+			@RequestParam String product_description,
+			@RequestParam String product_type,
+			@RequestParam Integer product_stock,
+			@RequestParam Double product_price)
+			throws Exception {
+
+		Optional<Product> optionalProduct = productService.getProductById(id);
+		if (optionalProduct.isPresent()) {
+			Product product = optionalProduct.get();
+			product.setName(product_name);
+			product.setDescription(product_description);
+			product.setType(product_type);
+			product.setStock(product_stock);
+			product.setPrice(product_price);
+
+			// Actualizar la imagen solo si se proporciona una nueva
+			if (product_image != null && !product_image.isEmpty()) {
+				product.setImage(BlobProxy.generateProxy(
+						product_image.getInputStream(),
+						product_image.getSize()));
+			}
+
+			productService.addProduct(product);
+
+			// Si el usuario es una empresa, redirigir a sus productos
+			if (userService.findByUsername(principal.getName()).get().isCompany()) {
+				return "redirect:/products/allProducts";
+			} else {
+				return "redirect:/adminPage";
+			}
+		} else {
+			return "redirect:/products/allProducts";
+		}
+	}
+
+	@GetMapping("/payCart")
+	public String payCart(@RequestParam String param) {
+		return "payment";
 	}
 
 	@GetMapping("/displayGraphs")
