@@ -52,17 +52,19 @@
                     {{/isCompany}}
                     {{/isAdmin}}
 
-                    <!-- Agregar en descriptionProduct.html donde sea apropiado -->
                     {{#isAdmin}}
 
                     <a href="/edit_product/{{productId}}" class="edit_product_button">Edit Product</a>
+                    <a href="/deleteProduct/{{productId}}" class="edit_product_button">Delete Product</a>
 
                     {{/isAdmin}}
+
 
                     {{#isCompany}}
                     <!-- Solo mostrar el botón al propietario del producto -->
                     {{#isOwner}}
                     <a href="/edit_product/{{productId}}" class="edit_product_button">Edit Product</a>
+                    <a href="/deleteProduct/{{productId}}" class="edit_product_button">Delete Product</a>
 
                     {{/isOwner}}
                     {{/isCompany}}

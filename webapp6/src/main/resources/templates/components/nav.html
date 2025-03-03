@@ -9,13 +9,15 @@
         </a>
 
         <div class="sections_list">
-            <a href="{{^isAdmin}}/products/allProducts{{/isAdmin}}{{#isAdmin}}/adminPage{{/isAdmin}}"
-                class="section">Products</a>
+            <a href="/products/allProducts" class="section">Products</a>
+            {{#isAdmin}}
+            <a href="/adminPage" class="section">Admin</a>
+            {{/isAdmin}}
             <a href="/about" class="section">About us</a>
         </div>
     </div>
 
-    {{^isAdmin}}{{^isCompany}}
+    {{^isCompany}}
     <form class="search_form" action="/search" method="get" role="search">
         <select class="search_category" name="type">
             <option value="all">All</option>
@@ -32,7 +34,7 @@
         <input name="search_text" class="search_input" type="search" placeholder="Search" aria-label="Search">
         <button class="search_button" type="submit"><i class="bi bi-search"></i></button>
     </form>
-    {{/isCompany}}{{/isAdmin}}
+    {{/isCompany}}
 
     {{#logged}}
     <div class="login_user">
