@@ -208,10 +208,11 @@ public class MainController {
 				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 			}
 			model.addAttribute("productImage", imageBase64);
-
 			model.addAttribute("productId", productService.getProductId(product.get()));
 			model.addAttribute("productStock", product.get().getStock());
-			model.addAttribute("reviews", reviewService.getReviewsByProductId(product.get().getId()));
+			model.addAttribute("reviews", product.get().getReviews());
+
+			product.get().getReviews().forEach(review -> System.out.println(review.getComment()));
 
 			productService.setViews_product_count(product.get());
 			model.addAttribute("count", productService.getViews_product_count(product.get()));

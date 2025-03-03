@@ -21,7 +21,7 @@ public class ReviewService {
 
     // Crear una nueva reseña
     public Review createReview(String username, String comment, int calification) {
-        Review review = new Review(username, comment, calification, LocalDateTime.now());
+        Review review = new Review(username, comment, calification);
         return reviewRepository.save(review);
     }
 

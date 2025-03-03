@@ -29,12 +29,12 @@ public class Review {
 
     public Review() {}
 
-    public Review(String username, String comment, int calification, LocalDateTime creationDate) {
+    public Review(String username, String comment, int calification) {
         if (calificationValidation(calification)) { 
             this.username = username;  
             this.comment = comment;
             this.calification = calification;
-            this.creationDate = creationDate;
+            this.creationDate = LocalDateTime.now();
         }else{
             throw new IllegalArgumentException("Calification must be between 0 and 5");
         }

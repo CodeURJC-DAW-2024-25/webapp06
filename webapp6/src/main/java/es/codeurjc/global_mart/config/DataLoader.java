@@ -55,8 +55,8 @@ public class DataLoader {
 
 
                 // Create and associate reviews before persisting
-                Review review1 = new Review("user1", "Muy bueno", 5, LocalDateTime.now());
-                Review review2 = new Review("user1", "Muy malo", 1, LocalDateTime.now());
+                Review review1 = new Review("user1", "Muy bueno", 5);
+                Review review2 = new Review("user1", "Muy malo", 1);
 
                 // Create product
                 productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0, 
