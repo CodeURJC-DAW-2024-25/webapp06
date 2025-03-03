@@ -1,27 +1,28 @@
 package es.codeurjc.global_mart.config;
 
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.Review;
-import es.codeurjc.global_mart.service.ProductService;
-import es.codeurjc.global_mart.service.UserService;
-import es.codeurjc.global_mart.service.ReviewService;
-import jakarta.annotation.PostConstruct;
-
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import es.codeurjc.global_mart.model.Review;
+import es.codeurjc.global_mart.service.ProductService;
+import es.codeurjc.global_mart.service.ReviewService;
+import es.codeurjc.global_mart.service.UserService;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class DataLoader {
+
+        private static final Logger logger = LoggerFactory.getLogger(DataLoader.class);
 
         @Autowired
         private ProductService productService;
@@ -61,8 +62,7 @@ public class DataLoader {
                 // Create product
                 productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0, 
                 "Una versión abreviada de las aventuras de un excéntrico caballero rural y su fiel compañero...",
-                BlobProxy.generateProxy(image7),10, true, List.of(review1, review2));
-                
+                BlobProxy.generateProxy(image7),10, true, List.of(review1, review2));               
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
                                 BlobProxy.generateProxy(image1), 10, true);
@@ -88,7 +88,6 @@ public class DataLoader {
                 userService.createUser(null, "a", "a", "a@gmail.com", passwordEncoder.encode("a"),
                                 Arrays.asList("USER"));
 
-                reviewService.createReview("user1", "Muy bueno", 5);
 
         }
 

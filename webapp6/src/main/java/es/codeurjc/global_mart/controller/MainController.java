@@ -1,5 +1,16 @@
 package es.codeurjc.global_mart.controller;
 
+import java.security.Principal;
+import java.sql.Blob;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.hibernate.engine.jdbc.BlobProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,32 +20,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Collections;
-import java.util.Optional;
-
-import org.hibernate.engine.jdbc.BlobProxy;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
-
-// import es.codeurjc.global_mart.model.LoggedUser;
-// import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
-import es.codeurjc.global_mart.service.ReviewService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.security.Principal;
-import java.sql.Blob;
 
 @Controller
 public class MainController {
 
-	@Autowired
-	private ReviewService reviewService;
+	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
 	@Autowired
 	private ProductService productService;
@@ -207,12 +203,29 @@ public class MainController {
 				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
 				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 			}
-			model.addAttribute("productImage", imageBase64);
-			model.addAttribute("productId", productService.getProductId(product.get()));
-			model.addAttribute("productStock", product.get().getStock());
-			model.addAttribute("reviews", product.get().getReviews());
 
-			product.get().getReviews().forEach(review -> System.out.println(review.getComment()));
+			logger.info("Llega hasta aquí");
+
+			// Obtener la lista de reviews
+			List<Review> reviews = product.get().getReviews();
+
+			// Verificar si hay reviews y agregarlas al modelo
+			if (reviews != null && !reviews.isEmpty()) {
+				logger.info("Total reviews: " + reviews.size());
+				model.addAttribute("reviews", reviews);
+
+				if (reviews.size() > 0) {
+					logger.info("Primer comentario: " + reviews.get(0).getComment());
+				}
+				
+				if (reviews.size() > 1) {
+					logger.info("Segundo comentario: " + reviews.get(1).getComment());
+				}
+			} else {
+				logger.info("No hay reviews para este producto.");
+				model.addAttribute("reviews", Collections.emptyList()); // Enviar lista vacía al template
+			}
+
 
 			productService.setViews_product_count(product.get());
 			model.addAttribute("count", productService.getViews_product_count(product.get()));

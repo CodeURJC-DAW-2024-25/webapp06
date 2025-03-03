@@ -57,9 +57,4 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
-    public List<Review> getReviewsByProductId(Long productId) {
-        Product product = productService.getProductById(productId)
-            .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
-        return reviewRepository.findByProduct(product);
-    }
 }

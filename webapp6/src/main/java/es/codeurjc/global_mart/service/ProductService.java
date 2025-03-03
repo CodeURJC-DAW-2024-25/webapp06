@@ -1,30 +1,33 @@
 package es.codeurjc.global_mart.service;
 
-import es.codeurjc.global_mart.repository.ProductRepository;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.Review;
-
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.sql.Blob;
-
-import org.hibernate.engine.jdbc.BlobProxy;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.engine.jdbc.BlobProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.model.Review;
+import es.codeurjc.global_mart.repository.ProductRepository;
+
 @Service
 public class ProductService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     @Autowired
     private ProductRepository productRepository;
 
     public Product createProduct(String type, String name, String business, Double price, String description,
             Blob image, Integer stock, Boolean isAccepted) throws IOException {
+        
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
 
         if (image != null) {
@@ -45,6 +48,8 @@ public class ProductService {
     Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
         product.setReviews(reviews);
+
+        logger.info("Number of reviews: " + reviews.size());
         
         if (image != null) {
             product.setImage(image); // como se sube una
