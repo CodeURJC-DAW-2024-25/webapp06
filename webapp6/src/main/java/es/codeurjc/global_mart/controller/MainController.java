@@ -75,6 +75,7 @@ public class MainController {
 
 		if (principal instanceof OAuth2User oAuth2User) {
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
+			model.addAttribute("isUser", true);
 
 		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<User> user = userService.findByUsername(userDetails.getUsername());
@@ -302,13 +303,22 @@ public String profile(Model model, Authentication authentication) {
 	}
 
 	@GetMapping("/shoppingcart")
-	public String shoppingCart(Model model) {
-		model.addAttribute("nombre", principal.getName());
-		// System.out.println("Nombre del usuario autenticado: " + principal.getName());
-		model.addAttribute("products",
-				userService.getCartProducts(userService.findByUsername(principal.getName()).get()));
-		model.addAttribute("totalPrice",
-				userService.getTotalPrice(userService.findByUsername(principal.getName()).get()));
+	public String shoppingCart(Model model,Authentication autentication) {
+
+		Object principal = autentication.getPrincipal();
+		if (principal instanceof OAuth2User oAuth2User) {
+			model.addAttribute("username", oAuth2User.getAttribute("name"));
+			model.addAttribute("products", userService.getCartProducts(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
+			model.addAttribute("totalPrice", userService.getTotalPrice(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			Optional<User> user = userService.findByUsername(userDetails.getUsername());
+			if (user.isPresent()) {
+				model.addAttribute("username", user.get().getUsername());
+				model.addAttribute("products", userService.getCartProducts(user.get()));
+				model.addAttribute("totalPrice", userService.getTotalPrice(user.get()));
+			}
+		}
+
 		return "shoppingcart";
 	}
 

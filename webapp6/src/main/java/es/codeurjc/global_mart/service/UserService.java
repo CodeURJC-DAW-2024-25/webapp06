@@ -82,4 +82,9 @@ public class UserService {
         return user.getTotalPrice();
     }
 
+    public Optional<User> findByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user;
+    }
+
 }
