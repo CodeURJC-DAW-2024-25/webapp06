@@ -12,6 +12,7 @@ import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,10 +96,18 @@ public class ProductService {
     public Blob getProductImage(Product product) {
         return product.getImage();
     }
-    
 
     public Long getProductId(Product product) {
         return product.getId();
+    }
+
+    public Integer getViews_product_count(Product product) {
+        return product.getViews_count();
+    }
+
+    public void setViews_product_count(Product product) {
+        product.setViews_count(getViews_product_count(product) + 1);
+        productRepository.save(product);
     }
 
     public List<Product> getAcceptedProductsByType(String type) {
@@ -165,5 +174,16 @@ public class ProductService {
         }
         return acceptedCompanyProducts;
 
+    }
+
+    public List<Product> getMostViewedProducts(int limit) {
+        List<Product> acceptedProducts = getAcceptedProducts();
+
+        // Ordenar productos por número de vistas (de mayor a menor)
+        Collections.sort(acceptedProducts, (p1, p2) -> p2.getViews_count().compareTo(p1.getViews_count()));
+
+        // Tomar solo los primeros 'limit' productos
+        int size = Math.min(limit, acceptedProducts.size());
+        return acceptedProducts.subList(0, size);
     }
 }

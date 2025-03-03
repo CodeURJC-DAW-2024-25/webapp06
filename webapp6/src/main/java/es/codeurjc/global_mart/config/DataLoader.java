@@ -38,30 +38,18 @@ public class DataLoader {
         @PostConstruct
         public void loadData() throws IOException {
 
-                byte[] image1 = Files.readAllBytes(new ClassPathResource("static/images/products/diariogreg.jpg").getFile().toPath());
-                byte[] image2 = Files.readAllBytes(new ClassPathResource("static/images/products/iphone16.jpg").getFile().toPath());
-                byte[] image3 = Files.readAllBytes(new ClassPathResource("static/images/products/macbook.jpg").getFile().toPath());
-                byte[] image4 = Files.readAllBytes(new ClassPathResource("static/images/products/at10.jpg").getFile().toPath());
-                byte[] image5 = Files.readAllBytes(new ClassPathResource("static/images/products/disco.jpg").getFile().toPath());
-
-                byte[] image6 = Files.readAllBytes(new ClassPathResource("static/images/products/lavadora.jpg").getFile().toPath());
-
-                byte[] image7 = Files.readAllBytes(new ClassPathResource("static/images/products/don_quijote.jpg").getFile().toPath());
-
-                // Create product
-                productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0, 
-                "Una versión abreviada de las aventuras de un excéntrico caballero rural y su fiel compañero...",
-                BlobProxy.generateProxy(image7),10, true);
-
-                // Create and associate reviews before persisting
-                Review review1 = new Review("user1", "Muy bueno", 5, LocalDateTime.now());
-                Review review2 = new Review("user1", "Muy malo", 1, LocalDateTime.now());
-
-
-
-                //elQuijote.setReviews(List.of(review1, review2)); 
-
-                
+                byte[] image1 = Files.readAllBytes(
+                                new ClassPathResource("static/images/products/diariogreg.jpg").getFile().toPath());
+                byte[] image2 = Files.readAllBytes(
+                                new ClassPathResource("static/images/products/iphone16.jpg").getFile().toPath());
+                byte[] image3 = Files.readAllBytes(
+                                new ClassPathResource("static/images/products/macbook.jpg").getFile().toPath());
+                byte[] image4 = Files.readAllBytes(
+                                new ClassPathResource("static/images/products/at10.jpg").getFile().toPath());
+                byte[] image5 = Files.readAllBytes(
+                                new ClassPathResource("static/images/products/disco.jpg").getFile().toPath());
+                byte[] image6 = Files.readAllBytes(
+                                new ClassPathResource("static/images/products/lavadora.jpg").getFile().toPath());
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
                                 BlobProxy.generateProxy(image1), 10, true);
@@ -77,9 +65,6 @@ public class DataLoader {
                                 BlobProxy.generateProxy(image5), 10, true);
                 productService.createProduct("Appliances", "Producto6", "MediaMarkt", 300.0, "Muy útil",
                                 BlobProxy.generateProxy(image6), 10, false);
-                                
-
-
 
                 userService.createUser(null, "User 1", "user1", "user1@gmail.com", passwordEncoder.encode("user1"),
                                 Arrays.asList("ADMIN"));

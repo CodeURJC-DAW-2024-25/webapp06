@@ -33,8 +33,6 @@ import java.sql.Blob;
 @Controller
 public class MainController {
 
-
-
 	@Autowired
 	private ReviewService reviewService;
 
@@ -46,11 +44,6 @@ public class MainController {
 
 	@Autowired
 	private SearchController searchController;
-	// @Autowired
-	// private LoggedUser loggedUser;
-
-	// @Autowired
-	// private UserRepository userRepository;
 
 	private Principal principal;
 
@@ -87,6 +80,15 @@ public class MainController {
 	// Initial page (index.html)
 	@GetMapping("/")
 	public String greeting(Model model) {
+		// Obtener los 4 productos más visitados
+		List<Product> mostViewedProducts = productService.getMostViewedProducts(4);
+
+		// Convertir las imágenes Blob a Base64 para cada producto
+		addImageDataToProducts(mostViewedProducts);
+
+		// Añadir la lista al modelo
+		model.addAttribute("mostViewedProducts", mostViewedProducts);
+
 		return "index";
 	}
 
@@ -211,6 +213,8 @@ public class MainController {
 			model.addAttribute("productStock", product.get().getStock());
 			model.addAttribute("reviews", reviewService.getReviewsByProductId(product.get().getId()));
 
+			productService.setViews_product_count(product.get());
+			model.addAttribute("count", productService.getViews_product_count(product.get()));
 
 			return "descriptionProduct";
 		} else {

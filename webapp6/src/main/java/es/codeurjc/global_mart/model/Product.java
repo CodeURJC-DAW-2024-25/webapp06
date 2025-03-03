@@ -27,10 +27,11 @@ public class Product {
     private String company;
     private Double price;
     private String description;
+    private Integer views_count;
 
     @Lob
     private Blob image;
-    
+
     private Integer stock;
     private Boolean isAccepted;
     private String imageBase64;
@@ -55,6 +56,7 @@ public class Product {
         this.stock = stock;
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;
+        this.views_count = 0;
     }
 
     // ----------------- Methods -----------------
@@ -164,4 +166,11 @@ public class Product {
         this.imageBase64 = imageBase64;
     }
 
+    public Integer getViews_count() {
+        return views_count;
+    }
+
+    public void setViews_count(Integer views_count) {
+        this.views_count = views_count;
+    }
 }
