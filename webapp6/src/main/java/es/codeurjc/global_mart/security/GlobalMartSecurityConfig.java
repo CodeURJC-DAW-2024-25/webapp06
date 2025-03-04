@@ -101,6 +101,9 @@ public class GlobalMartSecurityConfig {
                             }
                         })
                         .permitAll())
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/loginComprobation", true))
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")
