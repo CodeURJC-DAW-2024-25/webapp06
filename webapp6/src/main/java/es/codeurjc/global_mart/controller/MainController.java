@@ -228,7 +228,7 @@ public String profile(Model model, Authentication authentication) {
 	}
 
 	@GetMapping("/product/{id}")
-	public String productDescription(@PathVariable Long id, Model model) throws Exception {
+	public String productDescription(@PathVariable Long id, Model model, Authentication autentication) throws Exception {
 		Optional<Product> product = productService.getProductById(id); // Extract the product by its id
 
 		if (product.isPresent()) {
@@ -246,6 +246,10 @@ public String profile(Model model, Authentication authentication) {
 				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
 				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 			}
+
+			
+			
+			productService.setViews_product_count(product.get());
 			model.addAttribute("productImage", imageBase64);
 			model.addAttribute("productId", productService.getProductId(product.get()));
 			model.addAttribute("productStock", product.get().getStock());
