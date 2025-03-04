@@ -274,15 +274,22 @@ public String profile(Model model, Authentication authentication) {
 	@PostMapping("/newproduct")
 	public String newproduct(@RequestParam String product_name, @RequestParam MultipartFile product_image,
 			@RequestParam String product_description, @RequestParam String product_type,
-			@RequestParam Integer product_stock, @RequestParam Double product_price)
+			@RequestParam Integer product_stock, @RequestParam Double product_price,Authentication autentication)
 			throws Exception {
-
+		Object principal = autentication.getPrincipal();
 		// Usamos el parámetro Principal para obtener el nombre del usuario logueado
-		productService.createProduct(product_type, product_name, principal.getName(),
-				product_price,
-				product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
-				product_stock, false);
-
+		if (principal instanceof OAuth2User oAuth2User) {
+			productService.createProduct(product_type, product_name, oAuth2User.getAttribute("name"),
+					product_price,
+					product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
+					product_stock, false);
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			productService.createProduct(product_type, product_name, userDetails.getUsername(),
+					product_price,
+					product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
+					product_stock, false);
+		}
+		
 		return "redirect:/products/allProducts";
 	}
 
@@ -418,9 +425,16 @@ public String profile(Model model, Authentication authentication) {
 	}
 
 	@GetMapping("/displayGraphs")
-	public String displayGraph(Model model) {
-	
-		User user = userService.findByUsername(principal.getName()).get();
+	public String displayGraph(Model model,Authentication autentication) {
+
+		Object principal = autentication.getPrincipal();
+		if (principal instanceof OAuth2User oAuth2User) {
+			model.addAttribute("username", oAuth2User.getAttribute("name"));
+		} 
+		if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			Optional<User> user = userService.findByUsername(userDetails.getUsername());
+			model.addAttribute("username", user.get().getUsername());
+		
 		// Map<String, Integer> productsRange = new HashMap<>();
 		// productsRange.put("Nombre" , 12);
 		// productsRange.put("Deportes", 15);
@@ -438,7 +452,7 @@ public String profile(Model model, Authentication authentication) {
 		dataMap.put("Otros", 0);
 
 		// iterate over the products of the company and count the number of products of each type and store it in the dataMap
-		List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.getUsername());
+		List<Product> companyProducts = productService.getAcceptedCompanyProducts(userDetails.getUsername());
 		for (Product product : companyProducts) {
 			String type = product.getType();
 			dataMap.put(type, dataMap.getOrDefault(type, 0) + 1);
@@ -456,11 +470,11 @@ public String profile(Model model, Authentication authentication) {
 		// model.addAttribute("companyProducts", companyProducts);
 		model.addAttribute("productsRange", dataList);
 		model.addAttribute("books", 12);
-		model.addAttribute("username", principal.getName());
+		model.addAttribute("username", userDetails.getUsername());
 		model.addAttribute("sports", 15);
 		
 		
-		
+	}
 		return "companyGraphs";
 	}
 
