@@ -1,20 +1,16 @@
 package es.codeurjc.global_mart.service;
 
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.Review;
-import es.codeurjc.global_mart.repository.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import es.codeurjc.global_mart.model.Review;
+import es.codeurjc.global_mart.repository.ReviewRepository;
+
 @Service
 public class ReviewService {
-
-    @Autowired
-    private ProductService productService;
 
     @Autowired
     private ReviewRepository reviewRepository;

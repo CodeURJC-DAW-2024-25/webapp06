@@ -98,40 +98,8 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public String getProductName(Product product) {
-        return product.getName();
-    }
-
-    public String getProductType(Product product) {
-        return product.getType();
-    }
-
-    public String getProductCompany(Product product) {
-        return product.getCompany();
-    }
-
-    public Double getProductPrice(Product product) {
-        return product.getPrice();
-    }
-
-    public String getProductDescription(Product product) {
-        return product.getDescription();
-    }
-
-    public Blob getProductImage(Product product) {
-        return product.getImage();
-    }
-
-    public Long getProductId(Product product) {
-        return product.getId();
-    }
-
-    public Integer getViews_product_count(Product product) {
-        return product.getViews_count();
-    }
-
     public void setViews_product_count(Product product) {
-        product.setViews_count(getViews_product_count(product) + 1);
+        product.setViews_count(product.getViews_count() + 1);
         productRepository.save(product);
     }
 

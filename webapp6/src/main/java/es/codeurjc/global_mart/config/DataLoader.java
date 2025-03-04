@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.service.ProductService;
+import es.codeurjc.global_mart.service.ReviewService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.annotation.PostConstruct;
 
@@ -25,6 +26,9 @@ public class DataLoader {
 
         @Autowired
         private ProductService productService;
+
+        @Autowired
+        private ReviewService reviewService;
 
         @Autowired
         private UserService userService;
@@ -54,6 +58,9 @@ public class DataLoader {
                 // Create and associate reviews before persisting
                 Review review1 = new Review("user1", "Muy bueno", 5);
                 Review review2 = new Review("user1", "Muy malo", 1);
+
+//                reviewService.addReview(review1);
+//                reviewService.addReview(review2);
 
                 // Create product
                 productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0, 

@@ -1,0 +1,34 @@
+<div>
+    {{#logged}}
+
+    <form action="/product/{{id}}/new_review" method="POST">
+        <h2>Deja tu reseña</h2>
+        <label for="username">Nombre de usuario:</label>
+        <input type="text" id="username" name="username" required>
+    
+        <label for="calification">Calificación (1-5):</label>
+        <input type="number" id="calification" name="calification" min="1" max="5" required>
+    
+        <label for="comment">Comentario:</label>
+        <textarea id="comment" name="comment" required></textarea>
+    
+        <button type="submit">Enviar Review</button>
+        <input type="hidden" name="_csrf" value="{{token}}">
+    </form>
+
+    {{/logged}}
+    
+    <h2>Reviews</h2>    
+    <div class="reviews">
+        {{#reviews}}
+            <div class="review">
+                <p>{{calification}}</p>
+                <p>{{comment}}</p>
+            </div>
+        {{/reviews}}
+
+        {{^reviews}}
+            <p>No hay reseñas para este producto.</p>
+        {{/reviews}}
+    </div>
+</div>

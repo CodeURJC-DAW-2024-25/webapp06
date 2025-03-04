@@ -7,15 +7,12 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import ch.qos.logback.classic.Logger;
-
-import org.springframework.security.core.Authentication;
 import org.hibernate.engine.jdbc.BlobProxy;
-
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,34 +22,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Base64;
-import java.util.List;
-import java.util.Collections;
-import java.util.Optional;
-
-import org.hibernate.engine.jdbc.BlobProxy;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.ProductService;
+import es.codeurjc.global_mart.service.ReviewService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class MainController {
 
     private final CSRFHandlerConfiguration CSRFHandlerConfiguration;
 
-	
-
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private ReviewService reviewService;
 
 	@Autowired
 	private UserService userService;
@@ -233,11 +224,11 @@ public String profile(Model model, Authentication authentication) {
 
 		if (product.isPresent()) {
 			// Extract all the info of the product to use it in the musctache template
-			model.addAttribute("productName", productService.getProductName(product.get()));
-			model.addAttribute("productType", productService.getProductType(product.get()));
-			model.addAttribute("productCompany", productService.getProductCompany(product.get()));
-			model.addAttribute("productPrice", productService.getProductPrice(product.get()));
-			model.addAttribute("productDescription", productService.getProductDescription(product.get()));
+			model.addAttribute("productName", product.get().getName());
+			model.addAttribute("productType", product.get().getType());
+			model.addAttribute("productCompany",product.get().getCompany());
+			model.addAttribute("productPrice", product.get().getPrice());
+			model.addAttribute("productDescription", product.get().getDescription());
 
 			// Convert Blob to Base64 encoded string
 			String imageBase64 = null;
@@ -247,7 +238,7 @@ public String profile(Model model, Authentication authentication) {
 				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 			}
 			model.addAttribute("productImage", imageBase64);
-			model.addAttribute("productId", productService.getProductId(product.get()));
+			model.addAttribute("productId", product.get().getId());
 			model.addAttribute("productStock", product.get().getStock());
 			model.addAttribute("reviews", product.get().getReviews());
 
@@ -290,8 +281,8 @@ public String profile(Model model, Authentication authentication) {
 	public String acceptProduct(@PathVariable Long id) {
 		Optional<Product> product = productService.getProductById(id);
 		if (product.isPresent()) {
-			productService.updateProduct(id, productService.getProductName(product.get()),
-					productService.getProductPrice(product.get()));
+			productService.updateProduct(id, product.get().getName(),
+					product.get().getPrice());
 		}
 		return "redirect:/adminPage";
 	}
@@ -459,9 +450,24 @@ public String profile(Model model, Authentication authentication) {
 		model.addAttribute("username", principal.getName());
 		model.addAttribute("sports", 15);
 		
-		
-		
 		return "companyGraphs";
 	}
+
+	//Function to add review to a product
+	@PostMapping("/product/{id}/new_review")
+	public String postMethodName(Review review, @PathVariable Long id) {
+
+
+		Optional<Product> product = productService.getProductById(id);
+
+		if (product.isPresent()) {
+			product.get().addReview(review);
+			productService.addProduct(product.get());
+			return "redirect:/product/" + id;
+		}else {
+			return "redirect:/error";
+		}
+	}
+	
 
 }

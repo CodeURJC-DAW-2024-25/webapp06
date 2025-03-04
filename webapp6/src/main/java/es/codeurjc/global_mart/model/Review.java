@@ -14,7 +14,7 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long reviewId;
 
     private String username;
     private String comment;
@@ -35,12 +35,12 @@ public class Review {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getReviewId() {
+        return reviewId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setReviewId(Long id) {
+        this.reviewId = id;
     }
 
     public String getUsername() {

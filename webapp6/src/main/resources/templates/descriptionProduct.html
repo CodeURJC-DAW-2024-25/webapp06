@@ -72,21 +72,7 @@
                     <a href="/products/allProducts" class="back2products_button">Back to Products</a>
                 </div>
             </div>
-            <div>
-                <h2>Reviews</h2>
-                <div class="reviews">
-                    {{#reviews}}
-                        <div class="review">
-                            <p>{{calification}}</p>
-                            <p>{{comment}}</p>
-                        </div>
-                    {{/reviews}}
-            
-                    {{^reviews}}  <!-- Se ejecuta si NO hay reseñas -->
-                        <p>No hay reseñas para este producto.</p>
-                    {{/reviews}}
-                </div>
-            </div>
+            {{>/components/reviews}}
         </div>
     </div>
 
