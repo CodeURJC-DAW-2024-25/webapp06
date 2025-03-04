@@ -67,12 +67,17 @@
 					type : 'pie',
 					name : 'Ratio',
 					data: [
-					[ 'Sports', parseInt(document.getElementById('Deportes-data').getAttribute('data-')) ], // take the value of the data- attribute of the element with id from the DOM
-					[ 'Books', parseInt(document.getElementById('Libros-data').getAttribute('data-')) ],
-
-
-
+					[ 'Deportes', parseInt(document.getElementById('Sports-data').getAttribute('data-')) ], // take the value of the data- attribute of the element with id from the DOM
+					[ 'Libros', parseInt(document.getElementById('Books-data').getAttribute('data-')) ],
+					[ 'Educación', parseInt(document.getElementById('Education-data').getAttribute('data-')) ],
+					[ 'Casa', parseInt(document.getElementById('Home-data').getAttribute('data-')) ],
+					[ 'Musica', parseInt(document.getElementById('Music-data').getAttribute('data-')) ],
+					[ 'Cine', parseInt(document.getElementById('Cinema-data').getAttribute('data-')) ],
+					[ 'Otros', parseInt(document.getElementById('Others-data').getAttribute('data-')) ],
+					[ 'Tecnologia', parseInt(document.getElementById('Technology-data').getAttribute('data-')) ],
+					[ 'Electrodomesticos', parseInt(document.getElementById('Appliances-data').getAttribute('data-')) ]
 					]
+					
 				} ]
 			});
 		</script>

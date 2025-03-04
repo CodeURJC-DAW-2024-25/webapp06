@@ -446,14 +446,15 @@ public String profile(Model model, Authentication authentication) {
 		Map<String, Integer> dataMap = new HashMap<>();
 		
 		// Initialize the dataMap with predefined keys and zero values
-		dataMap.put("Technologia", 0);
-		dataMap.put("Libros", 0);
-		dataMap.put("Educación", 0);
-		dataMap.put("Deportes", 0);
-		dataMap.put("Casa", 0);
-		dataMap.put("Musica", 0);
-		dataMap.put("Cine", 0);
-		dataMap.put("Otros", 0);
+		dataMap.put("Technology", 0);
+		dataMap.put("Books", 0);
+		dataMap.put("Education", 0);
+		dataMap.put("Sports", 0);
+		dataMap.put("Home", 0);
+		dataMap.put("Music", 0);
+		dataMap.put("Cinema", 0);
+		dataMap.put("Appliances", 0);
+		dataMap.put("Others", 0);
 
 		// iterate over the products of the company and count the number of products of each type and store it in the dataMap
 		List<Product> companyProducts = productService.getAcceptedCompanyProducts(userDetails.getUsername());
