@@ -2,22 +2,34 @@
 	<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 	<meta charset="ISO-8859-1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>PIE</title>
-
+    
 	<link rel="stylesheet"
 		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 
 
 	<link rel="stylesheet"
 		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+	<link rel="stylesheet" href="/css/companyGraphs.css">
+	<!-- /* Itim Font */ -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
+		rel="stylesheet">
 
 	</head>
 	<body>
+		<div style="font-size: 15px;">
+		{{>./components/nav}}
+		</div>
 		<script src="https://code.highcharts.com/highcharts.js"></script>
 		<script src="https://code.highcharts.com/highcharts-3d.js"></script>
 		<script src="https://code.highcharts.com/modules/exporting.js"></script>
-
+		
 		<div id="container" style="height: 400px"></div>
+		
 		<div>
 
 			{{#dataList}}
@@ -25,6 +37,9 @@
 			{{/dataList}}
 			
 			
+		</div>
+		<div style="font-size: 15px;" >
+		{{>./components/footer}}
 		</div>
 		<script th:inline="javascript">
 			const dataElements = document.querySelectorAll('[id$="-data"]'); // get all elements with id ending in -data
