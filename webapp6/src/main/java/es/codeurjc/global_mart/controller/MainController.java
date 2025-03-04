@@ -219,7 +219,7 @@ public String profile(Model model, Authentication authentication) {
 	}
 
 	@GetMapping("/product/{id}")
-	public String productDescription(@PathVariable Long id, Model model) throws Exception {
+	public String productDescription(@PathVariable Long id, Model model, Authentication autentication) throws Exception {
 		Optional<Product> product = productService.getProductById(id); // Extract the product by its id
 
 		if (product.isPresent()) {
@@ -237,6 +237,10 @@ public String profile(Model model, Authentication authentication) {
 				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
 				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 			}
+
+			
+			
+			productService.setViews_product_count(product.get());
 			model.addAttribute("productImage", imageBase64);
 			model.addAttribute("productId", product.get().getId());
 			model.addAttribute("productStock", product.get().getStock());
@@ -265,15 +269,22 @@ public String profile(Model model, Authentication authentication) {
 	@PostMapping("/newproduct")
 	public String newproduct(@RequestParam String product_name, @RequestParam MultipartFile product_image,
 			@RequestParam String product_description, @RequestParam String product_type,
-			@RequestParam Integer product_stock, @RequestParam Double product_price)
+			@RequestParam Integer product_stock, @RequestParam Double product_price,Authentication autentication)
 			throws Exception {
-
+		Object principal = autentication.getPrincipal();
 		// Usamos el parámetro Principal para obtener el nombre del usuario logueado
-		productService.createProduct(product_type, product_name, principal.getName(),
-				product_price,
-				product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
-				product_stock, false);
-
+		if (principal instanceof OAuth2User oAuth2User) {
+			productService.createProduct(product_type, product_name, oAuth2User.getAttribute("name"),
+					product_price,
+					product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
+					product_stock, false);
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			productService.createProduct(product_type, product_name, userDetails.getUsername(),
+					product_price,
+					product_description, BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
+					product_stock, false);
+		}
+		
 		return "redirect:/products/allProducts";
 	}
 
@@ -409,9 +420,16 @@ public String profile(Model model, Authentication authentication) {
 	}
 
 	@GetMapping("/displayGraphs")
-	public String displayGraph(Model model) {
-	
-		User user = userService.findByUsername(principal.getName()).get();
+	public String displayGraph(Model model,Authentication autentication) {
+
+		Object principal = autentication.getPrincipal();
+		if (principal instanceof OAuth2User oAuth2User) {
+			model.addAttribute("username", oAuth2User.getAttribute("name"));
+		} 
+		if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			Optional<User> user = userService.findByUsername(userDetails.getUsername());
+			model.addAttribute("username", user.get().getUsername());
+		
 		// Map<String, Integer> productsRange = new HashMap<>();
 		// productsRange.put("Nombre" , 12);
 		// productsRange.put("Deportes", 15);
@@ -419,17 +437,18 @@ public String profile(Model model, Authentication authentication) {
 		Map<String, Integer> dataMap = new HashMap<>();
 		
 		// Initialize the dataMap with predefined keys and zero values
-		dataMap.put("Technologia", 0);
-		dataMap.put("Libros", 0);
-		dataMap.put("Educación", 0);
-		dataMap.put("Deportes", 0);
-		dataMap.put("Casa", 0);
-		dataMap.put("Musica", 0);
-		dataMap.put("Cine", 0);
-		dataMap.put("Otros", 0);
+		dataMap.put("Technology", 0);
+		dataMap.put("Books", 0);
+		dataMap.put("Education", 0);
+		dataMap.put("Sports", 0);
+		dataMap.put("Home", 0);
+		dataMap.put("Music", 0);
+		dataMap.put("Cinema", 0);
+		dataMap.put("Appliances", 0);
+		dataMap.put("Others", 0);
 
 		// iterate over the products of the company and count the number of products of each type and store it in the dataMap
-		List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.getUsername());
+		List<Product> companyProducts = productService.getAcceptedCompanyProducts(userDetails.getUsername());
 		for (Product product : companyProducts) {
 			String type = product.getType();
 			dataMap.put(type, dataMap.getOrDefault(type, 0) + 1);
@@ -447,9 +466,11 @@ public String profile(Model model, Authentication authentication) {
 		// model.addAttribute("companyProducts", companyProducts);
 		model.addAttribute("productsRange", dataList);
 		model.addAttribute("books", 12);
-		model.addAttribute("username", principal.getName());
+		model.addAttribute("username", userDetails.getUsername());
 		model.addAttribute("sports", 15);
 		
+		
+	}
 		return "companyGraphs";
 	}
 

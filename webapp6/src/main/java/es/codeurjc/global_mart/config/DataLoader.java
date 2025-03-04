@@ -71,7 +71,7 @@ public class DataLoader {
                                 BlobProxy.generateProxy(image1), 10, true);
                 productService.createProduct("Technology", "Producto2", "eBay", 30.0, "Muy útil",
                                 BlobProxy.generateProxy(image2), 10, true);
-                productService.createProduct("Technology", "Producto3", "Walmart", 40.0, "Muy práctico", BlobProxy
+                productService.createProduct("Technology", "Producto3", "comp", 40.0, "Muy práctico", BlobProxy
                                 .generateProxy(image3), 10,
                                 true);
                 productService.createProduct("Sports", "Producto4", "Decathlon", 50.0, "Muy resistente",
@@ -79,7 +79,7 @@ public class DataLoader {
                                 true);
                 productService.createProduct("Music", "Producto5", "Zara", 60.0, "Muy elegante",
                                 BlobProxy.generateProxy(image5), 10, true);
-                productService.createProduct("Appliances", "Producto6", "MediaMarkt", 300.0, "Muy útil",
+                productService.createProduct("Appliances", "Producto6", "comp", 300.0, "Muy útil",
                                 BlobProxy.generateProxy(image6), 10, false);
 
                 userService.createUser(null, "User 1", "user1", "user1@gmail.com", passwordEncoder.encode("user1"),
