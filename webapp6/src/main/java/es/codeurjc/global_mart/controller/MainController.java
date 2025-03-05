@@ -474,6 +474,27 @@ public String profile(Model model, Authentication authentication) {
 		return "companyGraphs";
 	}
 
+	
+	@GetMapping("/showUserGraphic")
+	public String displayUserGraph(Model model, Authentication authentication){
+		// Object principal = authentication.getPrincipal();
+		// if (principal instanceof OAuth2User oAuth2User) {
+		// 	model.addAttribute("username", oAuth2User.getAttribute("name"));
+		// } 
+		// if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+		// 	Optional<User> user = userService.findByUsername(userDetails.getUsername());
+		// 	model.addAttribute("username", user.get().getUsername());
+		// }
+
+
+		
+
+		return "userGraph";
+
+	}
+		
+	
+
 	//Function to add review to a product
 	@PostMapping("/product/{id}/new_review")
 	public String postMethodName(Review review, @PathVariable Long id) {

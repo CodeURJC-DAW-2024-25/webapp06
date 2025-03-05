@@ -42,6 +42,12 @@ public class User {
     @OneToMany
     private List<Product> cart;
 
+    private List<Double> historicalOrderPrices;
+
+    
+
+ 
+
     // ----------------- Constructor -----------------
     public User() {
     }
@@ -55,6 +61,7 @@ public class User {
         this.reviews = new ArrayList<>();
         this.role = role;
         this.cart = new ArrayList<>();
+        this.historicalOrderPrices = new ArrayList<>();
 
     }
 
@@ -120,6 +127,10 @@ public class User {
         return totalPrice;
     }
 
+    public List<Double> getHistoricalOrderPrices() {
+        return historicalOrderPrices;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;
@@ -155,6 +166,10 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setHistoricalOrderPrices(List<Double> historicalOrderPrices) {
+        this.historicalOrderPrices = historicalOrderPrices;
     }
 
     // Reviews
