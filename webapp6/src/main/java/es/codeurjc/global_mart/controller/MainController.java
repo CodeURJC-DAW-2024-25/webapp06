@@ -481,11 +481,21 @@ public String profile(Model model, Authentication authentication) {
 
 	//Function to add review to a product
 	@PostMapping("/product/{id}/new_review")
-	public String postMethodName(Review review, @PathVariable Long id) {
+	public String postMethodName(@RequestParam int calification,@RequestParam String comment,Authentication autentication,  @PathVariable Long id) {
 
 
 		Optional<Product> product = productService.getProductById(id);
-
+		Review review = new Review();
+		review.setCalification(calification);
+		review.setComment(comment);
+		Object principal = autentication.getPrincipal();
+		if (principal instanceof OAuth2User oAuth2User) {
+			review.setUsername(oAuth2User.getAttribute("name"));
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			review.setUsername(userDetails.getUsername());
+		}
+		
+		
 		if (product.isPresent()) {
 			product.get().addReview(review);
 			productService.addProduct(product.get());
