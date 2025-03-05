@@ -53,11 +53,17 @@
                     {{/isAdmin}}
 
                     {{#isAdmin}}
-
+                    
                     <a href="/edit_product/{{productId}}" class="edit_product_button">Edit Product</a>
-                    <a href="/deleteProduct/{{productId}}" class="edit_product_button">Delete Product</a>
 
                     {{/isAdmin}}
+                    {{#isCompany}}
+                    
+                    <a href="/edit_product/{{productId}}" class="edit_product_button">Edit Product</a>
+                    
+                    {{/isCompany}}
+
+                    
 
 
                     {{#isCompany}}
@@ -72,6 +78,7 @@
                     <a href="/products/allProducts" class="back2products_button">Back to Products</a>
                 </div>
             </div>
+            
             {{>/components/reviews}}
         </div>
     </div>
