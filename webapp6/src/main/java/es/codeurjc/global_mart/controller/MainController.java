@@ -382,7 +382,8 @@ public String profile(Model model, Authentication authentication) {
 			@RequestParam String product_description,
 			@RequestParam String product_type,
 			@RequestParam Integer product_stock,
-			@RequestParam Double product_price)
+			@RequestParam Double product_price,
+			Authentication autentication)
 			throws Exception {
 
 		Optional<Product> optionalProduct = productService.getProductById(id);
@@ -404,14 +405,18 @@ public String profile(Model model, Authentication authentication) {
 			productService.addProduct(product);
 
 			// Si el usuario es una empresa, redirigir a sus productos
-			if (userService.findByUsername(principal.getName()).get().isCompany()) {
-				return "redirect:/products/allProducts";
+			Object principal = autentication.getPrincipal();
+			if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+				if (userService.findByUsername(userDetails.getUsername()).get().isCompany()) {
+					return "redirect:/products/allProducts";
+				} else {
+					return "redirect:/adminPage";
+				}
 			} else {
-				return "redirect:/adminPage";
+				return "redirect:/products/allProducts";
 			}
-		} else {
-			return "redirect:/products/allProducts";
 		}
+		return "redirect:/products/allProducts";
 	}
 
 	@GetMapping("/payCart")
