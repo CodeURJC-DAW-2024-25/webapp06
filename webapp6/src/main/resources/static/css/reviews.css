@@ -1,60 +1,62 @@
-#div_reviews {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
+#div_reviews { 
+    width: 100%; /* Ocupar todo el ancho */
+    max-width: none; /* Elimina la restricción de ancho máximo */
+    margin: 20px 0; /* Solo margen vertical */
+    padding: 30px;
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
 #div_reviews h2.title-Reviews {
     color: #333;
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #ddd;
-    padding-bottom: 5px;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    border-bottom: 3px solid #ddd;
+    padding-bottom: 8px;
 }
 
 #div_reviews form {
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 25px;
+    padding: 20px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 #div_reviews label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 #div_reviews input[type="text"],
 #div_reviews input[type="number"],
 #div_reviews textarea {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
     box-sizing: border-box;
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 #div_reviews textarea {
     resize: vertical;
-    height: 80px;
+    height: 100px;
 }
 
 #div_reviews button {
     background-color: #28a745;
     color: #fff;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 1em;
+    transition: background 0.3s;
 }
 
 #div_reviews button:hover {
@@ -62,17 +64,17 @@
 }
 
 #div_reviews .uploaded-reviews {
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 #div_reviews .review {
-    border-bottom: 1px solid #ccc;
-    padding: 10px 0;
+    border-bottom: 1px solid #bbb;
+    padding: 12px 0;
 }
 
 #div_reviews .review p {
-    margin: 5px 0;
-    font-size: 0.9em;
+    margin: 6px 0;
+    font-size: 1em;
 }
 
 #div_reviews .review p:first-child {
@@ -84,11 +86,11 @@
 }
 
 #div_reviews .review p:nth-child(3) {
-    color: #555;
+    color: #444;
 }
 
 #div_reviews .no-reviews {
     text-align: center;
-    color: #999;
-    font-size: 0.9em;
+    color: #777;
+    font-size: 1em;
 }
