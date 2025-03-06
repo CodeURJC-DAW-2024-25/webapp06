@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 public class LoginRegisterController {
@@ -36,37 +34,34 @@ public class LoginRegisterController {
             @RequestParam MultipartFile image,
             @RequestParam String role) throws Exception {
 
-
         Optional<User> user = userService.findByUsername(username);
         if (user.isPresent()) {
             return "errors";
-        }else{
+        } else {
             userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role));
         }
-        
 
         return "redirect:/"; // Redirecciona a la página de login tras el registro
     }
 
     @GetMapping("/loginComprobation")
-public String loginComprobation(OAuth2AuthenticationToken authentication) {
-    OAuth2User oAuth2User = authentication.getPrincipal();
-    String email = oAuth2User.getAttribute("email");
+    public String loginComprobation(OAuth2AuthenticationToken authentication) {
+        OAuth2User oAuth2User = authentication.getPrincipal();
+        String email = oAuth2User.getAttribute("email");
 
-    Optional<User> existingUser = userService.findByEmail(email);
+        Optional<User> existingUser = userService.findByEmail(email);
 
-    if (existingUser.isEmpty()) {
-        User newUser = new User();
-        newUser.setUsername(oAuth2User.getAttribute("name"));
-        newUser.setEmail(email);
-        //newUser.setImage(oAuth2User.getAttribute("picture"));
-        newUser.setRole(List.of("USER")); // Por defecto, asignamos el rol de usuario normal
+        if (existingUser.isEmpty()) {
+            User newUser = new User();
+            newUser.setUsername(oAuth2User.getAttribute("name"));
+            newUser.setEmail(email);
+            // newUser.setImage(oAuth2User.getAttribute("picture"));
+            newUser.setRole(List.of("USER")); // Por defecto, asignamos el rol de usuario normal
 
-        userService.save(newUser);
+            userService.save(newUser);
+        }
+
+        return "redirect:/"; // Redirige a la página de perfil
     }
 
-    return "redirect:/"; // Redirige a la página de perfil
-}
-
-    
 }

@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.engine.jdbc.BlobProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,20 +13,14 @@ import org.springframework.stereotype.Component;
 
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.service.ProductService;
-import es.codeurjc.global_mart.service.ReviewService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.annotation.PostConstruct;
 
 @Component
 public class DataLoader {
 
-        private static final Logger logger = LoggerFactory.getLogger(DataLoader.class);
-
         @Autowired
         private ProductService productService;
-
-        @Autowired
-        private ReviewService reviewService;
 
         @Autowired
         private UserService userService;
@@ -54,18 +46,17 @@ public class DataLoader {
                 byte[] image7 = Files.readAllBytes(
                                 new ClassPathResource("static/images/products/don_quijote.jpg").getFile().toPath());
 
-
                 // Create and associate reviews before persisting
                 Review review1 = new Review("user1", "Muy bueno", 5);
                 Review review2 = new Review("user1", "Muy malo", 1);
 
-//                reviewService.addReview(review1);
-//                reviewService.addReview(review2);
+                // reviewService.addReview(review1);
+                // reviewService.addReview(review2);
 
                 // Create product
-                productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0, 
-                "Una versión abreviada de las aventuras de un excéntrico caballero rural y su fiel compañero...",
-                BlobProxy.generateProxy(image7),10, true, List.of(review1, review2));               
+                productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0,
+                                "Una versión abreviada de las aventuras de un excéntrico caballero rural y su fiel compañero...",
+                                BlobProxy.generateProxy(image7), 10, true, List.of(review1, review2));
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
                                 BlobProxy.generateProxy(image1), 10, true);
@@ -90,7 +81,6 @@ public class DataLoader {
 
                 userService.createUser(null, "a", "a", "a@gmail.com", passwordEncoder.encode("a"),
                                 Arrays.asList("USER"));
-
 
         }
 
