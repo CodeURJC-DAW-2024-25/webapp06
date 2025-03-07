@@ -54,6 +54,7 @@ public class Product {
         this.company = company;
         this.price = price;
         this.description = description;
+        // this.image = image;
         this.stock = stock;
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;

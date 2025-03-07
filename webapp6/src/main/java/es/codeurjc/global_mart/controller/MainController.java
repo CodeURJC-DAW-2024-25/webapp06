@@ -30,6 +30,8 @@ import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class MainController {
@@ -288,6 +290,7 @@ public class MainController {
 		return "redirect:/adminPage";
 	}
 
+
 	@GetMapping("/shoppingcart")
 	public String shoppingCart(Model model, Authentication autentication) {
 
@@ -298,6 +301,8 @@ public class MainController {
 					userService.getCartProducts(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
 			model.addAttribute("totalPrice",
 					userService.getTotalPrice(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
+			// org.springframework.security.web.csrf.CsrfToken csrfToken = CSRFHandlerConfiguration.getToken();
+			// model.addAttribute("token", csrfToken.getToken());
 		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<User> user = userService.findByUsername(userDetails.getUsername());
 			if (user.isPresent()) {
@@ -329,6 +334,39 @@ public class MainController {
 
 		return "redirect:/shoppingcart";
 	}
+
+	// removes a product from the user cart
+	@PostMapping("/removeProductFromCart/{id}")
+	public String removeProductFromCart(@PathVariable Long id, Authentication autentication) {
+		Object principal = autentication.getPrincipal();
+		if(principal instanceof OAuth2User oAuth2User){
+			User user = userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
+			Product product = productService.getProductById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+			if (user.getCart().contains(product)) {
+				user.removeProductFromCart(product); // call the user method to remove
+				userService.save(user);				 // update the user in DDBB without this line the user continues rendering the product
+				
+			}
+		} else{
+			return "redirect:/";
+		}
+
+		return "redirect:/shoppingcart";
+	}
+	
+
+	// to place an order
+	@PostMapping("/payment")
+	public String payment(Authentication autentication) {
+		Object principal = autentication.getPrincipal();
+
+		// if (principal instanceof OAuth2User oAuth2User) {
+		// 	User user =userService.getUserById(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
+			
+		// }
+		return "redirect:/";
+	}
+	
 
 	@GetMapping("/edit_product/{id}")
 	public String editProductForm(@PathVariable Long id, Model model) {

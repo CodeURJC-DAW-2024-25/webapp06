@@ -189,6 +189,7 @@ public class User {
 
     public void removeProductFromCart(Product product) {
         this.cart.remove(product);
+
     }
 
     public void emptyCart() {
