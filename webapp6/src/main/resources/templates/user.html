@@ -37,8 +37,12 @@
     </div>
 
     <div class="buttons_section">
-        <button onclick="showStadistics()"><a href="showUserGraphic">Mostrar gráfico</a></button>
-        <button onclick="showHistory()">Mostrar Historial</button>
+        {{#isUser}}
+        <button onclick="showStadistics()"><a href="showUserGraphic">Show graph of my expenses</a></button>
+        {{/isUser}}
+        {{#isCompany}}
+        <button><a th:href="@{/displayGraph}" href="/displayGraphs">Show graph of my type of products</a></button>
+        {{/isCompany}}
     </div>
 
     <!-- ------------Footer ------------ -->
