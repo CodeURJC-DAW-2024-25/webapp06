@@ -112,36 +112,36 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 #### Diagrama de Páginas GlobalMart
 
 **Navegador**
-El navegador se muestra en todas las pantallas, permitiendo desde este realizar búsquedas de todos los productos, iniciar sesión, registrarse, crear nuevos productos, acceder a la información del perfil, acceder al carrito y a la sección de "About us".
+- El navegador se muestra en todas las pantallas, permitiendo desde este realizar búsquedas de todos los productos, iniciar sesión, registrarse, crear nuevos productos, acceder a la información del perfil, acceder al carrito y a la sección de "About us".
 **Primera pantalla**
-En esta captura se puede observar lo que el usuario observará nada más entrar a la web (desde aquí se puede observar los algoritmos de consulta implementados y toda la funcionalidad del navegador)
+- En esta captura se puede observar lo que el usuario observará nada más entrar a la web (desde aquí se puede observar los algoritmos de consulta implementados y toda la funcionalidad del navegador)
 ![Prototipo Página Indice](./images_readme/index.png)
 **Pantalla de productos**
-En esta captura se pueden observar los productos que han sido subidos por las compañías y aceptados por los administradores, esta pantalla la verás si eres un usuario sin iniciar sesión o un comprador.
+- En esta captura se pueden observar los productos que han sido subidos por las compañías y aceptados por los administradores, esta pantalla la verás si eres un usuario sin iniciar sesión o un comprador.
 ![Prototipo Página productos](./images_readme/productsScreen.png)
 **Pantalla About us**
-En esta captura se puede observar información sobre nuestra empresa, en esta página nos introducimos a nosotros mismos indicando nuestras aficiones y lo que nos motiva a mejorar nuestra web.
+- En esta captura se puede observar información sobre nuestra empresa, en esta página nos introducimos a nosotros mismos indicando nuestras aficiones y lo que nos motiva a mejorar nuestra web.
 ![Prototipo Página About us](./images_readme/aboutUsScreen.png)
 **Pantalla de opciones para indentificarse**
-Esta pantalla es un "pop-up" en el que solicita al usuario que se quiere identificar si desea utilizar un formulario en el que introducir su información para iniciar sesión / registrarse o si desea utilizar la tecnología complementaria de google para iniciar sesión con esta plataforma.
+- Esta pantalla es un "pop-up" en el que solicita al usuario que se quiere identificar si desea utilizar un formulario en el que introducir su información para iniciar sesión / registrarse o si desea utilizar la tecnología complementaria de google para iniciar sesión con esta plataforma.
 ![Prototipo de selección](./images_readme/optionScreen.png)
 **Pantalla de registro/inicio de sesión**
-Esta pantalla es un "pop-up" en el que se solicita al usuario que se registre / inicie sesión mediante un formulario, además a través de este formulario el usuario podrá indicar si quiere una cuenta de compañía (para subir productos a la venta) o de comprador (para comprar los productos que suben las compañías).
+- Esta pantalla es un "pop-up" en el que se solicita al usuario que se registre / inicie sesión mediante un formulario, además a través de este formulario el usuario podrá indicar si quiere una cuenta de compañía (para subir productos a la venta) o de comprador (para comprar los productos que suben las compañías).
 ![Prototipo de registro](./images_readme/registerScreen.png)
 **Pantalla de carrito**
-En esta captura se puede observar el carrito del usuario que está registrado. Esta pantalla solo se puede observar si el usuario que ha iniciado sesión es un comprador.
+- En esta captura se puede observar el carrito del usuario que está registrado. Esta pantalla solo se puede observar si el usuario que ha iniciado sesión es un comprador.
 ![Prototipo de carrito](./images_readme/shoppingCartScreen.png)
 **Pantalla de información de la cuenta**
-En esta captura se puede observar la información de la cuenta que ha iniciado sesión.
+- En esta captura se puede observar la información de la cuenta que ha iniciado sesión.
 ![Prototipo de informacion de la cuenta](./images_readme/profileScreen.png)
 **Pantalla de creación de nuevo producto**
-En esta captura se puede observar un formulario que una compañía puede rellenar para la subida de un nuevo producto.
+- En esta captura se puede observar un formulario que una compañía puede rellenar para la subida de un nuevo producto.
 ![Prototipo de nuevo producto](./images_readme/newProductScreen.png)
 **Pantalla de página de administrador**
-En esta captura se observa la funcionalidad especial del administrador, la cual es aceptar o rechazar subidas de nuevos productos que quieres hacer las compañías.
+- En esta captura se observa la funcionalidad especial del administrador, la cual es aceptar o rechazar subidas de nuevos productos que quieres hacer las compañías.
 ![Prototipo de administrador](./images_readme/adminPage.png)
 **Pantalla de información detallada de un producto**
-En esta captura se puede observar la información detallada de un producto, indluyendo las reviews de otros usuarios sobre ese mismo producto.
+- En esta captura se puede observar la información detallada de un producto, indluyendo las reviews de otros usuarios sobre ese mismo producto.
 ![Prototipo producto](./images_readme/productInfoScreen.png)
 ![Prototitpo producto2](./images_readme/productInfoScreen2.png)
 
