@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
 import es.codeurjc.global_mart.model.Order;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
@@ -37,7 +35,6 @@ import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @Controller
 public class MainController {
@@ -165,39 +162,41 @@ public class MainController {
 
 		return "user"; // Nombre del archivo HTML de la vista
 	}
-/*
-	@GetMapping("/products/allProducts")
-	public String seeAllProds(Model model, HttpServletRequest request) {
-		List<Product> products = productService.getAcceptedProducts();
-		addImageDataToProducts(products);
-		model.addAttribute("allProds", productService.getAcceptedProducts());
-		model.addAttribute("tittle", false);
 
-		Principal principal = request.getUserPrincipal();
-		if (principal == null) {
-			model.addAttribute("allCompanyProds", Collections.emptyList());
-		} else {
-			Optional<User> user = userService.findByUsername(principal.getName());
-			if (user.isPresent() && user.get().isCompany()) {
-				model.addAttribute("allCompanyProds",
-						productService.getAcceptedCompanyProducts(user.get().getUsername()));
-			}
-		}
-		return "products";
-	}
-
-	// Redirection to see ONLY the products of a specific type
-	@GetMapping("/products/{type}")
-	public String getMethodName(@PathVariable String type, Model model) {
-
-		List<Product> products = productService.getAcceptedProductsByType(type);
-		addImageDataToProducts(products);
-		model.addAttribute("allProds", products);
-		model.addAttribute("type", type);
-		model.addAttribute("tittle", true);
-		return "products";
-	}
- */
+	/*
+	 * @GetMapping("/products/allProducts")
+	 * public String seeAllProds(Model model, HttpServletRequest request) {
+	 * List<Product> products = productService.getAcceptedProducts();
+	 * addImageDataToProducts(products);
+	 * model.addAttribute("allProds", productService.getAcceptedProducts());
+	 * model.addAttribute("tittle", false);
+	 * 
+	 * Principal principal = request.getUserPrincipal();
+	 * if (principal == null) {
+	 * model.addAttribute("allCompanyProds", Collections.emptyList());
+	 * } else {
+	 * Optional<User> user = userService.findByUsername(principal.getName());
+	 * if (user.isPresent() && user.get().isCompany()) {
+	 * model.addAttribute("allCompanyProds",
+	 * productService.getAcceptedCompanyProducts(user.get().getUsername()));
+	 * }
+	 * }
+	 * return "products";
+	 * }
+	 * 
+	 * // Redirection to see ONLY the products of a specific type
+	 * 
+	 * @GetMapping("/products/{type}")
+	 * public String getMethodName(@PathVariable String type, Model model) {
+	 * 
+	 * List<Product> products = productService.getAcceptedProductsByType(type);
+	 * addImageDataToProducts(products);
+	 * model.addAttribute("allProds", products);
+	 * model.addAttribute("type", type);
+	 * model.addAttribute("tittle", true);
+	 * return "products";
+	 * }
+	 */
 	private void addImageDataToProducts(List<Product> products) {
 		for (Product product : products) {
 			try {
@@ -215,10 +214,10 @@ public class MainController {
 
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(
-        Model model, 
-        HttpServletRequest request, 
-        @RequestParam(defaultValue = "0") int page, 
-        @RequestParam(defaultValue = "5") int size) {
+			Model model,
+			HttpServletRequest request,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
 
 		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(page, size));
 		List<Product> products = productsPage.getContent();
@@ -236,7 +235,8 @@ public class MainController {
 			Optional<User> user = userService.findByUsername(principal.getName());
 			if (user.isPresent() && user.get().isCompany()) {
 				model.addAttribute("allCompanyProds",
-						productService.getAcceptedCompanyProducts(user.get().getUsername(), PageRequest.of(page, size)));
+						productService.getAcceptedCompanyProducts(user.get().getUsername(),
+								PageRequest.of(page, size)));
 			}
 		}
 
@@ -245,9 +245,9 @@ public class MainController {
 
 	@GetMapping("/products/{type}")
 	public String seeCategorizedProds(
-			@PathVariable String type, 
-			Model model, 
-			@RequestParam(defaultValue = "0") int page, 
+			@PathVariable String type,
+			Model model,
+			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size) {
 
 		Page<Product> productsPage = productService.getAcceptedProductsByType(type, PageRequest.of(page, size));
@@ -259,11 +259,9 @@ public class MainController {
 		model.addAttribute("currentPage", page);
 		model.addAttribute("totalPages", productsPage.getTotalPages());
 		model.addAttribute("tittle", true);
-		
+
 		return "products";
 	}
-
-
 
 	@GetMapping("/product/{id}")
 	public String productDescription(@PathVariable Long id, Model model, Authentication autentication)
@@ -351,7 +349,6 @@ public class MainController {
 		return "redirect:/adminPage";
 	}
 
-
 	@GetMapping("/shoppingcart")
 	public String shoppingCart(Model model, Authentication autentication) {
 
@@ -362,7 +359,8 @@ public class MainController {
 					userService.getCartProducts(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
 			model.addAttribute("totalPrice",
 					userService.getTotalPrice(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
-			// org.springframework.security.web.csrf.CsrfToken csrfToken = CSRFHandlerConfiguration.getToken();
+			// org.springframework.security.web.csrf.CsrfToken csrfToken =
+			// CSRFHandlerConfiguration.getToken();
 			// model.addAttribute("token", csrfToken.getToken());
 		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<User> user = userService.findByUsername(userDetails.getUsername());
@@ -400,21 +398,23 @@ public class MainController {
 	@PostMapping("/removeProductFromCart/{id}")
 	public String removeProductFromCart(@PathVariable Long id, Authentication autentication) {
 		Object principal = autentication.getPrincipal();
-		if(principal instanceof OAuth2User oAuth2User){
-			User user = userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
-			Product product = productService.getProductById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+		if (principal instanceof OAuth2User oAuth2User) {
+			User user = userService.findByUsername(oAuth2User.getAttribute("name"))
+					.orElseThrow(() -> new RuntimeException("User not found"));
+			Product product = productService.getProductById(id)
+					.orElseThrow(() -> new RuntimeException("Product not found"));
 			if (user.getCart().contains(product)) {
 				userService.removeProductFromCart(user, product); // call the user method to remove
-				// userService.save( user);				 // update the user in DDBB without this line the user continues rendering the product
-				
+				// userService.save( user); // update the user in DDBB without this line the
+				// user continues rendering the product
+
 			}
-		} else{
+		} else {
 			return "redirect:/";
 		}
 
 		return "redirect:/shoppingcart";
 	}
-	
 
 	// to place an order
 	@PostMapping("/payment")
@@ -422,16 +422,16 @@ public class MainController {
 		Object principal = autentication.getPrincipal();
 
 		if (principal instanceof OAuth2User oAuth2User) {
-			User user =userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
-			orderService.createOrder(user);		// all the payment logic is in the orderService
-		} 
-		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			User user = userService.findByUsername(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
-			orderService.createOrder(user);		// all the payment logic is in the orderService
+			User user = userService.findByUsername(oAuth2User.getAttribute("name"))
+					.orElseThrow(() -> new RuntimeException("User not found"));
+			orderService.createOrder(user); // all the payment logic is in the orderService
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			User user = userService.findByUsername(userDetails.getUsername())
+					.orElseThrow(() -> new RuntimeException("User not found"));
+			orderService.createOrder(user); // all the payment logic is in the orderService
 		}
 		return "redirect:/";
 	}
-	
 
 	@GetMapping("/edit_product/{id}")
 	public String editProductForm(@PathVariable Long id, Model model) {
@@ -510,7 +510,7 @@ public class MainController {
 
 	// @GetMapping("/payCart")
 	// public String payCart(@RequestParam String param) {
-	// 	return "payment";
+	// return "payment";
 	// }
 
 	@GetMapping("/displayGraphs")
@@ -577,7 +577,6 @@ public class MainController {
 					.getHistoricalOrderPrices();
 			model.addAttribute("orderPrices", orderPrices);
 		}
-		
 
 		return "userGraph";
 
