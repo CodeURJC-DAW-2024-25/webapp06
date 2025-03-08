@@ -3,11 +3,10 @@
 ## Desarrolladores
 
 Este proyecto ha sido desarrollado por los siguientes colaboradores:
-
-- **Luis Abril Andreu** - [l.abril.2022@alumnos.urjc.es](mailto:l.abril.2022@alumnos.urjc.es)
-- **Cristian Teijeiro Parga** - [c.teijeiro.2022@alumnos.urjc.es](mailto:c.teijeiro.2022@alumnos.urjc.es)
-- **Juan Manuel Bustos Moya** - [jm.bustos.2022@alumnos.urjc.es](mailto:jm.bustos.2022@alumnos.urjc.es)
-- **Álvaro Pindado Castiñeira** - [a.pindado.2019@alumnos.urjc.es](mailto:a.pindado.2019@alumnos.urjc.es)
+- **Luis Abril Andreu** - [l.abril.2022@alumnos.urjc.es](mailto:l.abril.2022@alumnos.urjc.es) - [GitHub](https://github.com/LuisAbril)
+- **Cristian Teijeiro Parga** - [c.teijeiro.2022@alumnos.urjc.es](mailto:c.teijeiro.2022@alumnos.urjc.es) - [GitHub](https://github.com/teijeiro7)
+- **Juan Manuel Bustos Moya** - [jm.bustos.2022@alumnos.urjc.es](mailto:jm.bustos.2022@alumnos.urjc.es) - [GitHub](https://github.com/juanmabm73)
+- **Álvaro Pindado Castiñeira** - [a.pindado.2019@alumnos.urjc.es](mailto:a.pindado.2019@alumnos.urjc.es) - [GitHub](https://github.com/Alvaropin17)
 
 ## Tecnologías Usadas
 
@@ -16,16 +15,15 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![Java](https://2/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
+![BootStrap](https://getbootstrap.com/)
+![GithubMaterialWeb](https://github.com/material-components/material-web)
 
-## Preparación
-
-### Preparación 1
-
+## Preparación 1
 #### Entidades
 
-- **Usuario**
-- **Productos**
-- **Pedidos**
+- **Usuario**: Tiene varios pedidos.
+- **Pedidos**: Cada pedido puede tener varios o ningún producto.
+- **Productos**: Cada producto puede tener cero o varias reseñas.
 - **Reseñas**
 
 #### Tipos de Usuarios
@@ -37,16 +35,46 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 
 #### Permisos de los Usuarios
 
-- **Anónimo**: No tiene permisos, solo puede ver productos y registrarse.
-- **Comprador**:
-    - Iniciar sesión, añadir productos al carrito y realizar pedidos.
-    - Subir reseñas de productos comprados.
-- **Empresa**:
+- **Anónimo** (usuario sin registrar): 
+    - No tiene permisos, solo puede ver productos, buscarlos, iniciar sesión y registrarse.
+- **Comprador** (usuario registrado como individual):
+    - Cerrar sesión, ver y buscar productos, añadir productos al carrito y realizar pedidos.
+    - Subir reseñas de productos.
+- **Empresa** (usuario registrado como empresa):
     - Subir productos con nombre, tipo, descripción, precio, cantidad e imagen.
     - Gestionar productos subidos (ver, editar, borrar).
-- **Administrador**:
+    - Observar las gráficas que indiquen qué tipo de productos son los más subidos.
+- **Administrador** (propietario de la app):
     - Gestionar solicitudes de productos de empresas (aceptar/rechazar).
     - Eliminar productos que no cumplan con el reglamento.
+    - Editar información de productos.
+
+### Imágenes
+
+- **Anónimo**: Ninguna imagen asociada.
+- **Comprador**: Imagen de perfil asociada a la cuenta.
+- **Empresa**: Imagen de perfil asociada a la cuenta, además puede introducir imágenes para subir y editar productos.
+- **Administrador**: Imagen de perfil asociada a la cuenta, además puede introducir imágenes para subir y editar productos.
+
+
+### Gráficos
+
+- **Gráfico para las empresas**
+    - Gráfico circular en el que se muestra el porcentaje de tipos de productos que tiene una empresa subido y aceptado a la plataforma.
+- **Gráfico para los usuarios**
+    - Gráfico de líneas en el que se muestra el gasto del usuario a lo largo de la historia de la cuenta, en este gráfico aparece el gasto de cada pedido a lo largo del tiempo.
+
+### Tecnología complementaria
+
+- **Inicio de sesión con los servicios de google**
+
+### Algoritmo de consulta avanzada
+
+- Filtración por tipo y nombre del producto
+- Productos más vistos
+- Nuevos productos
+
+
 
 #### Información de las Bases de Datos
 
@@ -79,11 +107,47 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
     - Método de pago
     - Instrucciones para el repartidor
 
-### Preparación 2
+### Práctica 1
 
 #### Diagrama de Páginas GlobalMart
 
-![Diagrama de Páginas GlobalMart](./images_readme/diagrama_paginas_GlobalMart.png)
+**Navegador**
+El navegador se muestra en todas las pantallas, permitiendo desde este realizar búsquedas de todos los productos, iniciar sesión, registrarse, crear nuevos productos, acceder a la información del perfil, acceder al carrito y a la sección de "About us".
+**Primera pantalla**
+En esta captura se puede observar lo que el usuario observará nada más entrar a la web (desde aquí se puede observar los algoritmos de consulta implementados y toda la funcionalidad del navegador)
+![Prototipo Página Indice](./images_readme/index.png)
+**Pantalla de productos**
+En esta captura se pueden observar los productos que han sido subidos por las compañías y aceptados por los administradores, esta pantalla la verás si eres un usuario sin iniciar sesión o un comprador.
+![Prototipo Página productos](./images_readme/productsScreen.png)
+**Pantalla About us**
+En esta captura se puede observar información sobre nuestra empresa, en esta página nos introducimos a nosotros mismos indicando nuestras aficiones y lo que nos motiva a mejorar nuestra web.
+![Prototipo Página About us](./images_readme/aboutUsScreen.png)
+**Pantalla de opciones para indentificarse**
+Esta pantalla es un "pop-up" en el que solicita al usuario que se quiere identificar si desea utilizar un formulario en el que introducir su información para iniciar sesión / registrarse o si desea utilizar la tecnología complementaria de google para iniciar sesión con esta plataforma.
+![Prototipo de selección](./images_readme/optionScreen.png)
+**Pantalla de registro/inicio de sesión**
+Esta pantalla es un "pop-up" en el que se solicita al usuario que se registre / inicie sesión mediante un formulario, además a través de este formulario el usuario podrá indicar si quiere una cuenta de compañía (para subir productos a la venta) o de comprador (para comprar los productos que suben las compañías).
+![Prototipo de registro](./images_readme/registerScreen.png)
+**Pantalla de carrito**
+En esta captura se puede observar el carrito del usuario que está registrado. Esta pantalla solo se puede observar si el usuario que ha iniciado sesión es un comprador.
+![Prototipo de carrito](./images_readme/shoppingCartScreen.png)
+**Pantalla de información de la cuenta**
+En esta captura se puede observar la información de la cuenta que ha iniciado sesión.
+![Prototipo de informacion de la cuenta](./images_readme/profileScreen.png)
+**Pantalla de creación de nuevo producto**
+En esta captura se puede observar un formulario que una compañía puede rellenar para la subida de un nuevo producto.
+![Prototipo de nuevo producto](./images_readme/newProductScreen.png)
+**Pantalla de página de administrador**
+En esta captura se observa la funcionalidad especial del administrador, la cual es aceptar o rechazar subidas de nuevos productos que quieres hacer las compañías.
+![Prototipo de administrador](./images_readme/adminPage.png)
+**Pantalla de información detallada de un producto**
+En esta captura se puede observar la información detallada de un producto, indluyendo las reviews de otros usuarios sobre ese mismo producto.
+![Prototipo producto](./images_readme/productInfoScreen.png)
+![Prototitpo producto2](./images_readme/productInfoScreen2.png)
+
+
+**Diagrama de navegación de GlobalMart**
+![Diagrama de Páginas GlobalMart](./images_readme/navegationDiagram.png)
 
 ## Commits de Mayor Importancia Realizados
 
