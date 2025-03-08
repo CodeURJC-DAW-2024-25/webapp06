@@ -12,7 +12,9 @@ import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -163,7 +165,7 @@ public class MainController {
 
 		return "user"; // Nombre del archivo HTML de la vista
 	}
-
+/*
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
 		List<Product> products = productService.getAcceptedProducts();
@@ -195,7 +197,7 @@ public class MainController {
 		model.addAttribute("tittle", true);
 		return "products";
 	}
-
+ */
 	private void addImageDataToProducts(List<Product> products) {
 		for (Product product : products) {
 			try {
@@ -210,6 +212,58 @@ public class MainController {
 			}
 		}
 	}
+
+	@GetMapping("/products/allProducts")
+	public String seeAllProds(
+        Model model, 
+        HttpServletRequest request, 
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "5") int size) {
+
+		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(page, size));
+		List<Product> products = productsPage.getContent();
+		addImageDataToProducts(products);
+
+		model.addAttribute("allProds", products);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", productsPage.getTotalPages());
+		model.addAttribute("tittle", false);
+
+		Principal principal = request.getUserPrincipal();
+		if (principal == null) {
+			model.addAttribute("allCompanyProds", Collections.emptyList());
+		} else {
+			Optional<User> user = userService.findByUsername(principal.getName());
+			if (user.isPresent() && user.get().isCompany()) {
+				model.addAttribute("allCompanyProds",
+						productService.getAcceptedCompanyProducts(user.get().getUsername(), PageRequest.of(page, size)));
+			}
+		}
+
+		return "products";
+	}
+
+	@GetMapping("/products/{type}")
+	public String seeCategorizedProds(
+			@PathVariable String type, 
+			Model model, 
+			@RequestParam(defaultValue = "0") int page, 
+			@RequestParam(defaultValue = "5") int size) {
+
+		Page<Product> productsPage = productService.getAcceptedProductsByType(type, PageRequest.of(page, size));
+		List<Product> products = productsPage.getContent();
+		addImageDataToProducts(products);
+
+		model.addAttribute("allProds", products);
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", productsPage.getTotalPages());
+		model.addAttribute("tittle", true);
+		
+		return "products";
+	}
+
+
 
 	@GetMapping("/product/{id}")
 	public String productDescription(@PathVariable Long id, Model model, Authentication autentication)

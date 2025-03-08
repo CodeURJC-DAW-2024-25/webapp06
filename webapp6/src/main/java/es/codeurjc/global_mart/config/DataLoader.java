@@ -72,6 +72,18 @@ public class DataLoader {
                                 BlobProxy.generateProxy(image5), 10, true);
                 productService.createProduct("Appliances", "Producto6", "comp", 300.0, "Muy útil",
                                 BlobProxy.generateProxy(image6), 10, false);
+                productService.createProduct("Books", "ProductoExtra1", "Amazon", 20.0, "Muy chulo",
+                                BlobProxy.generateProxy(image1), 10, true);
+                productService.createProduct("Books", "ProductoExtra2", "Amazon", 20.0, "Muy chulo",
+                                BlobProxy.generateProxy(image1), 10, true);
+                productService.createProduct("Books", "ProductoExtra3", "Amazon", 20.0, "Muy chulo",
+                                BlobProxy.generateProxy(image1), 10, true);
+                productService.createProduct("Books", "ProductoExtra4", "Amazon", 20.0, "Muy chulo",
+                                BlobProxy.generateProxy(image1), 10, true);
+                productService.createProduct("Books", "ProductoExtra5", "Amazon", 20.0, "Muy chulo",
+                                BlobProxy.generateProxy(image1), 10, true);
+                productService.createProduct("Books", "ProductoExtra6", "Amazon", 20.0, "Muy chulo",
+                                BlobProxy.generateProxy(image1), 10, true);
 
                 userService.createUser(null, "User 1", "user1", "user1@gmail.com", passwordEncoder.encode("user1"),
                                 Arrays.asList("ADMIN"));

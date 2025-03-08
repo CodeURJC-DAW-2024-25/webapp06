@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
+import org.springframework.data.domain.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import es.codeurjc.global_mart.model.Product;
@@ -114,6 +116,11 @@ public class ProductService {
         return acceptedProducts;
     }
 
+    public Page<Product> getAcceptedProductsByType(String type, Pageable pageable) {
+        return productRepository.findByIsAcceptedTrueAndType(type, pageable);
+    }
+    
+ 
     public List<Product> getAcceptedProducts() {
         List<Product> allProducts = productRepository.findAll();
         List<Product> acceptedProducts = new ArrayList<>();
@@ -123,6 +130,11 @@ public class ProductService {
             }
         }
         return acceptedProducts;
+    }
+
+
+    public Page<Product> getAcceptedProducts(Pageable pageable) {
+        return productRepository.findByIsAcceptedTrue(pageable);
     }
 
     public List<Product> getNotAcceptedProducts() {
@@ -169,6 +181,11 @@ public class ProductService {
 
     }
 
+    public Page<Product> getAcceptedCompanyProducts(String company, Pageable pageable) {
+        return productRepository.findByIsAcceptedTrueAndCompany(company, pageable);
+    }
+    
+
     public List<Product> getMostViewedProducts(int limit) {
         List<Product> acceptedProducts = getAcceptedProducts();
 
@@ -178,5 +195,9 @@ public class ProductService {
         // Tomar solo los primeros 'limit' productos
         int size = Math.min(limit, acceptedProducts.size());
         return acceptedProducts.subList(0, size);
+    }
+
+    public Page<Product> getProductsPage(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 }
