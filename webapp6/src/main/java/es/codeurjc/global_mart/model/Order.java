@@ -1,13 +1,18 @@
 package es.codeurjc.global_mart.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import java.util.List;
+import java.sql.Date;
 import java.util.ArrayList;
 
 @Entity
@@ -24,27 +29,43 @@ public class Order {
     private String direction; // Direction where the order will be sent
 
     private String userName;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user; // Our order have one user
 
-    @ManyToMany
+    // @ManyToMany
+    // @JoinTable(
+    //     name = "order_product",
+    //     joinColumns = @JoinColumn(name = "order_id"),
+    //     inverseJoinColumns = @JoinColumn(name = "product_id")
+    @OneToMany
+    @JoinColumn(name = "order_id")
+    
     private List<Product> products; // Our order have minum one product to n products
 
+    private Date date;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     // ----------------- Constructor -----------------
+    public Order(String username, Double total, User user, List<Product> cart){
+        this.date = new Date(System.currentTimeMillis());    // yyyy/mm/dd
+        this.userName = username;
+        this.total = total;
+        this.user = user;
+        this.products = cart;
+
+    }
+
     public Order() {
-        this.products = new ArrayList<Product>();
-        this.total = 0.0;
-
+        
     }
-
-    public Order(User user) {
-        this();
-        this.userName = user.getUsername();
-
-    }
-
-
-
 
     // ----------------- Methods -----------------
 

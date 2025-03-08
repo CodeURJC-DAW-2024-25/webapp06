@@ -23,12 +23,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+
+
+import es.codeurjc.global_mart.model.Order;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
+import es.codeurjc.global_mart.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -43,6 +47,9 @@ public class MainController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private OrderService orderService;
 
 	@Autowired
 	private SearchController searchController;
@@ -343,8 +350,8 @@ public class MainController {
 			User user = userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
 			Product product = productService.getProductById(id).orElseThrow(() -> new RuntimeException("Product not found"));
 			if (user.getCart().contains(product)) {
-				user.removeProductFromCart(product); // call the user method to remove
-				userService.save(user);				 // update the user in DDBB without this line the user continues rendering the product
+				userService.removeProductFromCart(user, product); // call the user method to remove
+				// userService.save( user);				 // update the user in DDBB without this line the user continues rendering the product
 				
 			}
 		} else{
@@ -360,10 +367,14 @@ public class MainController {
 	public String payment(Authentication autentication) {
 		Object principal = autentication.getPrincipal();
 
-		// if (principal instanceof OAuth2User oAuth2User) {
-		// 	User user =userService.getUserById(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
-			
-		// }
+		if (principal instanceof OAuth2User oAuth2User) {
+			User user =userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
+			orderService.createOrder(user);		// all the payment logic is in the orderService
+		} 
+		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			User user = userService.findByUsername(userDetails.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+			orderService.createOrder(user);		// all the payment logic is in the orderService
+		}
 		return "redirect:/";
 	}
 	
@@ -443,10 +454,10 @@ public class MainController {
 		return "redirect:/products/allProducts";
 	}
 
-	@GetMapping("/payCart")
-	public String payCart(@RequestParam String param) {
-		return "payment";
-	}
+	// @GetMapping("/payCart")
+	// public String payCart(@RequestParam String param) {
+	// 	return "payment";
+	// }
 
 	@GetMapping("/displayGraphs")
 	public String displayGraph(Model model, Authentication autentication) {
@@ -505,15 +516,14 @@ public class MainController {
 
 	@GetMapping("/showUserGraphic")
 	public String displayUserGraph(Model model, Authentication authentication) {
-		// Object principal = authentication.getPrincipal();
-		// if (principal instanceof OAuth2User oAuth2User) {
-		// model.addAttribute("username", oAuth2User.getAttribute("name"));
-		// }
-		// if (principal instanceof org.springframework.security.core.userdetails.User
-		// userDetails) {
-		// Optional<User> user = userService.findByUsername(userDetails.getUsername());
-		// model.addAttribute("username", user.get().getUsername());
-		// }
+		Object principal = authentication.getPrincipal();
+		if (principal instanceof OAuth2User oAuth2User) {
+			model.addAttribute("username", oAuth2User.getAttribute("name"));
+			List<Double> orderPrices = userService.findByUsername(oAuth2User.getAttribute("name")).get()
+					.getHistoricalOrderPrices();
+			model.addAttribute("orderPrices", orderPrices);
+		}
+		
 
 		return "userGraph";
 

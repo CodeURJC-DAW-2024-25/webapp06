@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import es.codeurjc.global_mart.repository.OrderRepository;
+import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.model.Order;
 import es.codeurjc.global_mart.repository.ProductRepository;
 import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.repository.UserRepository;
 // import es.codeurjc.global_mart.model.Product;
 
 @Service
@@ -16,12 +18,22 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
     private ProductRepository productRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
+    
 
-    public Order createOrder() {
-        Order order = new Order();
+    public Order createOrder(User user) {
+        Order order = new Order(user.getUsername(), user.getTotalPrice(), user, user.getCart());
+
+        user.getHistoricalOrderPrices().add(order.getTotal());
+		user.emptyCart();
+		user.getOrders().add(order);
+        System.out.println("historicalOrderPrices: " + user.getHistoricalOrderPrices());
         
-
-        return orderRepository.save(order);
+        userRepository.save(user);
+        orderRepository.save(order);
+        return order;
     }
     
 

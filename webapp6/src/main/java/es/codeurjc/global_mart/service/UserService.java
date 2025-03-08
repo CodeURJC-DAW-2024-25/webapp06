@@ -78,8 +78,18 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void removeProductFromCart(User user, Product product){
+        user.removeProductFromCart(product);
+        userRepository.save(user);
+    }
+
     public double getTotalPrice(User user){
-        return user.getTotalPrice();
+        return user.getCartPrice();
+    }
+
+    public void restartCart(User user){
+        user.emptyCart();
+        userRepository.save(user);
     }
 
     public Optional<User> findByEmail(String email) {

@@ -8,6 +8,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.CascadeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> role;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
     @OneToMany
@@ -42,6 +43,12 @@ public class User {
     @OneToMany
     private List<Product> cart;
 
+    private double cartPrice;
+
+    
+
+    
+    @ElementCollection(fetch = FetchType.EAGER) // EAGER: fetch the data when the object is created
     private List<Double> historicalOrderPrices;
 
     
@@ -61,7 +68,9 @@ public class User {
         this.reviews = new ArrayList<>();
         this.role = role;
         this.cart = new ArrayList<>();
+        this.cartPrice = 0;
         this.historicalOrderPrices = new ArrayList<>();
+    
 
     }
 
@@ -131,6 +140,10 @@ public class User {
         return historicalOrderPrices;
     }
 
+    public double getCartPrice() {
+        return cartPrice;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;
@@ -172,6 +185,10 @@ public class User {
         this.historicalOrderPrices = historicalOrderPrices;
     }
 
+    public void setCartPrice(int cartPrice) {
+        this.cartPrice = cartPrice;
+    }
+
     // Reviews
     public void addReview(Review review) {
         this.reviews.add(review);
@@ -185,14 +202,17 @@ public class User {
 
     public void addProductToCart(Product product) {
         this.cart.add(product);
+        this.cartPrice += product.getPrice();
     }
 
     public void removeProductFromCart(Product product) {
         this.cart.remove(product);
-
+        this.cartPrice -= product.getPrice();
+        
     }
 
     public void emptyCart() {
         this.cart.clear();
+        this.cartPrice = 0;
     }
 }
