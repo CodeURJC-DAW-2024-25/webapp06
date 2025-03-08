@@ -97,4 +97,11 @@ public class UserService {
         return user;
     }
 
+    public List<Double> getLast15OrderPrices(String username){
+        Optional<User> user = userRepository.findByUsername(username);
+        List <Double> ordersPrices = user.get().getHistoricalOrderPrices();
+        int size = ordersPrices.size();
+        return ordersPrices.subList(Math.max(size - 15, 0), size); // Devuelve solo los últimos 15
+    }
+
 }

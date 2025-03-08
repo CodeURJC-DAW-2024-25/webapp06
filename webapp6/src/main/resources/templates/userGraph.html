@@ -9,17 +9,33 @@
     
 
     <div id="container"></div>
-    <p class="highcharts-description">
-    
-    </p>
+    <p class="highcharts-description"></p>
 </figure>
-<div>{{orderPrices}}</div>
+<div id="orderPrices-data" data-orderPrices="{{orderPrices}}">{{orderPrices}}</div>
 <div style="font-size: 15px;">
     {{>./components/footer}}
 </div>
 <script>
 
+    // document.addEventListener('DOMContentLoaded', loadChartData);
+
+    // async function loadChartData() {
+    //     try{
+    //         const response = await fetch('/loadUserGraph');
+    //         const data = await response.json();
+    //         console.log("Datos devueltos por el servidor:" + data);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
     
+    const dataElements = JSON.parse(document.getElementById('orderPrices-data').dataset.orderprices);
+    const size = dataElements.length;
+    const index = [];
+    for (let i = 1; i <= size; i++) {
+        index.push("Order " + i );
+    }
+    console.log("DATOS" + dataElements);
 
     Highcharts.chart('container', {
         chart: {
@@ -31,10 +47,7 @@
         
         xAxis: {
             // order ID
-            categories: [
-                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-                'Oct', 'Nov', 'Dec'
-            ]
+            categories: index
         },
         yAxis: {
             title: {
@@ -51,10 +64,7 @@
         },
         series: [{
             name: 'Username',
-            data: [
-                16.0, 18.2, 23.1, 27.9, 130.2, 36.4, 39.8, 38.4, 35.5, 29.2,
-                22.0, 200.0
-            ]
+            data: dataElements
         }, ]
     });
 
