@@ -4,14 +4,14 @@
     {{#logged}}
     {{#isUser}}
     <form action="/product/{{id}}/new_review" method="POST" id="review-form">
-        <h2 class="title-Reviews">Deja tu reseña</h2>
-        <label for="calification">Calificación (1-5):</label>
+        <h2 class="title-Reviews">Write your own review</h2>
+        <label for="calification">Calification (1-5):</label>
         <input type="number" id="calification" name="calification" min="1" max="5" required>
     
-        <label for="comment">Comentario:</label>
+        <label for="comment">Comment:</label>
         <textarea id="comment" name="comment" required></textarea>
     
-        <button type="submit">Enviar Review</button>
+        <button type="submit">Send Review</button>
         <input type="hidden" name="_csrf" value="{{token}}">
     </form>
     {{/isUser}}
@@ -28,7 +28,7 @@
         {{/reviews}}
 
         {{^reviews}}
-            <p class="no-reviews">No hay reseñas para este producto.</p>
+            <p class="no-reviews">No reviews for this product</p>
         {{/reviews}}
     </div>
 </div>
