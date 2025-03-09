@@ -482,10 +482,6 @@ public class MainController {
 			Optional<User> user = userService.findByUsername(userDetails.getUsername());
 			model.addAttribute("username", user.get().getUsername());
 
-			// Map<String, Integer> productsRange = new HashMap<>();
-			// productsRange.put("Nombre" , 12);
-			// productsRange.put("Deportes", 15);
-
 			Map<String, Integer> dataMap = new HashMap<>();
 
 			// Initialize the dataMap with predefined keys and zero values
