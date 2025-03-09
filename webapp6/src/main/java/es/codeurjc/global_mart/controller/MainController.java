@@ -514,6 +514,4 @@ public class MainController {
 		}
 	}
 
-=======
->>>>>>> 2cd2c6dcbf8e86acdbf2931ca4586ab863cde47f
 }
