@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 45624480fc378d8d87ed37539ed89826e375d3bc
 import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -38,7 +42,11 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class MainController {
 
+<<<<<<< HEAD
 	private final DaoAuthenticationProvider authenticationProvider;
+=======
+    private final DaoAuthenticationProvider authenticationProvider;
+>>>>>>> 45624480fc378d8d87ed37539ed89826e375d3bc
 
 	private final CSRFHandlerConfiguration CSRFHandlerConfiguration;
 
@@ -181,6 +189,7 @@ public class MainController {
 		}
 	}
 
+<<<<<<< HEAD
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
 		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(0, 5));
@@ -207,6 +216,14 @@ public class MainController {
 	public String getMethodName(@PathVariable String type, Model model) {
 
 		List<Product> products = productService.getAcceptedProductsByType(type);
+=======
+
+	@GetMapping("/moreProds")
+	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
+		Pageable pageable = PageRequest.of(page, 5);
+		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
+		List<Product> products = productsPage.getContent();
+>>>>>>> 45624480fc378d8d87ed37539ed89826e375d3bc
 		addImageDataToProducts(products);
 		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
