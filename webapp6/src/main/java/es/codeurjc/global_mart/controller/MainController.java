@@ -337,6 +337,7 @@ public class MainController {
 		return "shoppingcart";
 	}
 
+	// adds a product to the user cart
 	@PostMapping("/shoppingcart/{productId}")
 	public String addProductToCart(@PathVariable Long productId, Authentication autentication) {
 		Object principal = autentication.getPrincipal();
