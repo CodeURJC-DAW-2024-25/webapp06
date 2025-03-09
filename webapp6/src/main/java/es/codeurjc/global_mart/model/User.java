@@ -45,15 +45,8 @@ public class User {
 
     private double cartPrice;
 
-    
-
-    
     @ElementCollection(fetch = FetchType.EAGER) // EAGER: fetch the data when the object is created
     private List<Double> historicalOrderPrices;
-
-    
-
- 
 
     // ----------------- Constructor -----------------
     public User() {
@@ -70,7 +63,6 @@ public class User {
         this.cart = new ArrayList<>();
         this.cartPrice = 0;
         this.historicalOrderPrices = new ArrayList<>();
-    
 
     }
 
@@ -208,7 +200,7 @@ public class User {
     public void removeProductFromCart(Product product) {
         this.cart.remove(product);
         this.cartPrice -= product.getPrice();
-        
+
     }
 
     public void emptyCart() {
