@@ -1,39 +1,27 @@
 package es.codeurjc.global_mart.controller;
 
-import java.security.Principal;
 import java.sql.Blob;
-import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+=======
+>>>>>>> 2cd2c6dcbf8e86acdbf2931ca4586ab863cde47f
 import org.springframework.security.core.Authentication;
-import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
-import es.codeurjc.global_mart.service.OrderService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
@@ -49,46 +37,11 @@ public class MainController {
 	private UserService userService;
 
 	@Autowired
-	private OrderService orderService;
-
-	@Autowired
 	private SearchController searchController;
 
 	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration, DaoAuthenticationProvider authenticationProvider) {
 		this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
 		this.authenticationProvider = authenticationProvider;
-	}
-
-	@ModelAttribute
-	public void addAtributes(Model model, HttpServletRequest request, Authentication authentication) {
-		if (authentication != null) {
-			Object principal = authentication.getPrincipal();
-			model.addAttribute("logged", true);
-
-			if (principal instanceof OAuth2User oAuth2User) {
-				model.addAttribute("username", oAuth2User.getAttribute("name"));
-				model.addAttribute("isUser", true);
-
-			} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-				Optional<User> user = userService.findByUsername(userDetails.getUsername());
-				model.addAttribute("username", user.get().getUsername());
-				if (user.isPresent() && user.get().isAdmin()) {
-					model.addAttribute("isAdmin", true);
-					model.addAttribute("isCompany", false);
-					model.addAttribute("isUser", false);
-				} else if (user.isPresent() && user.get().isCompany()) {
-					model.addAttribute("isAdmin", false);
-					model.addAttribute("isCompany", true);
-					model.addAttribute("isUser", false);
-				} else {
-					model.addAttribute("isAdmin", false);
-					model.addAttribute("isCompany", false);
-					model.addAttribute("isUser", true);
-				}
-			}
-		} else {
-			model.addAttribute("logged", false);
-		}
 	}
 
 	// Functions to redirect to the different pages of the application
@@ -180,6 +133,7 @@ public class MainController {
 		}
 	}
 
+<<<<<<< HEAD
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
 		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(0, 5));
@@ -560,4 +514,6 @@ public class MainController {
 		}
 	}
 
+=======
+>>>>>>> 2cd2c6dcbf8e86acdbf2931ca4586ab863cde47f
 }
