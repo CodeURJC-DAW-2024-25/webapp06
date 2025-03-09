@@ -55,9 +55,8 @@ public class MainController {
 	@Autowired
 	private OrderService orderService;
 
-	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration, DaoAuthenticationProvider authenticationProvider) {
+	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration) {
 		this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
-		this.authenticationProvider = authenticationProvider;
 	}
 
 	// Functions to redirect to the different pages of the application
@@ -158,7 +157,12 @@ public class MainController {
 		addImageDataToProducts(products);
 
 		model.addAttribute("allProds", products);
-		return "moreProducts";
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", productsPage.getTotalPages());
+		model.addAttribute("tittle", true);
+
+		return "products";
 	}
 
 	@GetMapping("/new_product")
