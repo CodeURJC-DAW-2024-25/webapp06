@@ -175,11 +175,24 @@ public class MainController {
 		}
 	}
 
+
+	@GetMapping("/moreProds")
+	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
+		PageRequest pageable = PageRequest.of(page, 5);
+		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
+		List<Product> products = productsPage.getContent();
+		addImageDataToProducts(products);
+
+		model.addAttribute("allProds", products);
+		return "moreProducts";
+	}
+
+
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
-		List<Product> products = productService.getAcceptedProducts();
+		List<Product> products = productService.getAcceptedProducts(PageRequest.of(0, 5)).getContent();
 		addImageDataToProducts(products);
-		model.addAttribute("allProds", productService.getAcceptedProducts());
+		model.addAttribute("allProds", products);
 		model.addAttribute("tittle", false);
 
 		Principal principal = request.getUserPrincipal();
