@@ -75,7 +75,7 @@ public class GlobalMartSecurityConfig {
                                                                             // aceptar un producto
                 .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
                 .requestMatchers("/profile").permitAll()
-                .requestMatchers("/showUserGraphic").hasAnyRole("USER")
+                .requestMatchers("/showUserGraphic").permitAll()
 
                 .anyRequest().authenticated()
 
