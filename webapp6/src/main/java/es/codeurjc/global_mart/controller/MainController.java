@@ -1,27 +1,40 @@
 package es.codeurjc.global_mart.controller;
 
+import java.security.Principal;
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-=======
->>>>>>> 2cd2c6dcbf8e86acdbf2931ca4586ab863cde47f
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
+import es.codeurjc.global_mart.service.OrderService;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
@@ -38,6 +51,9 @@ public class MainController {
 
 	@Autowired
 	private SearchController searchController;
+
+	@Autowired
+	private OrderService orderService;
 
 	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration, DaoAuthenticationProvider authenticationProvider) {
 		this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
@@ -133,7 +149,7 @@ public class MainController {
 		}
 	}
 
-<<<<<<< HEAD
+
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
 		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(0, 5));
