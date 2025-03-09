@@ -150,39 +150,6 @@ public class MainController {
 	}
 
 
-	@GetMapping("/products/allProducts")
-	public String seeAllProds(Model model, HttpServletRequest request) {
-		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(0, 5));
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
-		model.addAttribute("allProds", products);
-		model.addAttribute("tittle", false);
-
-		Principal principal = request.getUserPrincipal();
-		if (principal == null) {
-			model.addAttribute("allCompanyProds", Collections.emptyList());
-		} else {
-			Optional<User> user = userService.findByUsername(principal.getName());
-			if (user.isPresent() && user.get().isCompany()) {
-				model.addAttribute("allCompanyProds",
-						productService.getAcceptedCompanyProducts(user.get().getUsername()));
-			}
-		}
-		model.addAttribute("page", 0);
-		return "products";
-	}
-
-	@GetMapping("/products/{type}")
- 	public String getMethodName(@PathVariable String type, Model model) {
- 
- 		List<Product> products = productService.getAcceptedProductsByType(type);
- 		addImageDataToProducts(products);
- 		model.addAttribute("allProds", products);
- 		model.addAttribute("type", type);
- 		model.addAttribute("tittle", true);
- 		return "products";
- 	}
-
 	@GetMapping("/moreProds")
 	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
 		Pageable pageable = PageRequest.of(page, 5);
@@ -192,46 +159,6 @@ public class MainController {
 
 		model.addAttribute("allProds", products);
 		return "moreProducts";
-	}
-
-	@GetMapping("/product/{id}")
-	public String productDescription(@PathVariable Long id, Model model, Authentication autentication)
-			throws Exception {
-		Optional<Product> product = productService.getProductById(id); // Extract the product by its id
-
-		if (product.isPresent()) {
-			// Extract all the info of the product to use it in the musctache template
-			model.addAttribute("productName", product.get().getName());
-			model.addAttribute("productType", product.get().getType());
-			model.addAttribute("productCompany", product.get().getCompany());
-			model.addAttribute("productPrice", product.get().getPrice());
-			model.addAttribute("productDescription", product.get().getDescription());
-
-			// Convert Blob to Base64 encoded string
-			String imageBase64 = null;
-			Blob imageBlob = product.get().getImage();
-			if (imageBlob != null) {
-				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-				imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-			}
-
-			productService.setViews_product_count(product.get());
-			model.addAttribute("productImage", imageBase64);
-			model.addAttribute("productId", product.get().getId());
-			model.addAttribute("productStock", product.get().getStock());
-			model.addAttribute("reviews", product.get().getReviews());
-
-			return "descriptionProduct";
-		} else {
-			return "redirect:/allProducts";
-		}
-	}
-
-	// Redirection to the descriprion of a produdct
-	@GetMapping("/descriptionProduct")
-	public String descriptionProduct(Model model) {
-		// model.addAttribute("token", ); // take token for the post method
-		return "descriptionProduct";
 	}
 
 	@GetMapping("/new_product")
@@ -278,91 +205,6 @@ public class MainController {
 	public String deleteProduct(@PathVariable Long id) {
 		productService.deleteProduct(id);
 		return "redirect:/adminPage";
-	}
-
-	@GetMapping("/shoppingcart")
-	public String shoppingCart(Model model, Authentication autentication) {
-
-		Object principal = autentication.getPrincipal();
-		if (principal instanceof OAuth2User oAuth2User) {
-			model.addAttribute("username", oAuth2User.getAttribute("name"));
-			model.addAttribute("products",
-					userService.getCartProducts(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
-			model.addAttribute("totalPrice",
-					userService.getTotalPrice(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
-			// org.springframework.security.web.csrf.CsrfToken csrfToken =
-			// CSRFHandlerConfiguration.getToken();
-			// model.addAttribute("token", csrfToken.getToken());
-		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			Optional<User> user = userService.findByUsername(userDetails.getUsername());
-			if (user.isPresent()) {
-				model.addAttribute("username", user.get().getUsername());
-				model.addAttribute("products", userService.getCartProducts(user.get()));
-				model.addAttribute("totalPrice", userService.getTotalPrice(user.get()));
-			}
-		}
-
-		return "shoppingcart";
-	}
-
-	// adds a product to the user cart
-	@PostMapping("/shoppingcart/{productId}")
-	public String addProductToCart(@PathVariable Long productId, Authentication autentication) {
-		Object principal = autentication.getPrincipal();
-		if (principal instanceof OAuth2User oAuth2User) {
-			User user = userService.findByUsername(oAuth2User.getAttribute("name"))
-					.orElseThrow(() -> new RuntimeException("User not found"));
-			Product product = productService.getProductById(productId)
-					.orElseThrow(() -> new RuntimeException("Product not found"));
-			userService.addProductToCart(user, product);
-		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			User user = userService.findByUsername(userDetails.getUsername())
-					.orElseThrow(() -> new RuntimeException("User not found"));
-			Product product = productService.getProductById(productId)
-					.orElseThrow(() -> new RuntimeException("Product not found"));
-			userService.addProductToCart(user, product);
-		}
-
-		return "redirect:/shoppingcart";
-	}
-
-	// removes a product from the user cart
-	@PostMapping("/removeProductFromCart/{id}")
-	public String removeProductFromCart(@PathVariable Long id, Authentication autentication) {
-		Object principal = autentication.getPrincipal();
-		if (principal instanceof OAuth2User oAuth2User) {
-			User user = userService.findByUsername(oAuth2User.getAttribute("name"))
-					.orElseThrow(() -> new RuntimeException("User not found"));
-			Product product = productService.getProductById(id)
-					.orElseThrow(() -> new RuntimeException("Product not found"));
-			if (user.getCart().contains(product)) {
-				userService.removeProductFromCart(user, product); // call the user method to remove
-				// userService.save( user); // update the user in DDBB without this line the
-				// user continues rendering the product
-
-			}
-		} else {
-			return "redirect:/";
-		}
-
-		return "redirect:/shoppingcart";
-	}
-
-	// to place an order
-	@PostMapping("/payment")
-	public String payment(Authentication autentication) {
-		Object principal = autentication.getPrincipal();
-
-		if (principal instanceof OAuth2User oAuth2User) {
-			User user = userService.findByUsername(oAuth2User.getAttribute("name"))
-					.orElseThrow(() -> new RuntimeException("User not found"));
-			orderService.createOrder(user); // all the payment logic is in the orderService
-		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			User user = userService.findByUsername(userDetails.getUsername())
-					.orElseThrow(() -> new RuntimeException("User not found"));
-			orderService.createOrder(user); // all the payment logic is in the orderService
-		}
-		return "redirect:/";
 	}
 
 	@GetMapping("/edit_product/{id}")
@@ -440,69 +282,6 @@ public class MainController {
 		return "redirect:/products/allProducts";
 	}
 
-	@GetMapping("/displayGraphs")
-	public String displayGraph(Model model, Authentication autentication) {
-
-		Object principal = autentication.getPrincipal();
-		if (principal instanceof OAuth2User oAuth2User) {
-			model.addAttribute("username", oAuth2User.getAttribute("name"));
-		}
-		if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			Optional<User> user = userService.findByUsername(userDetails.getUsername());
-			model.addAttribute("username", user.get().getUsername());
-
-			Map<String, Integer> dataMap = new HashMap<>();
-
-			// Initialize the dataMap with predefined keys and zero values
-			dataMap.put("Technology", 0);
-			dataMap.put("Books", 0);
-			dataMap.put("Education", 0);
-			dataMap.put("Sports", 0);
-			dataMap.put("Home", 0);
-			dataMap.put("Music", 0);
-			dataMap.put("Cinema", 0);
-			dataMap.put("Appliances", 0);
-			dataMap.put("Others", 0);
-
-			// iterate over the products of the company and count the number of products of
-			// each type and store it in the dataMap
-			List<Product> companyProducts = productService.getAcceptedCompanyProducts(userDetails.getUsername());
-			for (Product product : companyProducts) {
-				String type = product.getType();
-				dataMap.put(type, dataMap.getOrDefault(type, 0) + 1);
-			}
-
-			List<Map<String, Object>> dataList = new ArrayList<>();
-			for (Map.Entry<String, Integer> entry : dataMap.entrySet()) {
-				Map<String, Object> item = new HashMap<>();
-				item.put("key", entry.getKey());
-				item.put("value", entry.getValue());
-				dataList.add(item);
-			}
-			model.addAttribute("dataList", dataList);
-
-			// model.addAttribute("companyProducts", companyProducts);
-			model.addAttribute("productsRange", dataList);
-			model.addAttribute("books", 12);
-			model.addAttribute("username", userDetails.getUsername());
-			model.addAttribute("sports", 15);
-
-		}
-		return "companyGraphs";
-	}
-
-	@GetMapping("/showUserGraphic")
-	public String displayUserGraph(Model model, Authentication authentication) {
-		Object principal = authentication.getPrincipal();
-		if (principal instanceof OAuth2User oAuth2User) {
-			model.addAttribute("username", oAuth2User.getAttribute("name"));
-			List<Double> orderPrices = userService.findByUsername(oAuth2User.getAttribute("name")).get()
-					.getHistoricalOrderPrices();
-			model.addAttribute("orderPrices", orderPrices);
-		}
-
-		return "userGraph";
-	}
 
 	// Function to add review to a product
 	@PostMapping("/product/{id}/new_review")
