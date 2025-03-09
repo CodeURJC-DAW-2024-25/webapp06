@@ -502,7 +502,6 @@ public class MainController {
 		}
 
 		return "userGraph";
-
 	}
 
 	// Function to add review to a product
