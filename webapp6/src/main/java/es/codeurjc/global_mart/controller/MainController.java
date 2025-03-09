@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import es.codeurjc.global_mart.model.Order;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.model.User;
@@ -35,7 +32,6 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import es.codeurjc.global_mart.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class MainController {
@@ -164,40 +160,6 @@ public class MainController {
 		return "user"; // Nombre del archivo HTML de la vista
 	}
 
-	/*
-	 * @GetMapping("/products/allProducts")
-	 * public String seeAllProds(Model model, HttpServletRequest request) {
-	 * List<Product> products = productService.getAcceptedProducts();
-	 * addImageDataToProducts(products);
-	 * model.addAttribute("allProds", productService.getAcceptedProducts());
-	 * model.addAttribute("tittle", false);
-	 * 
-	 * Principal principal = request.getUserPrincipal();
-	 * if (principal == null) {
-	 * model.addAttribute("allCompanyProds", Collections.emptyList());
-	 * } else {
-	 * Optional<User> user = userService.findByUsername(principal.getName());
-	 * if (user.isPresent() && user.get().isCompany()) {
-	 * model.addAttribute("allCompanyProds",
-	 * productService.getAcceptedCompanyProducts(user.get().getUsername()));
-	 * }
-	 * }
-	 * return "products";
-	 * }
-	 * 
-	 * // Redirection to see ONLY the products of a specific type
-	 * 
-	 * @GetMapping("/products/{type}")
-	 * public String getMethodName(@PathVariable String type, Model model) {
-	 * 
-	 * List<Product> products = productService.getAcceptedProductsByType(type);
-	 * addImageDataToProducts(products);
-	 * model.addAttribute("allProds", products);
-	 * model.addAttribute("type", type);
-	 * model.addAttribute("tittle", true);
-	 * return "products";
-	 * }
-	 */
 	private void addImageDataToProducts(List<Product> products) {
 		for (Product product : products) {
 			try {
@@ -585,17 +547,19 @@ public class MainController {
 
 	// try to do with fetch in the future
 	// @GetMapping("/loadUserGraph")
-	// public List<Double> loadUserGraph(Model model, Authentication authentication){
-	// 	Object principal = authentication.getPrincipal();
-	// 	System.out.println("SI FUNCIONA EL FETCH");
-	// 	if (principal instanceof OAuth2User oAuth2User){
-	// 		User user = userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() -> new RuntimeException("User not found"));
-	// 		System.out.println("LSITA DE PRECIOS DE ORDERS:");
-	// 		System.out.println(user.getHistoricalOrderPrices().stream()
-	// 	}
+	// public List<Double> loadUserGraph(Model model, Authentication
+	// authentication){
+	// Object principal = authentication.getPrincipal();
+	// System.out.println("SI FUNCIONA EL FETCH");
+	// if (principal instanceof OAuth2User oAuth2User){
+	// User user =
+	// userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() ->
+	// new RuntimeException("User not found"));
+	// System.out.println("LSITA DE PRECIOS DE ORDERS:");
+	// System.out.println(user.getHistoricalOrderPrices().stream()
+	// }
 
-
-	// 	return Collections.emptyList();
+	// return Collections.emptyList();
 	// }
 
 	// Function to add review to a product

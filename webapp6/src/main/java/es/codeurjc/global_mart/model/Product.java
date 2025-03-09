@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -37,7 +36,6 @@ public class Product {
     private Boolean isAccepted;
     private String imageBase64;
 
-    
     // private List<Order> orders;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -100,7 +98,7 @@ public class Product {
     }
 
     // public List<Order> getOrders() {
-    //     return orders;
+    // return orders;
     // }
 
     public List<Review> getReviews() {
@@ -141,7 +139,7 @@ public class Product {
     }
 
     // public void setOrders(List<Order> orders) {
-    //     this.orders = orders;
+    // this.orders = orders;
     // }
 
     public void setStock(Integer stock) {
