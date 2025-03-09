@@ -176,19 +176,10 @@ public class MainController {
 	}
 
 	@GetMapping("/products/allProducts")
-	public String seeAllProds(
-			Model model,
-			HttpServletRequest request,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int size) {
-
-		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(page, size));
-		List<Product> products = productsPage.getContent();
+	public String seeAllProds(Model model, HttpServletRequest request) {
+		List<Product> products = productService.getAcceptedProducts();
 		addImageDataToProducts(products);
-
-		model.addAttribute("allProds", products);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", productsPage.getTotalPages());
+		model.addAttribute("allProds", productService.getAcceptedProducts());
 		model.addAttribute("tittle", false);
 
 		Principal principal = request.getUserPrincipal();
@@ -198,11 +189,9 @@ public class MainController {
 			Optional<User> user = userService.findByUsername(principal.getName());
 			if (user.isPresent() && user.get().isCompany()) {
 				model.addAttribute("allCompanyProds",
-						productService.getAcceptedCompanyProducts(user.get().getUsername(),
-								PageRequest.of(page, size)));
+						productService.getAcceptedCompanyProducts(user.get().getUsername()));
 			}
 		}
-
 		return "products";
 	}
 
