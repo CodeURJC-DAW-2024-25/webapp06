@@ -14,9 +14,6 @@ import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -39,8 +36,6 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class MainController {
 
-    private final DaoAuthenticationProvider authenticationProvider;
-
 	private final CSRFHandlerConfiguration CSRFHandlerConfiguration;
 
 	@Autowired
@@ -55,9 +50,8 @@ public class MainController {
 	@Autowired
 	private OrderService orderService;
 
-	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration, DaoAuthenticationProvider authenticationProvider) {
+	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration) {
 		this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
-		this.authenticationProvider = authenticationProvider;
 	}
 
 	// Functions to redirect to the different pages of the application
@@ -149,16 +143,44 @@ public class MainController {
 		}
 	}
 
+	@GetMapping("/products/allProducts")
+	public String seeAllProds(Model model, HttpServletRequest request) {
+		List<Product> products = productService.getAcceptedProducts();
+		addImageDataToProducts(products);
+		model.addAttribute("allProds", productService.getAcceptedProducts());
+		model.addAttribute("tittle", false);
 
-	@GetMapping("/moreProds")
-	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
-		Pageable pageable = PageRequest.of(page, 5);
-		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
+		Principal principal = request.getUserPrincipal();
+		if (principal == null) {
+			model.addAttribute("allCompanyProds", Collections.emptyList());
+		} else {
+			Optional<User> user = userService.findByUsername(principal.getName());
+			if (user.isPresent() && user.get().isCompany()) {
+				model.addAttribute("allCompanyProds",
+						productService.getAcceptedCompanyProducts(user.get().getUsername()));
+			}
+		}
+		return "products";
+	}
+
+	@GetMapping("/products/{type}")
+	public String seeCategorizedProds(
+			@PathVariable String type,
+			Model model,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
+
+		Page<Product> productsPage = productService.getAcceptedProductsByType(type, PageRequest.of(page, size));
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
 
 		model.addAttribute("allProds", products);
-		return "moreProducts";
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", productsPage.getTotalPages());
+		model.addAttribute("tittle", true);
+
+		return "products";
 	}
 
 	@GetMapping("/new_product")
