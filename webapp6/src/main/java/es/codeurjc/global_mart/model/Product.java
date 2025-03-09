@@ -1,6 +1,7 @@
 package es.codeurjc.global_mart.model;
 
 import java.sql.Blob;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class Product {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
+    private Date date;
+
     // ----------------- Constructor -----------------
     public Product() {
     }
@@ -57,6 +60,7 @@ public class Product {
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;
         this.views_count = 0;
+        this.date = new Date();
     }
 
     // ----------------- Methods -----------------
@@ -95,6 +99,10 @@ public class Product {
 
     public Integer getStock() {
         return stock;
+    }
+
+    public Date getDate() {
+        return date;
     }
 
     // public List<Order> getOrders() {
@@ -164,6 +172,10 @@ public class Product {
 
     public void setImageBase64(String imageBase64) {
         this.imageBase64 = imageBase64;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Integer getViews_count() {

@@ -197,6 +197,15 @@ public class ProductService {
         return acceptedProducts.subList(0, size);
     }
 
+    public List<Product> getNewProducts(int limit){
+        List<Product> acceptedProducts = getAcceptedProducts();
+
+        Collections.sort(acceptedProducts, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
+
+        int size = Math.min(limit, acceptedProducts.size());
+        return acceptedProducts.subList(0, size);
+    }
+
     public Page<Product> getProductsPage(Pageable pageable) {
         return productRepository.findAll(pageable);
     }

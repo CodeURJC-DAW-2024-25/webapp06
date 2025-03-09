@@ -46,33 +46,18 @@
         <div class="product_section_container">
             <h2 class="section_title">New Products</h2>
             <div class="products_container">
+                {{#newProducts}}
                 <div class="product">
-                    <img src="/images/1.jpg" alt="Product 1" class="product_image">
-                    <h3 class="product_title">Product 1</h3>
-                    <p class="product_description">Description</p>
-                    <p class="product_price">Price</p>
+                    <img src="{{imageBase64}}" alt="{{name}}" class="product_image">
+                    <h3 class="{{name}}">Product 1</h3>
+                    <p class="product_price">{{price}}</p>
                 </div>
+                {{/newProducts}}
 
-                <div class="product">
-                    <img src="/images/2.jpg" alt="Product 2" class="product_image">
-                    <h3 class="product_title">Product 2</h3>
-                    <p class="product_description">Description</p>
-                    <p class="product_price">Price</p>
-                </div>
+                {{^newProducts}}
+                <p>No hay productos nuevos todavía</p>
+                {{/newProducts}}
 
-                <div class="product">
-                    <img src="/images/3.jpg" alt="Product 3" class="product_image">
-                    <h3 class="product_title">Product 3</h3>
-                    <p class="product_description">Description</p>
-                    <p class="product_price">Price</p>
-                </div>
-
-                <div class="product">
-                    <img src="/images/4.jpg" alt="Product 4" class="product_image">
-                    <h3 class="product_title">Product 4</h3>
-                    <p class="product_description">Description</p>
-                    <p class="product_price">Price</p>
-                </div>
             </div>
         </div>
 
