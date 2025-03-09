@@ -13,12 +13,6 @@ import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-<<<<<<< HEAD
-=======
-
->>>>>>> 45624480fc378d8d87ed37539ed89826e375d3bc
 import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -42,12 +36,6 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class MainController {
 
-<<<<<<< HEAD
-	private final DaoAuthenticationProvider authenticationProvider;
-=======
-    private final DaoAuthenticationProvider authenticationProvider;
->>>>>>> 45624480fc378d8d87ed37539ed89826e375d3bc
-
 	private final CSRFHandlerConfiguration CSRFHandlerConfiguration;
 
 	@Autowired
@@ -62,10 +50,8 @@ public class MainController {
 	@Autowired
 	private SearchController searchController;
 
-	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration,
-			DaoAuthenticationProvider authenticationProvider) {
+	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration) {
 		this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
-		this.authenticationProvider = authenticationProvider;
 	}
 
 	@ModelAttribute
@@ -189,13 +175,11 @@ public class MainController {
 		}
 	}
 
-<<<<<<< HEAD
 	@GetMapping("/products/allProducts")
 	public String seeAllProds(Model model, HttpServletRequest request) {
-		Page<Product> productsPage = productService.getAcceptedProducts(PageRequest.of(0, 5));
-		List<Product> products = productsPage.getContent();
+		List<Product> products = productService.getAcceptedProducts();
 		addImageDataToProducts(products);
-		model.addAttribute("allProds", products);
+		model.addAttribute("allProds", productService.getAcceptedProducts());
 		model.addAttribute("tittle", false);
 
 		Principal principal = request.getUserPrincipal();
@@ -208,38 +192,27 @@ public class MainController {
 						productService.getAcceptedCompanyProducts(user.get().getUsername()));
 			}
 		}
-		model.addAttribute("page", 0);
 		return "products";
 	}
 
 	@GetMapping("/products/{type}")
-	public String getMethodName(@PathVariable String type, Model model) {
+	public String seeCategorizedProds(
+			@PathVariable String type,
+			Model model,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
 
-		List<Product> products = productService.getAcceptedProductsByType(type);
-=======
-
-	@GetMapping("/moreProds")
-	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
-		Pageable pageable = PageRequest.of(page, 5);
-		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
+		Page<Product> productsPage = productService.getAcceptedProductsByType(type, PageRequest.of(page, size));
 		List<Product> products = productsPage.getContent();
->>>>>>> 45624480fc378d8d87ed37539ed89826e375d3bc
 		addImageDataToProducts(products);
+
 		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", productsPage.getTotalPages());
 		model.addAttribute("tittle", true);
+
 		return "products";
-	}
-
-	@GetMapping("/moreProds")
-	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
-		Pageable pageable = PageRequest.of(page, 5);
-		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
-
-		model.addAttribute("allProds", products);
-		return "moreProducts";
 	}
 
 	@GetMapping("/product/{id}")
