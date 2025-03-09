@@ -6,23 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
 
-   
+
     <!-- /* Links */ -->
     <link rel="stylesheet" href="/css/shoppingcart.css">
 
-<!-- /* Itim Font */ -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
-    rel="stylesheet">
+    <!-- /* Itim Font */ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
+        rel="stylesheet">
 
-    
+
 </head>
 
 <body>
-<!-- ----------------- Nav ----------------- -->
-{{>./components/nav}}
+    <!-- ----------------- Nav ----------------- -->
+    {{>./components/nav}}
 
 
 
@@ -31,37 +31,36 @@
         <p>User registered as: {{username}}</p>
         {{#products}}
         <div class="cart-item">
-            <img src="/images/placeholder.png" alt="Producto">
+            <img src="{{imageBase64}}" alt="Producto">
             <div class="details">
                 <p><strong>{{name}}</strong></p>
-                <p>{{price}}</p>
-                <p>{{id}}</p>
+                <p>Price: {{price}}</p>
                 <div>
-                    <!-- <input type="number" value="1" min="1" style="width: 40px;"> -->
-                     <form action="/removeProductFromCart/{{id}}" method="POST">
+                    <form action="/removeProductFromCart/{{id}}" method="POST">
                         <input type="hidden" name="_csrf" value="{{token}}">
                         <button type="submit" class="remove">Remove product</button>
-                     </form>
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="payment">
+        <div class="subtotal_and_payment_div">
             <form action="/payment" method="POST">
                 <input type="hidden" name="_csrf" value="{{token}}">
-                <button class="buy" type="submit">Buy</button>
+                <button class="buy_button" type="submit">Buy</button>
             </form>
+            <p class="subtotal_title">Subtotal: {{totalPrice}}</p>
         </div>
         {{/products}}
         {{^products}}
         <h3>No products in the cart</h3>
         {{/products}}
-        
-        <div class="subtotal">Subtotal: {{totalPrice}}</div>
+
+
     </div>
 
 
-<!-- ------------Footer ------------ -->
-{{>./components/footer}}
+    <!-- ------------Footer ------------ -->
+    {{>./components/footer}}
 
 </body>
 

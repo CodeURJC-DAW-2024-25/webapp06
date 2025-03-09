@@ -471,11 +471,6 @@ public class MainController {
 		return "redirect:/products/allProducts";
 	}
 
-	// @GetMapping("/payCart")
-	// public String payCart(@RequestParam String param) {
-	// return "payment";
-	// }
-
 	@GetMapping("/displayGraphs")
 	public String displayGraph(Model model, Authentication autentication) {
 
@@ -544,23 +539,6 @@ public class MainController {
 		return "userGraph";
 
 	}
-
-	// try to do with fetch in the future
-	// @GetMapping("/loadUserGraph")
-	// public List<Double> loadUserGraph(Model model, Authentication
-	// authentication){
-	// Object principal = authentication.getPrincipal();
-	// System.out.println("SI FUNCIONA EL FETCH");
-	// if (principal instanceof OAuth2User oAuth2User){
-	// User user =
-	// userService.findByUsername(oAuth2User.getAttribute("name")).orElseThrow(() ->
-	// new RuntimeException("User not found"));
-	// System.out.println("LSITA DE PRECIOS DE ORDERS:");
-	// System.out.println(user.getHistoricalOrderPrices().stream()
-	// }
-
-	// return Collections.emptyList();
-	// }
 
 	// Function to add review to a product
 	@PostMapping("/product/{id}/new_review")
