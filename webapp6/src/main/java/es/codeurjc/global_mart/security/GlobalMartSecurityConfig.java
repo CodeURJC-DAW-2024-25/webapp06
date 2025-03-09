@@ -59,24 +59,23 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/products/{type}").permitAll()
                 .requestMatchers("/payCart").permitAll()
 
-                                // -------------- PRIVATE PAGES ----------------
-                                .requestMatchers("/profile").authenticated()
-                                .requestMatchers("/shoppingcart").authenticated()
-                                .requestMatchers("/new_product").hasRole("COMPANY")
-                                .requestMatchers("/displayGraph").permitAll()
-                                //----------------- ADMIN PAGES ----------------
-                                .requestMatchers("/adminPage").hasAnyRole("ADMIN")
-                                .requestMatchers("/profile").authenticated()
-                                .requestMatchers("/new_product").permitAll()
-                                .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN") // aqui si que funciona lo
-                                                                                            // del rol de admin, si no
-                                                                                            // esta esto no se puede
-                                                                                            // aceptar un producto
-                                .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
-                                .requestMatchers("/profile").permitAll()
-                                // .requestMatchers("/shoppingcart").permitAll()
-                                // .requestMatchers("/shoppingcart").permitAll()
-                                // .requestMatchers("/error").permitAll()
+                // -------------- PRIVATE PAGES ----------------
+                .requestMatchers("/profile").authenticated()
+                .requestMatchers("/shoppingcart").authenticated()
+                .requestMatchers("/shoppingcart/*").authenticated()
+                .requestMatchers("/new_product").hasRole("COMPANY")
+                .requestMatchers("/displayGraphs").permitAll()
+                // ----------------- ADMIN PAGES ----------------
+                .requestMatchers("/adminPage").hasAnyRole("ADMIN")
+                .requestMatchers("/profile").authenticated()
+                .requestMatchers("/new_product").permitAll()
+                .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN") // aqui si que funciona lo
+                                                                            // del rol de admin, si no
+                                                                            // esta esto no se puede
+                                                                            // aceptar un producto
+                .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
+                .requestMatchers("/profile").permitAll()
+                .requestMatchers("/showUserGraphic").hasAnyRole("USER")
 
                 .anyRequest().authenticated()
 

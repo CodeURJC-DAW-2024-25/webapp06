@@ -106,48 +106,26 @@ public class ProductService {
     }
 
     public List<Product> getAcceptedProductsByType(String type) {
-        List<Product> filterType = productRepository.findByType(type);
-        List<Product> acceptedProducts = new ArrayList<>();
-        for (Product product : filterType) {
-            if (product.getIsAccepted()) {
-                acceptedProducts.add(product);
-            }
-        }
-        return acceptedProducts;
-    }
+        return productRepository.findByIsAcceptedTrueAndType(type);
+    }    
 
     public Page<Product> getAcceptedProductsByType(String type, Pageable pageable) {
         return productRepository.findByIsAcceptedTrueAndType(type, pageable);
     }
     
- 
     public List<Product> getAcceptedProducts() {
-        List<Product> allProducts = productRepository.findAll();
-        List<Product> acceptedProducts = new ArrayList<>();
-        for (Product product : allProducts) {
-            if (product.getIsAccepted()) {
-                acceptedProducts.add(product);
-            }
-        }
-        return acceptedProducts;
+        return productRepository.findByIsAcceptedTrue();
     }
-
-
+    
     public Page<Product> getAcceptedProducts(Pageable pageable) {
         return productRepository.findByIsAcceptedTrue(pageable);
     }
 
     public List<Product> getNotAcceptedProducts() {
-        List<Product> allProducts = productRepository.findAll();
-        List<Product> notacceptedProducts = new ArrayList<>();
-        for (Product product : allProducts) {
-            if (!product.getIsAccepted()) {
-                notacceptedProducts.add(product);
-            }
-        }
-        return notacceptedProducts;
-    }
+        return productRepository.findByIsAcceptedFalse();
 
+    }
+/*
     public List<Product> searchProductsByName(String query) {
         System.out.println("Buscando productos con nombre que contenga: '" + query + "'");
         List<Product> allProducts = productRepository.findAll();
@@ -164,6 +142,11 @@ public class ProductService {
         System.out.println("Total de coincidencias: " + matchedProducts.size());
         return matchedProducts;
     }
+ */
+    public List<Product> searchProductsByName(String query) {
+        return productRepository.findByNameContainingIgnoreCase(query);
+    }
+    
 
     public List<Product> searchProductsByNameAndType(String query, String type) {
         return productRepository.findByNameContainingIgnoreCaseAndType(query, type);
