@@ -221,8 +221,11 @@ Acceder en el navegador a la url: https://localhost:8443
 
 ---
 
-- **Diagrama de relaciones de base de datos**
+**Diagrama de relaciones de base de datos**
 ![Diagrama de base de datos](./images_readme/Practica1/databaseDiagram.png)
+
+**Diagrama de relaciones de clases**
+![Diagrama de base de datos](./images_readme/Practica1/diagramaRelaciones.png)
 
 ## Commits de Mayor Importancia Realizados
 
