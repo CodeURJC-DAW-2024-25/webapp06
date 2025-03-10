@@ -2,7 +2,6 @@ package es.codeurjc.global_mart.model;
 
 import java.sql.Timestamp;
 import java.sql.Blob;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +43,6 @@ public class Product {
     private List<Review> reviews;
 
     private Timestamp date;
-
-   
-
-    
 
     // ----------------- Constructor -----------------
     public Product() {
