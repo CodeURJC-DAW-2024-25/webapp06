@@ -277,7 +277,7 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-| Commit en el que se ha aplicado la funcionalidad base de AJAX (se ha ido retocando con commits futuros)       | [Link Commit 1 Luis](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/699e64b42fbd1efd322fa1c89641db34eedad371)     |
+| Commit en el que se ha aplicado la funcionalidad de AJAX (se ha ido retocando con commits anteriores y futuros)       | [Link Commit 1 Luis](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/9dedd81c14dd7eb4c7079a6522eba629c617b91a)     |
 | Commit en el que se ha implementado la posibilidad de registro desde una cuenta de la plataforma google       | [Link Commit 2 Luis](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/a021b735c768df52e518ebf91d18ed09d6e862c1)     |
 | Commit en el que se ha implementado la correcta visualización de los productos       | [Link Commit 3 Luis](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/2edc130217277e00bf35a17891e70f803e52db5f)     |
 | Commit en el que se ha implementado la funcionalidad de la página de los administradores      | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/02ef00424dc21eea547535221e942d6938a24b75)     |
@@ -319,11 +319,11 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-| Fichero 1       | [Link 1]     |
-| Fichero 2       | [Link 2]     |
-| Fichero 3       | [Link 3]     |
-| Fichero 4       | [Link 4]     |
-| Fichero 5       | [Link 5]     |
+| MainController.java      | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/MainController.java)     |
+| BaseController.java       | [Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/blame/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/BaseController.java)     |
+| LoadMore.js     | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/static/js/loadMoreTypes.js)     |
+| Products.html      | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/products.html)     |
+| ProductsController.html       | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ProductsController.java)     |
 
 ### Cristian
 
