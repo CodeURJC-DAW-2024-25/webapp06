@@ -343,7 +343,7 @@ Acceder en el navegador a la url: https://localhost:8443
 | **Descripción** | **Link**     |
 |-----------------|--------------|
 | ShoppingCartController.java      | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ShoppingCartController.java)   |
-| GraphsController.java     | [Link 2] (https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/GraphsController.java)   |
+| GraphsController.java     | [Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/GraphsController.java)   |
 | Order.java      | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/model/Order.java)    |
 | companyGraph.html and userGraph.html       | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/companyGraphs.html)   |
 | shoppingCart.html | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/shoppingcart.html)  |
