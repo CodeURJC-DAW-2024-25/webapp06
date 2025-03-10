@@ -92,6 +92,7 @@ public class MainController {
 		Object principal = authentication.getPrincipal();
 
 		if (principal instanceof OAuth2User oAuth2User) {
+			model.addAttribute("name", oAuth2User.getAttribute("name"));
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
 			model.addAttribute("email", oAuth2User.getAttribute("email"));
 			model.addAttribute("profile_image", oAuth2User.getAttribute("picture"));
