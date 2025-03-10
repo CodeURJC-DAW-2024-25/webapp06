@@ -29,12 +29,11 @@ public class BaseController {
     public void addUserAttributes(Authentication authentication, org.springframework.ui.Model model,
             HttpServletRequest request) {
 
-        // Valores predeterminados
         model.addAttribute("logged", false);
         model.addAttribute("isAdmin", false);
         model.addAttribute("isCompany", false);
         model.addAttribute("isUser", false);
-        model.addAttribute("isGoogleUser", false); // Valor predeterminado
+        model.addAttribute("isGoogleUser", false);
 
         if (authentication != null && authentication.isAuthenticated() &&
                 !authentication.getName().equals("anonymousUser")) {
@@ -48,7 +47,7 @@ public class BaseController {
                 model.addAttribute("email", oAuth2User.getAttribute("email"));
                 model.addAttribute("profile_image", oAuth2User.getAttribute("picture"));
                 model.addAttribute("isUser", true);
-                model.addAttribute("isGoogleUser", true); // Marcar como usuario de Google
+                model.addAttribute("isGoogleUser", true);
             }
             // Regular user
             else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
@@ -57,7 +56,7 @@ public class BaseController {
                     model.addAttribute("username", user.get().getUsername());
                     model.addAttribute("email", user.get().getEmail());
                     model.addAttribute("profile_image", user.get().getImage());
-                    model.addAttribute("isGoogleUser", false); // Marcar como usuario normal
+                    model.addAttribute("isGoogleUser", false);
 
                     if (user.get().isAdmin()) {
                         model.addAttribute("isAdmin", true);

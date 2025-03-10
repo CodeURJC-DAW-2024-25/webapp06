@@ -42,7 +42,7 @@ public class ProductsController {
                 if (imageBlob != null) {
                     byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
                     String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-                    product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
+                    product.setImageBase64(imageBase64); // add the image to the product
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -64,7 +64,8 @@ public class ProductsController {
         } else {
             Optional<User> user = userService.findByUsername(principal.getName());
             if (user.isPresent() && user.get().isCompany()) {
-                List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.get().getUsername(), PageRequest.of(0, 5)).getContent();
+                List<Product> companyProducts = productService
+                        .getAcceptedCompanyProducts(user.get().getUsername(), PageRequest.of(0, 5)).getContent();
                 addImageDataToProducts(companyProducts);
                 model.addAttribute("companyName", user.get().getName());
                 model.addAttribute("allCompanyProds", companyProducts);
@@ -83,7 +84,8 @@ public class ProductsController {
         model.addAttribute("allProds", products);
         model.addAttribute("type", type);
         model.addAttribute("tittle", true);
-        model.addAttribute("hasNextProd", productService.getAcceptedProductsByType(type, PageRequest.of(1, 5)).hasContent());
+        model.addAttribute("hasNextProd",
+                productService.getAcceptedProductsByType(type, PageRequest.of(1, 5)).hasContent());
         return "products";
     }
 
@@ -120,7 +122,6 @@ public class ProductsController {
         }
     }
 
-    // Redirection to the descriprion of a produdct
     @GetMapping("/descriptionProduct")
     public String descriptionProduct(Model model) {
         // model.addAttribute("token", ); // take token for the post method
@@ -139,7 +140,6 @@ public class ProductsController {
             @RequestParam Integer product_stock, @RequestParam Double product_price, Authentication autentication)
             throws Exception {
         Object principal = autentication.getPrincipal();
-        // Usamos el parámetro Principal para obtener el nombre del usuario logueado
         if (principal instanceof OAuth2User oAuth2User) {
             productService.createProduct(product_type, product_name, oAuth2User.getAttribute("name"),
                     product_price,
@@ -181,7 +181,7 @@ public class ProductsController {
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
 
-            // Convertir la imagen Blob a Base64 para mostrarla
+            // convert Blob to Base64 encoded string
             try {
                 Blob imageBlob = product.getImage();
                 if (imageBlob != null) {
@@ -193,7 +193,7 @@ public class ProductsController {
                 e.printStackTrace();
             }
 
-            // Añadir atributos para seleccionar el tipo correcto en el menú desplegable
+            // add the product to the model
             model.addAttribute("type_" + product.getType(), true);
             model.addAttribute("product", product);
         } else {
@@ -224,7 +224,7 @@ public class ProductsController {
             product.setStock(product_stock);
             product.setPrice(product_price);
 
-            // Actualizar la imagen solo si se proporciona una nueva
+            // update the image if it is not null
             if (product_image != null && !product_image.isEmpty()) {
                 product.setImage(BlobProxy.generateProxy(
                         product_image.getInputStream(),
@@ -233,7 +233,6 @@ public class ProductsController {
 
             productService.addProduct(product);
 
-            // Si el usuario es una empresa, redirigir a sus productos
             Object principal = autentication.getPrincipal();
             if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
                 if (userService.findByUsername(userDetails.getUsername()).get().isCompany()) {

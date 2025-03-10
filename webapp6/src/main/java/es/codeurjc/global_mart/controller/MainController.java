@@ -32,26 +32,23 @@ public class MainController {
 	@Autowired
 	private SearchController searchController;
 
-	// Functions to redirect to the different pages of the application
-	// Initial page (index.html)
 	@GetMapping("/")
 	public String greeting(Model model) {
-		// Obtener los 4 productos más visitados
+		// get the most viewed and last products
 		List<Product> mostViewedProducts = productService.getMostViewedProducts(4);
 		List<Product> lastProducts = productService.getLastProducts(4);
 
-		// Convertir las imágenes Blob a Base64 para cada producto
+		// Add image data to the products
 		addImageDataToProducts(mostViewedProducts);
 		addImageDataToProducts(lastProducts);
 
-		// Añadir la lista al modelo
+		// Add the products to the model
 		model.addAttribute("mostViewedProducts", mostViewedProducts);
-		model.addAttribute("lastProducts" , lastProducts);
+		model.addAttribute("lastProducts", lastProducts);
 
 		return "index";
 	}
 
-	// Redirection to the initial page
 	@GetMapping("/redir")
 	public String redir(Model model) {
 		return "redirect:/";
@@ -82,11 +79,10 @@ public class MainController {
 		return "administrator";
 	}
 
-	// Redirection to the user page
 	@GetMapping("/profile")
 	public String profile(Model model, Authentication authentication) {
 		if (authentication == null) {
-			return "redirect:/login"; // Redirigir si no hay usuario autenticado
+			return "redirect:/login";
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -96,9 +92,9 @@ public class MainController {
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
 			model.addAttribute("email", oAuth2User.getAttribute("email"));
 			model.addAttribute("profile_image", oAuth2User.getAttribute("picture"));
-			model.addAttribute("isGoogleUser", true); // Añadir flag para indicar autenticación con Google
+			model.addAttribute("isGoogleUser", true); // add flag to indicate authentication with Google
 		}
-		// Si el usuario ha iniciado sesión con usuario y contraseña
+		// Regular user
 		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<User> user = userService.findByUsername(userDetails.getUsername());
 			if (user.isPresent()) {
@@ -106,11 +102,12 @@ public class MainController {
 				model.addAttribute("username", user.get().getUsername());
 				model.addAttribute("email", user.get().getEmail());
 				model.addAttribute("profile_image", user.get().getImage());
-				model.addAttribute("isGoogleUser", false); // Añadir flag para indicar autenticación normal
+				model.addAttribute("isGoogleUser", false); // add flag to indicate authentication with username and
+															// password
 			}
 		}
 
-		return "user"; // Nombre del archivo HTML de la vista
+		return "user";
 	}
 
 	private void addImageDataToProducts(List<Product> products) {
@@ -120,7 +117,7 @@ public class MainController {
 				if (imageBlob != null) {
 					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
 					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-					product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
+					product.setImageBase64(imageBase64);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -134,7 +131,7 @@ public class MainController {
 		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
-		model.addAttribute("hasMore", productsPage.getTotalPages() -1 > page);
+		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
 		model.addAttribute("allProds", products);
 		return "moreProducts";
 	}

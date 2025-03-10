@@ -25,10 +25,8 @@ public class LoginRegisterController {
     @Autowired
     private UserService userService;
 
-    // Procesa el registro del usuario
     @PostMapping("/register")
-    public String registerUser(@RequestParam String name, @RequestParam String username, // Recibe los datos del
-                                                                                         // formulario
+    public String registerUser(@RequestParam String name, @RequestParam String username, // receive the form data
             @RequestParam String mail,
             @RequestParam String password,
             @RequestParam MultipartFile image,
@@ -41,7 +39,7 @@ public class LoginRegisterController {
             userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role));
         }
 
-        return "redirect:/"; // Redirecciona a la página de login tras el registro
+        return "redirect:/"; // redirect to the profile page
     }
 
     @GetMapping("/loginComprobation")
@@ -56,12 +54,12 @@ public class LoginRegisterController {
             newUser.setUsername(oAuth2User.getAttribute("name"));
             newUser.setEmail(email);
             // newUser.setImage(oAuth2User.getAttribute("picture"));
-            newUser.setRole(List.of("USER")); // Por defecto, asignamos el rol de usuario normal
+            newUser.setRole(List.of("USER")); // we set the role to USER
 
             userService.save(newUser);
         }
 
-        return "redirect:/"; // Redirige a la página de perfil
+        return "redirect:/"; // redirect to the profile page
     }
 
 }
