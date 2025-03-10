@@ -300,11 +300,11 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-|Company graph, commit where it was implemented a pie chart of the types of products in a company| [Link 1] (https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/23fdae3d2fb9dca53df17ab606dc2cdc9ff8ecff)    |
-| User graph, similar to the company graph but with a different chary to show the historical prices trend of orders (not definitive)        | [Link 2] (https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/3e1798d5773b7716f5c88de4eca018a7c8aef102)     |
-| Cart changes, remodeling the initial cart, with "add product to cart" funcionality (not definitive improvements in next commits)        | [Link 3] (https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/514d2a2fe2159ff4f4a4db08a46253cb03ae4eeb)   |
-| Remove product and initiate payment in cart, includes remove funcionality and the initial step of payment method too        | [Link 4]  (https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/041da04d4e0eb9e3e506f860f39efa024d0494d8)   |
-| Payment and others corrections, includes final payment funcionality and other changes in models         | [Link 5] (https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/46d2147ac3a20fede704f03a30233d5689d5d43e)  |
+|Company graph, commit where it was implemented a pie chart of the types of products in a company| [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/23fdae3d2fb9dca53df17ab606dc2cdc9ff8ecff)    |
+| User graph, similar to the company graph but with a different chary to show the historical prices trend of orders (not definitive)        | [Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/3e1798d5773b7716f5c88de4eca018a7c8aef102)     |
+| Cart changes, remodeling the initial cart, with "add product to cart" funcionality (not definitive improvements in next commits)        | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/514d2a2fe2159ff4f4a4db08a46253cb03ae4eeb)   |
+| Remove product and initiate payment in cart, includes remove funcionality and the initial step of payment method too        | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/041da04d4e0eb9e3e506f860f39efa024d0494d8)   |
+| Payment and others corrections, includes final payment funcionality and other changes in models         | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/46d2147ac3a20fede704f03a30233d5689d5d43e)  |
 
 ### Álvaro
 
@@ -342,11 +342,11 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-| ShoppingCartController.java      | [Link 1] (https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ShoppingCartController.java)   |
-| GraphsController.java     | [Link 2]  (https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/GraphsController.java)   |
-| Order.java      | [Link 3] (https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/model/Order.java)    |
-| companyGraph.html and userGraph.html       | [Link 4]  (https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/companyGraphs.html)   |
-| shoppingCart.html | [Link 5]  https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/shoppingcart.html   |
+| ShoppingCartController.java      | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ShoppingCartController.java)   |
+| GraphsController.java     | [Link 2] (https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/GraphsController.java)   |
+| Order.java      | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/model/Order.java)    |
+| companyGraph.html and userGraph.html       | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/companyGraphs.html)   |
+| shoppingCart.html | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/shoppingcart.html)  |
 
 ### Álvaro
 
