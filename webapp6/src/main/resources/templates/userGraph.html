@@ -11,7 +11,7 @@
     <div id="container"></div>
     <p class="highcharts-description"></p>
 </figure>
-<div id="orderPrices-data" data-orderPrices="{{orderPrices}}">{{orderPrices}}</div>
+<div id="orderPrices-data" data-orderPrices="{{orderPrices}}" style="display: none;"></div>
 <div style="font-size: 15px;">
     {{>./components/footer}}
 </div>
@@ -63,7 +63,7 @@
             }
         },
         series: [{
-            name: 'Username',
+            name: 'Línea de gastos en pedidos',
             data: dataElements
         }, ]
     });

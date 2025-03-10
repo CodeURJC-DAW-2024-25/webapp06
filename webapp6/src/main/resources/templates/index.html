@@ -48,9 +48,12 @@
             <div class="products_container">
                 {{#lastProducts}}
                 <div class="product">
-                    <img src="{{imageBase64}}" alt="{{name}}" class="product_image">
-                    <h3 class="{{name}}">{{name}}</h3>
-                    <p class="product_price">{{price}} €</p>
+                    <a href="/product/{{id}}">
+                        <img src="{{imageBase64}}" alt="{{name}}" class="product_image">
+                        <h3 class="{{name}}">{{name}}</h3>
+                        <p class="product_price">{{price}} €</p>
+                    </a>
+                  
                 </div>
                 {{/lastProducts}}
 
