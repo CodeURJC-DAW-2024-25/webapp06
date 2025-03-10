@@ -52,3 +52,24 @@ body {
     background-color: white;
     border-bottom: 1px solid #e0e0e0;
 }
+
+.load-more-btn {
+    display: block;
+    width: 200px;
+    margin: 30px auto;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.load-more-btn:hover {
+    background-color: #0056b3;
+}
