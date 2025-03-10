@@ -214,7 +214,7 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 ![Prototitpo producto2](./images_readme/Practica1/productInfoScreen2.png)
 
 - **Diagrama de navegación de GlobalMart**
-![Diagrama de Páginas GlobalMart](./images_readme/Practica1/navegationDiagram.png)
+![Diagrama de Páginas GlobalMart](./images_readme/Practica1/diagramafinalpaginas.svg)
 
 # Instrucciones de Ejecución
 
