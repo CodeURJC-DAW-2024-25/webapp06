@@ -150,6 +150,19 @@ public class MainController {
 		return "moreProducts";
 	}
 
+	@GetMapping("/moreProdsCompany")
+	public String loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company, Model model) {
+		Pageable pageable = Pageable.ofSize(5).withPage(page);
+		Page<Product> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
+		List<Product> products = productsPage.getContent();
+		addImageDataToProducts(products);
+
+		model.addAttribute("allProds", products);
+		model.addAttribute("company", company);
+		model.addAttribute("isCompany", true);
+		return "moreProducts";
+	}
+
 	public ProductService getProductService() {
 		return productService;
 	}

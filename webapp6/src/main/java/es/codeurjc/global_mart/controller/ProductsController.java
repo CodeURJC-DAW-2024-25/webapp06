@@ -63,8 +63,9 @@ public class ProductsController {
         } else {
             Optional<User> user = userService.findByUsername(principal.getName());
             if (user.isPresent() && user.get().isCompany()) {
-                List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.get().getUsername());
+                List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.get().getUsername(), PageRequest.of(0, 5)).getContent();
                 addImageDataToProducts(companyProducts);
+                model.addAttribute("companyName", user.get().getName());
                 model.addAttribute("allCompanyProds", companyProducts);
             } else {
                 model.addAttribute("allCompanyProds", Collections.emptyList());

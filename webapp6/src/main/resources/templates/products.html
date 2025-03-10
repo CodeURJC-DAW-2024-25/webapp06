@@ -81,11 +81,16 @@
 
     
     {{^tittle}}
+    {{^isCompany}}
     <button id="loadMoreBtn" class="load-more-btn" onclick="loadMoreAll()">Load More</button>
+    {{/isCompany}}
     {{/tittle}}
     {{#tittle}}
     <button id="loadMoreTypes" class="load-more-btn" onclick="loadMoreTypes('{{type}}')">Load More</button>
     {{/tittle}}
+    {{#isCompany}}
+    <button id="loadMoreCompany" class="load-more-btn" onclick="loadMoreCompany('{{companyName}}')">Load More</button>
+    {{/isCompany}}
     
 
     <!-- ----------------- Footer ----------------- -->
@@ -96,5 +101,6 @@
 </body>
 <script src="/js/loadMore.js"></script>
 <script src="/js/loadMoreTypes.js"></script>
+<script src="/js/loadMoreCompany.js"></script>
 
 </html>
