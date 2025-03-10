@@ -109,6 +109,49 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 
 ## Preparación 2
 
+### Pantallas
+
+- **Pantalla de inicio de sesión/registro**
+    - Esta pantalla permite a los usuarios iniciar sesión en la aplicación proporcionando sus credenciales.
+![Pantalla de inicio de sesión](./images_readme/Preparacion2/Página%20de%20registro.png)
+
+
+- **Pantalla de perfil de usuario**
+    - Esta pantalla muestra la información del perfil del usuario, incluyendo detalles personales y opciones de configuración.
+![Pantalla de perfil de usuario](./images_readme/Preparacion2/Página%20_Mi%20cuenta_.png)
+
+- **Pantalla de lista de productos**
+    - Esta pantalla muestra una lista de productos disponibles para la compra, con opciones de filtrado y búsqueda.
+![Pantalla de lista de productos](./images_readme/Preparacion2/Página%20de%20búsqueda.png)
+
+- **Pantalla de detalles del producto**
+    - Esta pantalla muestra información detallada sobre un producto seleccionado, incluyendo imágenes, descripción y reseñas.
+![Pantalla de detalles del producto](./images_readme/Preparacion2/Página%20detalle%20de%20producto.png)
+
+- **Pantalla de carrito de compras**
+    - Esta pantalla muestra los productos que el usuario ha añadido a su carrito de compras, con opciones para modificar cantidades o eliminar productos.
+![Pantalla de carrito de compras](./images_readme/Preparacion2/Página%20de%20cesta.png)
+
+- **Pantalla de estadísticas**
+    - Esta pantalla muestra estadísticas relevantes para los usuarios y administradores, como gráficos de ventas, productos más vendidos, y análisis de usuarios.
+![Pantalla de estadísticas](./images_readme/Preparacion2/Estadísticas.png)
+
+- **Pantalla de solicitudes del administrador**
+    - Esta pantalla permite al administrador ver y gestionar las solicitudes de productos subidos por las empresas, pudiendo aceptar o rechazar cada solicitud.
+![Pantalla de solicitudes del administrador](./images_readme/Preparacion2/Página%20de%20solicitudes%20(admin).png)
+
+- **Pantalla de subida de un producto**
+    - Esta pantalla es un formulario que permite a las empresas subir nuevos productos, incluyendo detalles como nombre, descripción, precio, y fotos.
+![Pantalla de subida de un producto](./images_readme/Preparacion2/Página%20de%20subida%20de%20producto%20(Empresa).png)
+
+- **Pantalla del usuario sin registrar**
+    - Esta es la primera pantalla que aparece al cargar la web, mostrando productos destacados y opciones para iniciar sesión o registrarse.
+![Pantalla del usuario sin registrar](./images_readme/Preparacion2/Página%20usuario%20sin%20registrar.png)
+
+- **Pantalla de productos de la empresa**
+    - Esta pantalla muestra todos los productos que una empresa ha subido, permitiendo gestionar cada uno de ellos.
+![Pantalla de productos de la empresa](./images_readme/Preparacion2/Página%20productos%20de%20empresa.png)
+
 ## Práctica 1
 
 #### Diagrama de Páginas GlobalMart
