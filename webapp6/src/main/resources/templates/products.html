@@ -79,7 +79,7 @@
     </div>
     {{/isCompany}}
 
-    
+    {{#hasNextProd}}
     {{^tittle}}
     {{^isCompany}}
     <button id="loadMoreBtn" class="load-more-btn" onclick="loadMoreAll()">Load More</button>
@@ -91,7 +91,8 @@
     {{#isCompany}}
     <button id="loadMoreCompany" class="load-more-btn" onclick="loadMoreCompany('{{companyName}}')">Load More</button>
     {{/isCompany}}
-    
+    {{/hasNextProd}}
+  
 
     <!-- ----------------- Footer ----------------- -->
     <br>
