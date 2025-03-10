@@ -29,14 +29,11 @@ public class ProductService {
 
     public Product createProduct(String type, String name, String business, Double price, String description,
             Blob image, Integer stock, Boolean isAccepted) throws IOException {
-        
+
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
 
         if (image != null) {
-            product.setImage(image); // como se sube una
-                                     // imagen con blob a
-                                     // partir de
-                                     // multipartfile
+            product.setImage(image); // set image from blob
         } else {
             product.setImage(BlobProxy.generateProxy(
                     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
@@ -47,17 +44,14 @@ public class ProductService {
     }
 
     public Product createProduct(String type, String name, String business, Double price, String description,
-    Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
+            Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
         product.setReviews(reviews);
 
         logger.info("Number of reviews: " + reviews.size());
-        
+
         if (image != null) {
-            product.setImage(image); // como se sube una
-                                    // imagen con blob a
-                                    // partir de
-                                    // multipartfile
+            product.setImage(image); // set image from blob
         } else {
             product.setImage(BlobProxy.generateProxy(
                     "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
@@ -107,16 +101,16 @@ public class ProductService {
 
     public List<Product> getAcceptedProductsByType(String type) {
         return productRepository.findByIsAcceptedTrueAndType(type);
-    }    
+    }
 
     public Page<Product> getAcceptedProductsByType(String type, Pageable pageable) {
         return productRepository.findByIsAcceptedTrueAndType(type, pageable);
     }
-    
+
     public List<Product> getAcceptedProducts() {
         return productRepository.findByIsAcceptedTrue();
     }
-    
+
     public Page<Product> getAcceptedProducts(Pageable pageable) {
         return productRepository.findByIsAcceptedTrue(pageable);
     }
@@ -125,28 +119,29 @@ public class ProductService {
         return productRepository.findByIsAcceptedFalse();
 
     }
-/*
-    public List<Product> searchProductsByName(String query) {
-        System.out.println("Buscando productos con nombre que contenga: '" + query + "'");
-        List<Product> allProducts = productRepository.findAll();
-        List<Product> matchedProducts = new ArrayList<>();
 
-        for (Product product : allProducts) {
-            if (product.getName() != null &&
-                    product.getName().toLowerCase().contains(query.toLowerCase())) {
-                System.out.println("Coincidencia encontrada: " + product.getName());
-                matchedProducts.add(product);
-            }
-        }
-
-        System.out.println("Total de coincidencias: " + matchedProducts.size());
-        return matchedProducts;
-    }
- */
+    /*
+     * public List<Product> searchProductsByName(String query) {
+     * System.out.println("Buscando productos con nombre que contenga: '" + query +
+     * "'");
+     * List<Product> allProducts = productRepository.findAll();
+     * List<Product> matchedProducts = new ArrayList<>();
+     * 
+     * for (Product product : allProducts) {
+     * if (product.getName() != null &&
+     * product.getName().toLowerCase().contains(query.toLowerCase())) {
+     * System.out.println("Coincidencia encontrada: " + product.getName());
+     * matchedProducts.add(product);
+     * }
+     * }
+     * 
+     * System.out.println("Total de coincidencias: " + matchedProducts.size());
+     * return matchedProducts;
+     * }
+     */
     public List<Product> searchProductsByName(String query) {
         return productRepository.findByNameContainingIgnoreCaseAndIsAcceptedTrue(query);
     }
-    
 
     public List<Product> searchProductsByNameAndType(String query, String type) {
         return productRepository.findByNameContainingIgnoreCaseAndTypeAndIsAcceptedTrue(query, type);
@@ -167,12 +162,10 @@ public class ProductService {
     public Page<Product> getAcceptedCompanyProducts(String company, Pageable pageable) {
         return productRepository.findByIsAcceptedTrueAndCompany(company, pageable);
     }
-    
 
     public List<Product> getMostViewedProducts(int limit) {
         List<Product> acceptedProducts = getAcceptedProducts();
 
-        
         // order products by visit number (high to low)
         Collections.sort(acceptedProducts, (p1, p2) -> p2.getViews_count().compareTo(p1.getViews_count()));
 
@@ -181,10 +174,10 @@ public class ProductService {
         return acceptedProducts.subList(0, size);
     }
 
-    public List<Product> getLastProducts(int limit){
+    public List<Product> getLastProducts(int limit) {
         List<Product> acceptedProducts = getAcceptedProducts();
 
-        // sort accepted products by creation date 
+        // sort accepted products by creation date
         Collections.sort(acceptedProducts, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
         int size = Math.min(limit, acceptedProducts.size());
         System.out.println("lista de aceptados");

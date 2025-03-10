@@ -15,7 +15,6 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    // Crear una nueva reseña
     public Review createReview(String username, String comment, int calification) {
         Review review = new Review(username, comment, calification);
         return reviewRepository.save(review);
@@ -25,17 +24,14 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-    // Obtener todas las reseñas
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
     }
 
-    // Obtener una reseña por su ID
     public Optional<Review> getReviewById(Long id) {
         return reviewRepository.findById(id);
     }
 
-    // Actualizar una reseña existente
     public Review updateReview(Long id, String comment, int calification) {
         Optional<Review> optionalReview = reviewRepository.findById(id);
         if (optionalReview.isPresent()) {
@@ -48,7 +44,6 @@ public class ReviewService {
         }
     }
 
-    // Eliminar una reseña por su ID
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
     }

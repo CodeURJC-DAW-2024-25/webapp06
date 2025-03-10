@@ -37,8 +37,6 @@ public class Product {
     private Boolean isAccepted;
     private String imageBase64;
 
-    // private List<Order> orders;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
@@ -55,7 +53,6 @@ public class Product {
         this.company = company;
         this.price = price;
         this.description = description;
-        // this.image = image;
         this.stock = stock;
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;
@@ -101,10 +98,6 @@ public class Product {
         return stock;
     }
 
-    // public List<Order> getOrders() {
-    // return orders;
-    // }
-
     public List<Review> getReviews() {
         return reviews;
     }
@@ -145,10 +138,6 @@ public class Product {
     public void setImage(Blob image) {
         this.image = image;
     }
-
-    // public void setOrders(List<Order> orders) {
-    // this.orders = orders;
-    // }
 
     public void setStock(Integer stock) {
         this.stock = stock;

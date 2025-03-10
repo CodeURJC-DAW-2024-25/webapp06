@@ -68,7 +68,6 @@ public class GraphsController {
             }
             model.addAttribute("dataList", dataList);
 
-            // model.addAttribute("companyProducts", companyProducts);
             model.addAttribute("productsRange", dataList);
             model.addAttribute("books", 12);
             model.addAttribute("username", userDetails.getUsername());

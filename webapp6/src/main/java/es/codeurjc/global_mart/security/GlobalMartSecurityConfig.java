@@ -71,10 +71,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/adminPage").hasAnyRole("ADMIN")
                 .requestMatchers("/profile").authenticated()
                 .requestMatchers("/new_product").permitAll()
-                .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN") // aqui si que funciona lo
-                                                                            // del rol de admin, si no
-                                                                            // esta esto no se puede
-                                                                            // aceptar un producto
+                .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN") // only admin can accept products
                 .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
                 .requestMatchers("/profile").permitAll()
                 .requestMatchers("/showUserGraphic").permitAll()
@@ -82,7 +79,7 @@ public class GlobalMartSecurityConfig {
                 .anyRequest().authenticated()
 
         )
-                // Configurar el formulario de login
+                // configure login and logout
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login_error")
@@ -111,8 +108,7 @@ public class GlobalMartSecurityConfig {
                         .logoutSuccessUrl("/")
                         .permitAll())
 
-                // Configurar manejo de excepciones para redirigir a la página de login si no se
-                // está autenticado
+                // manage exceptions
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/")));
 

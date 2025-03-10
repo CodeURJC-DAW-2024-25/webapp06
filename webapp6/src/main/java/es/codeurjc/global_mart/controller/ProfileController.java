@@ -44,13 +44,11 @@ public class ProfileController {
             return "redirect:/";
         }
 
-        // Añadir datos del usuario al modelo
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
         model.addAttribute("name", user.getName());
         model.addAttribute("userId", user.getId());
 
-        // Añadir token CSRF al modelo
         CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
         if (token != null) {
             model.addAttribute("token", token.getToken());
@@ -74,39 +72,29 @@ public class ProfileController {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            // Guardar el nombre de usuario antiguo
             String oldUsername = user.getUsername();
 
-            // Actualizar datos básicos
             user.setUsername(username);
             user.setEmail(email);
             user.setName(name);
 
-            // Actualizar contraseña solo si se proporciona y coincide con la confirmación
             if (password != null && !password.isEmpty() && password.equals(confirmPassword)) {
                 user.setPassword(passwordEncoder.encode(password));
             }
 
-            // Guardar los cambios
             userService.save(user);
 
-            // Si el nombre de usuario cambió, actualizar la autenticación en el contexto de
-            // seguridad
             if (!oldUsername.equals(username) && currentAuth instanceof UsernamePasswordAuthenticationToken) {
-                // Cargar los nuevos detalles del usuario
                 UserDetails newUserDetails = userDetailsService.loadUserByUsername(username);
 
-                // Crear una nueva autenticación con los nuevos detalles
                 UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
                         newUserDetails, null, newUserDetails.getAuthorities());
 
-                // Actualizar el contexto de seguridad
                 SecurityContextHolder.getContext().setAuthentication(newAuth);
             }
 
             return "redirect:/profile";
         } else {
-            // Usuario no encontrado
             return "redirect:/";
         }
     }

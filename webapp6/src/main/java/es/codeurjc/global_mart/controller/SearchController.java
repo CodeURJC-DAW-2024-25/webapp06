@@ -29,29 +29,29 @@ public class SearchController {
         System.out.println("Type: " + type);
 
         if (search_text != null && !search_text.isEmpty()) {
-            // Búsqueda por texto
+            // by text
             if ("all".equals(type)) {
                 searchResults = productService.searchProductsByName(search_text);
             } else {
-                // Búsqueda por texto y categoría
+                // by text and type
                 searchResults = productService.searchProductsByNameAndType(search_text, type);
             }
         } else if (!"all".equals(type)) {
-            // Sólo búsqueda por categoría
+            // by type
             searchResults = productService.getProductsByType(type);
         } else {
-            // Sin criterios, mostrar todos los productos
+            // all products
             searchResults = productService.getAllProducts();
         }
 
-        // Convertir las imágenes Blob a Base64 para cada producto
+        // Convert the image to base64
         convertBlobToBase64(searchResults);
 
         model.addAttribute("products", searchResults);
         model.addAttribute("searchQuery", search_text);
         model.addAttribute("category", type);
 
-        return "search"; // Template que mostrará los resultados
+        return "search";
     }
 
     public void convertBlobToBase64(List<Product> products) {
@@ -63,7 +63,7 @@ public class SearchController {
                     String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
                     product.setImageBase64(imageBase64);
                 } else {
-                    // Imagen por defecto si es null
+                    // Default image
                     product.setImageBase64("/images/default-product.jpg");
                 }
             } catch (Exception e) {

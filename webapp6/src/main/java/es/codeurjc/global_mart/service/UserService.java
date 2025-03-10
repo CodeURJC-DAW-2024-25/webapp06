@@ -65,29 +65,29 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void save (User user){
+    public void save(User user) {
         userRepository.save(user);
     }
 
-    public List<Product> getCartProducts(User user){
+    public List<Product> getCartProducts(User user) {
         return user.getCart();
     }
 
-    public void addProductToCart(User user, Product product){
+    public void addProductToCart(User user, Product product) {
         user.addProductToCart(product);
         userRepository.save(user);
     }
 
-    public void removeProductFromCart(User user, Product product){
+    public void removeProductFromCart(User user, Product product) {
         user.removeProductFromCart(product);
         userRepository.save(user);
     }
 
-    public double getTotalPrice(User user){
+    public double getTotalPrice(User user) {
         return user.getCartPrice();
     }
 
-    public void restartCart(User user){
+    public void restartCart(User user) {
         user.emptyCart();
         userRepository.save(user);
     }
@@ -97,11 +97,11 @@ public class UserService {
         return user;
     }
 
-    public List<Double> getLast15OrderPrices(String username){
+    public List<Double> getLast15OrderPrices(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        List <Double> ordersPrices = user.get().getHistoricalOrderPrices();
+        List<Double> ordersPrices = user.get().getHistoricalOrderPrices();
         int size = ordersPrices.size();
-        return ordersPrices.subList(Math.max(size - 15, 0), size); // Devuelve solo los últimos 15
+        return ordersPrices.subList(Math.max(size - 15, 0), size);
     }
 
 }

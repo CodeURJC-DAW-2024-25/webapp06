@@ -152,6 +152,9 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
     - Esta pantalla muestra todos los productos que una empresa ha subido, permitiendo gestionar cada uno de ellos.
 ![Pantalla de productos de la empresa](./images_readme/Preparacion2/Página%20productos%20de%20empresa.png)
 
+- **Diagrama de navegación**
+![Diagrama de Páginas GlobalMart](./images_readme/Practica1/navegationDiagram.png)
+
 ## Práctica 1
 
 #### Diagrama de Páginas GlobalMart
@@ -211,7 +214,7 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 ![Prototitpo producto2](./images_readme/Practica1/productInfoScreen2.png)
 
 - **Diagrama de navegación de GlobalMart**
-![Diagrama de Páginas GlobalMart](./images_readme/Practica1/navegationDiagram.png)
+![Diagrama de Páginas GlobalMart](./images_readme/Practica1/diagramafinalpaginas.svg)
 
 # Instrucciones de Ejecución
 
@@ -287,11 +290,11 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-| Commit 1        | [Link 1]     |
-| Commit 2        | [Link 2]     |
-| Commit 3        | [Link 3]     |
-| Commit 4        | [Link 4]     |
-| Commit 5        | [Link 5]     |
+| Clase, Repo y Servicio User        | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/67cd541161ceefb0da09bb75f7fe6860e179f993)     |
+| Search Controller y arreglo Data Loader       | [Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/8a7bff3ab42c6e1ad0f133f6599429a70872b951)     |
+| Empiezo login (hecho mas tarde, pero no en este commit)        | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/8a7bff3ab42c6e1ad0f133f6599429a70872b951)     |
+| Editar perfil       | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/79db84e9a3ffdb4450fafa1ac5381440b0ff75ad)     |
+| Búsqueda de productos        | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/78f789f5ff74787465a3078d72c65e6648173b72)     |
 
 ### Juan Manuel
 
@@ -329,11 +332,11 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-| Fichero 1       | [Link 1]     |
-| Fichero 2       | [Link 2]     |
-| Fichero 3       | [Link 3]     |
-| Fichero 4       | [Link 4]     |
-| Fichero 5       | [Link 5]     |
+| UserService.java       | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/service/UserService.java)    |
+| LoginRegisterController       | [Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/LoginRegisterController.java)     |
+| SearchController.java       | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/SearchController.java)     |
+| User.java       | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/model/User.java)     |
+| login.js       | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/static/js/login.js)     |
 
 ### Juan Manuel
 

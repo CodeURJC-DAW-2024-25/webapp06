@@ -9,12 +9,10 @@ const popupRegister = document.getElementsByClassName("register_div")[0];
 const popupContainerContent = document.getElementsByClassName("content")[0];
 const popupContainerOverlay = document.getElementsByClassName("overlay")[0];
 
-// todos los elementos con la clase "button_text"
 const popupButtonTexts = document.getElementsByClassName("button_text");
 
 const popupButtonEmail = document.getElementsByClassName("email_login_button")[0];
 
-// texto inicial de cada "button_text"
 const initialPopupButtons = Array.from(popupButtonTexts).map(btn => btn.innerHTML);
 
 loginButton.addEventListener("click", function () {
@@ -55,15 +53,3 @@ popupOverlay.addEventListener("click", function () {
         btn.innerHTML = initialPopupButtons[index];
     });
 });
-
-
-// !NO BORRAR LO ESTOY HACIENDO FUNCIONAR
-// // Mustache inyecta loggedUsername en el HTML
-// const loggedUsername = "{{ loggedUsername }}";
-// if (loggedUsername && loggedUsername.trim() !== "") {
-//     document.querySelector('.login_register_div').style.display = 'none';
-//     document.querySelector('.login_register_div').style.display = 'none';
-//     const loginUser = document.querySelector('.login_user');
-//     loginUser.style.display = 'flex';
-//     document.querySelector('.username').textContent = loggedUsername;
-// }
