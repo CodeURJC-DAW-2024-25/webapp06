@@ -107,7 +107,9 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
     - Método de pago
     - Instrucciones para el repartidor
 
-### Práctica 1
+## Preparación 2
+
+## Práctica 1
 
 #### Diagrama de Páginas GlobalMart
 
@@ -117,57 +119,59 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 - **Primera pantalla**
 
     - En esta captura se puede observar lo que el usuario observará nada más entrar a la web (desde aquí se puede observar los algoritmos de consulta implementados y toda la funcionalidad del navegador)
-![Prototipo Página Indice](./images_readme/index.png)
+![Prototipo Página Indice](./images_readme/Practica1/index.png)
 
 - **Pantalla de productos**
 
     - En esta captura se pueden observar los productos que han sido subidos por las compañías y aceptados por los administradores, esta pantalla la verás si eres un usuario sin iniciar sesión o un comprador.
-![Prototipo Página productos](./images_readme/productsScreen.png)
+![Prototipo Página productos](./images_readme/Practica1/productsScreen.png)
 
 - **Pantalla About us**
 
     - En esta captura se puede observar información sobre nuestra empresa, en esta página nos introducimos a nosotros mismos indicando nuestras aficiones y lo que nos motiva a mejorar nuestra web.
-![Prototipo Página About us](./images_readme/aboutUsScreen.png)
+![Prototipo Página About us](./images_readme/Practica1/aboutUsScreen.png)
 
 - **Pantalla de opciones para indentificarse**
 
     - Esta pantalla es un "pop-up" en el que solicita al usuario que se quiere identificar si desea utilizar un formulario en el que introducir su información para iniciar sesión / registrarse o si desea utilizar la tecnología complementaria de google para iniciar sesión con esta plataforma.
-![Prototipo de selección](./images_readme/optionScreen.png)
+![Prototipo de selección](./images_readme/Practica1/optionScreen.png)
 
 - **Pantalla de registro/inicio de sesión**
 
     - Esta pantalla es un "pop-up" en el que se solicita al usuario que se registre / inicie sesión mediante un formulario, además a través de este formulario el usuario podrá indicar si quiere una cuenta de compañía (para subir productos a la venta) o de comprador (para comprar los productos que suben las compañías).
-![Prototipo de registro](./images_readme/registerScreen.png)
+![Prototipo de registro](./images_readme/Practica1/registerScreen.png)
 
 - **Pantalla de carrito**
 
     - En esta captura se puede observar el carrito del usuario que está registrado. Esta pantalla solo se puede observar si el usuario que ha iniciado sesión es un comprador.
-![Prototipo de carrito](./images_readme/shoppingCartScreen.png)
+![Prototipo de carrito](./images_readme/Practica1/shoppingCartScreen.png)
 
 - **Pantalla de información de la cuenta**
 
     - En esta captura se puede observar la información de la cuenta que ha iniciado sesión.
-![Prototipo de informacion de la cuenta](./images_readme/profileScreen.png)
+![Prototipo de informacion de la cuenta](./images_readme/Practica1/profileScreen.png)
 
 - **Pantalla de creación de nuevo producto**
 
     - En esta captura se puede observar un formulario que una compañía puede rellenar para la subida de un nuevo producto.
-![Prototipo de nuevo producto](./images_readme/newProductScreen.png)
+![Prototipo de nuevo producto](./images_readme/Practica1/newProductScreen.png)
 
 - **Pantalla de página de administrador**
 
     - En esta captura se observa la funcionalidad especial del administrador, la cual es aceptar o rechazar subidas de nuevos productos que quieres hacer las compañías.
-![Prototipo de administrador](./images_readme/adminPage.png)
+![Prototipo de administrador](./images_readme/Practica1/adminPage.png)
 
 - **Pantalla de información detallada de un producto**
 
-    - En esta captura se puede observar la información detallada de un producto, indluyendo las reviews de otros usuarios sobre ese mismo producto.
-![Prototipo producto](./images_readme/productInfoScreen.png)
-![Prototitpo producto2](./images_readme/productInfoScreen2.png)
-
+    - En esta captura se puede observar la información detallada de un producto, incluyendo las reviews de otros usuarios sobre ese mismo producto.
+![Prototipo producto](./images_readme/Practica1/productInfoScreen.png)
+![Prototitpo producto2](./images_readme/Practica1/productInfoScreen2.png)
 
 - **Diagrama de navegación de GlobalMart**
-![Diagrama de Páginas GlobalMart](./images_readme/navegationDiagram.png)
+![Diagrama de Páginas GlobalMart](./images_readme/Practica1/navegationDiagram.png)
+
+- **Diagrama de relaciones de base de datos**
+![Diagrama de base de datos](./images_readme/Practica1/databaseDiagram.png)
 
 ## Commits de Mayor Importancia Realizados
 
