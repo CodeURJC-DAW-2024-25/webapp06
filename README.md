@@ -349,8 +349,8 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-| Fichero 1       | [Link 1]     |
-| Fichero 2       | [Link 2]     |
-| Fichero 3       | [Link 3]     |
-| Fichero 4       | [Link 4]     |
-| Fichero 5       | [Link 5]     |
+| ProductService.java       | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/service/ProductService.java)     |
+| reviews.html       | [Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/resources/templates/components/reviews.html)     |
+| ProductsController.java       | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ProductsController.java)     |
+| DataLoader.java       | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/config/DataLoader.java)     |
+| Review.java       | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/model/Review.java)     |
