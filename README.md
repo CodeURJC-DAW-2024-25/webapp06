@@ -152,6 +152,9 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
     - Esta pantalla muestra todos los productos que una empresa ha subido, permitiendo gestionar cada uno de ellos.
 ![Pantalla de productos de la empresa](./images_readme/Preparacion2/Página%20productos%20de%20empresa.png)
 
+- **Diagrama de navegación**
+![Diagrama de Páginas GlobalMart](./images_readme/Practica1/navegationDiagram.png)
+
 ## Práctica 1
 
 #### Diagrama de Páginas GlobalMart
