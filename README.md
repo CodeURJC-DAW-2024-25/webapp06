@@ -170,6 +170,9 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 - **Diagrama de navegación de GlobalMart**
 ![Diagrama de Páginas GlobalMart](./images_readme/Practica1/navegationDiagram.png)
 
+- **Diagrama de relaciones de base de datos**
+![Diagrama de base de datos](./images_readme/Practica1/databaseDiagram.png)
+
 ## Commits de Mayor Importancia Realizados
 
 ### Luis
