@@ -320,19 +320,19 @@ public class MainController {
 		Object principal = autentication.getPrincipal();
 		if (principal instanceof OAuth2User oAuth2User) {
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
-			model.addAttribute("products",
-					userService.getCartProducts(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
-			model.addAttribute("totalPrice",
-					userService.getTotalPrice(userService.findByUsername(oAuth2User.getAttribute("name")).get()));
-			// org.springframework.security.web.csrf.CsrfToken csrfToken =
-			// CSRFHandlerConfiguration.getToken();
-			// model.addAttribute("token", csrfToken.getToken());
+			User user = userService.findByUsername(oAuth2User.getAttribute("name")).get();
+			model.addAttribute("products", userService.getCartProducts(user));
+			double totalPrice = userService.getTotalPrice(user);
+			model.addAttribute("totalPrice", totalPrice);
+			model.addAttribute("isEmpty", totalPrice == 0);
 		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<User> user = userService.findByUsername(userDetails.getUsername());
 			if (user.isPresent()) {
 				model.addAttribute("username", user.get().getUsername());
 				model.addAttribute("products", userService.getCartProducts(user.get()));
-				model.addAttribute("totalPrice", userService.getTotalPrice(user.get()));
+				double totalPrice = userService.getTotalPrice(user.get());
+				model.addAttribute("totalPrice", totalPrice);
+				model.addAttribute("isEmpty", totalPrice == 0);
 			}
 		}
 
