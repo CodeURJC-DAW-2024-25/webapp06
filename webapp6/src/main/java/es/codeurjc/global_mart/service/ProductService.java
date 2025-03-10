@@ -144,12 +144,12 @@ public class ProductService {
     }
  */
     public List<Product> searchProductsByName(String query) {
-        return productRepository.findByNameContainingIgnoreCase(query);
+        return productRepository.findByNameContainingIgnoreCaseAndIsAcceptedTrue(query);
     }
     
 
     public List<Product> searchProductsByNameAndType(String query, String type) {
-        return productRepository.findByNameContainingIgnoreCaseAndType(query, type);
+        return productRepository.findByNameContainingIgnoreCaseAndTypeAndIsAcceptedTrue(query, type);
     }
 
     public List<Product> getAcceptedCompanyProducts(String company) {
@@ -172,11 +172,29 @@ public class ProductService {
     public List<Product> getMostViewedProducts(int limit) {
         List<Product> acceptedProducts = getAcceptedProducts();
 
-        // Ordenar productos por número de vistas (de mayor a menor)
+        
+        // order products by visit number (high to low)
         Collections.sort(acceptedProducts, (p1, p2) -> p2.getViews_count().compareTo(p1.getViews_count()));
 
-        // Tomar solo los primeros 'limit' productos
+        // take only the limit number products
         int size = Math.min(limit, acceptedProducts.size());
+        return acceptedProducts.subList(0, size);
+    }
+
+    public List<Product> getLastProducts(int limit){
+        List<Product> acceptedProducts = getAcceptedProducts();
+
+        // sort accepted products by creation date 
+        Collections.sort(acceptedProducts, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
+        int size = Math.min(limit, acceptedProducts.size());
+        System.out.println("lista de aceptados");
+        for (Product product : acceptedProducts) {
+            System.out.println("Fecha:" + product.getDate() + ", Nombre: " + product.getName());
+        }
+        System.out.println("sublista");
+        for (Product product : acceptedProducts.subList(0, size)) {
+            System.out.println("Fecha: " + product.getDate() + ", Nombre: " + product.getName());
+        }
         return acceptedProducts.subList(0, size);
     }
 

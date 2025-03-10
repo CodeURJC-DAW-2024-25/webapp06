@@ -11,62 +11,8 @@
     <div id="container"></div>
     <p class="highcharts-description"></p>
 </figure>
-<div id="orderPrices-data" data-orderPrices="{{orderPrices}}">{{orderPrices}}</div>
+<div id="orderPrices-data" data-orderPrices="{{orderPrices}}" style="display: none;"></div>
 <div style="font-size: 15px;">
     {{>./components/footer}}
 </div>
-<script>
-
-    // document.addEventListener('DOMContentLoaded', loadChartData);
-
-    // async function loadChartData() {
-    //     try{
-    //         const response = await fetch('/loadUserGraph');
-    //         const data = await response.json();
-    //         console.log("Datos devueltos por el servidor:" + data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-    
-    const dataElements = JSON.parse(document.getElementById('orderPrices-data').dataset.orderprices);
-    const size = dataElements.length;
-    const index = [];
-    for (let i = 1; i <= size; i++) {
-        index.push("Order " + i );
-    }
-    console.log("DATOS" + dataElements);
-
-    Highcharts.chart('container', {
-        chart: {
-            type: 'line'
-        },
-        title: {
-            text: 'Gasto últimos pedidos'
-        },
-        
-        xAxis: {
-            // order ID
-            categories: index
-        },
-        yAxis: {
-            title: {
-                text: 'Gasto en euros'
-            }
-        },
-        plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: true
-            }
-        },
-        series: [{
-            name: 'Username',
-            data: dataElements
-        }, ]
-    });
-
-    
-</script>
+<script src="/js/userGraph.js"></script>

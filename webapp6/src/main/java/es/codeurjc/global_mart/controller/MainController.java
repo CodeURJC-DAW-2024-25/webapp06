@@ -38,12 +38,15 @@ public class MainController {
 	public String greeting(Model model) {
 		// Obtener los 4 productos más visitados
 		List<Product> mostViewedProducts = productService.getMostViewedProducts(4);
+		List<Product> lastProducts = productService.getLastProducts(4);
 
 		// Convertir las imágenes Blob a Base64 para cada producto
 		addImageDataToProducts(mostViewedProducts);
+		addImageDataToProducts(lastProducts);
 
 		// Añadir la lista al modelo
 		model.addAttribute("mostViewedProducts", mostViewedProducts);
+		model.addAttribute("lastProducts" , lastProducts);
 
 		return "index";
 	}
