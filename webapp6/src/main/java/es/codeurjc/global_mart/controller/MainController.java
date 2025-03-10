@@ -190,7 +190,7 @@ public class MainController {
 
 
 	@GetMapping("/products/allProducts")
-	public String seeAllProds(Model model, HttpServletRequest request) {
+	public String seeAllProds(Model model, HttpServletRequest request, Authentication authentication) {
 		List<Product> products = productService.getAcceptedProducts(PageRequest.of(0, 5)).getContent();
 		addImageDataToProducts(products);
 		model.addAttribute("allProds", products);
@@ -202,8 +202,11 @@ public class MainController {
 		} else {
 			Optional<User> user = userService.findByUsername(principal.getName());
 			if (user.isPresent() && user.get().isCompany()) {
-				model.addAttribute("allCompanyProds",
-						productService.getAcceptedCompanyProducts(user.get().getUsername()));
+				List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.get().getUsername());
+				addImageDataToProducts(companyProducts);
+				model.addAttribute("allCompanyProds", companyProducts);
+			} else {
+				model.addAttribute("allCompanyProds", Collections.emptyList());
 			}
 		}
 		return "products";
