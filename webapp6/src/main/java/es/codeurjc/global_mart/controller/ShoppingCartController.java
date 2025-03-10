@@ -86,8 +86,6 @@ public class ShoppingCartController {
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             if (user.getCart().contains(product)) {
                 userService.removeProductFromCart(user, product); // call the user method to remove
-                // userService.save( user); // update the user in DDBB without this line the
-                // user continues rendering the product
 
             }
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
