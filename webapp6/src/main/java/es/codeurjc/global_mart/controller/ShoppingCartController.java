@@ -1,5 +1,8 @@
 package es.codeurjc.global_mart.controller;
 
+import java.sql.Blob;
+import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +39,9 @@ public class ShoppingCartController {
         if (principal instanceof OAuth2User oAuth2User) {
             model.addAttribute("username", oAuth2User.getAttribute("name"));
             User user = userService.findByUsername(oAuth2User.getAttribute("name")).get();
-            model.addAttribute("products", userService.getCartProducts(user));
+            List<Product> cartProducts = userService.getCartProducts(user);
+            addImageDataToProducts(cartProducts);
+            model.addAttribute("products", cartProducts);
             double totalPrice = userService.getTotalPrice(user);
             model.addAttribute("totalPrice", totalPrice);
             model.addAttribute("isEmpty", totalPrice == 0);
@@ -44,6 +49,8 @@ public class ShoppingCartController {
             Optional<User> user = userService.findByUsername(userDetails.getUsername());
             if (user.isPresent()) {
                 model.addAttribute("username", user.get().getUsername());
+                List<Product> cartProducts = userService.getCartProducts(user.get());
+                addImageDataToProducts(cartProducts);
                 model.addAttribute("products", userService.getCartProducts(user.get()));
                 double totalPrice = userService.getTotalPrice(user.get());
                 model.addAttribute("totalPrice", totalPrice);
@@ -122,5 +129,20 @@ public class ShoppingCartController {
         }
         return "redirect:/";
     }
+
+    private void addImageDataToProducts(List<Product> products) {
+		for (Product product : products) {
+			try {
+				Blob imageBlob = product.getImage();
+				if (imageBlob != null) {
+					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+					product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }
