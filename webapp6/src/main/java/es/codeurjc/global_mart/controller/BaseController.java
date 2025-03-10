@@ -9,19 +9,38 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class BaseController {
 
+    private final CSRFHandlerConfiguration CSRFHandlerConfiguration;
+
     @Autowired
     private UserService userService;
 
+    BaseController(CSRFHandlerConfiguration CSRFHandlerConfiguration) {
+        this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
+    }
+
     @ModelAttribute
-    public void addUserAttributes(Authentication authentication, org.springframework.ui.Model model) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
+    public void addUserAttributes(Authentication authentication, org.springframework.ui.Model model,
+            HttpServletRequest request) {
+
+        // Valores predeterminados
+        model.addAttribute("logged", false);
+        model.addAttribute("isAdmin", false);
+        model.addAttribute("isCompany", false);
+        model.addAttribute("isUser", false);
+        model.addAttribute("isGoogleUser", false); // Valor predeterminado
+
+        if (authentication != null && authentication.isAuthenticated() &&
+                !authentication.getName().equals("anonymousUser")) {
+
             model.addAttribute("logged", true);
+            Object principal = authentication.getPrincipal();
 
             // OAuth2 user (Google, GitHub, etc.)
             if (principal instanceof OAuth2User oAuth2User) {
@@ -29,8 +48,7 @@ public class BaseController {
                 model.addAttribute("email", oAuth2User.getAttribute("email"));
                 model.addAttribute("profile_image", oAuth2User.getAttribute("picture"));
                 model.addAttribute("isUser", true);
-                model.addAttribute("isAdmin", false);
-                model.addAttribute("isCompany", false);
+                model.addAttribute("isGoogleUser", true); // Marcar como usuario de Google
             }
             // Regular user
             else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
@@ -39,6 +57,7 @@ public class BaseController {
                     model.addAttribute("username", user.get().getUsername());
                     model.addAttribute("email", user.get().getEmail());
                     model.addAttribute("profile_image", user.get().getImage());
+                    model.addAttribute("isGoogleUser", false); // Marcar como usuario normal
 
                     if (user.get().isAdmin()) {
                         model.addAttribute("isAdmin", true);
@@ -55,11 +74,19 @@ public class BaseController {
                     }
                 }
             }
-        } else {
-            model.addAttribute("logged", false);
-            model.addAttribute("isAdmin", false);
-            model.addAttribute("isCompany", false);
-            model.addAttribute("isUser", false);
         }
     }
+
+    public CSRFHandlerConfiguration getCSRFHandlerConfiguration() {
+        return CSRFHandlerConfiguration;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
 }

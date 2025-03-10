@@ -13,19 +13,15 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.User;
-import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
-
-	private final CSRFHandlerConfiguration CSRFHandlerConfiguration;
 
 	@Autowired
 	private ProductService productService;
@@ -35,10 +31,6 @@ public class MainController {
 
 	@Autowired
 	private SearchController searchController;
-
-	MainController(CSRFHandlerConfiguration CSRFHandlerConfiguration) {
-		this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
-	}
 
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
@@ -103,14 +95,17 @@ public class MainController {
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
 			model.addAttribute("email", oAuth2User.getAttribute("email"));
 			model.addAttribute("profile_image", oAuth2User.getAttribute("picture"));
+			model.addAttribute("isGoogleUser", true); // Añadir flag para indicar autenticación con Google
 		}
 		// Si el usuario ha iniciado sesión con usuario y contraseña
 		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<User> user = userService.findByUsername(userDetails.getUsername());
 			if (user.isPresent()) {
+				model.addAttribute("name", user.get().getName());
 				model.addAttribute("username", user.get().getUsername());
 				model.addAttribute("email", user.get().getEmail());
 				model.addAttribute("profile_image", user.get().getImage());
+				model.addAttribute("isGoogleUser", false); // Añadir flag para indicar autenticación normal
 			}
 		}
 
@@ -153,10 +148,6 @@ public class MainController {
 		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
 		return "moreProducts";
-	}
-
-	public CSRFHandlerConfiguration getCSRFHandlerConfiguration() {
-		return CSRFHandlerConfiguration;
 	}
 
 	public ProductService getProductService() {
