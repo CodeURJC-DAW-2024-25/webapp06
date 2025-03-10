@@ -17,7 +17,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
         rel="stylesheet">
-    <script src="/js/loadMore.js"></script>
+    
 </head>
 
 <body>
@@ -57,7 +57,7 @@
             {{#tittle}}
             <h2 class="section_title">{{type}}</h2>
             {{/tittle}}
-            <div class="products_container"id="productsContainer">
+            <div class="products_container" id="productsContainer">
                 {{#allCompanyProds}}
                 
                 <div class="products_container" >
@@ -80,9 +80,12 @@
     {{/isCompany}}
 
     
-    <!-- Botón de Cargar Más -->
-    <button id="loadMoreBtn" class="load-more-btn" onclick="loadMore()">Load More</button>
-    
+    {{^tittle}}
+    <button id="loadMoreBtn" class="load-more-btn" onclick="loadMoreAll()">Load More</button>
+    {{/tittle}}
+    {{#tittle}}
+    <button id="loadMoreTypes" class="load-more-btn" onclick="loadMoreTypes()">Load More</button>
+    {{/tittle}}
     
 
     <!-- ----------------- Footer ----------------- -->
@@ -91,5 +94,7 @@
 
     
 </body>
+<script src="/js/loadMore.js"></script>
+<script src="/js/loadMoreTypes.js"></script>
 
 </html>

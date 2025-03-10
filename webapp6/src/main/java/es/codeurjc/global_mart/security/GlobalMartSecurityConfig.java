@@ -58,7 +58,8 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/search").permitAll()
                 .requestMatchers("/products/{type}").permitAll()
                 .requestMatchers("/payCart").permitAll()
-                .requestMatchers("/moreProds").permitAll()
+                .requestMatchers("/moreProdsAll").permitAll()
+                .requestMatchers("/moreProdsTypes").permitAll()
 
                 // -------------- PRIVATE PAGES ----------------
                 .requestMatchers("/profile").authenticated()

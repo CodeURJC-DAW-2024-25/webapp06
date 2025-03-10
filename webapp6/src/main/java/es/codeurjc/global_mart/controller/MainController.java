@@ -177,7 +177,7 @@ public class MainController {
 	}
 
 
-	@GetMapping("/moreProds")
+	@GetMapping("/moreProdsAll")
 	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
 		Pageable pageable = Pageable.ofSize(5).withPage(page);
 		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
@@ -185,6 +185,18 @@ public class MainController {
 		addImageDataToProducts(products);
 
 		model.addAttribute("allProds", products);
+		return "moreProducts";
+	}
+
+	@GetMapping("/moreProdsTypes")
+	public String loadMoreProductsByType(@RequestParam int page, @RequestParam String type, Model model) {
+		Pageable pageable = Pageable.ofSize(5).withPage(page);
+		Page<Product> productsPage = productService.getAcceptedProductsByType(type, pageable);
+		List<Product> products = productsPage.getContent();
+		addImageDataToProducts(products);
+
+		model.addAttribute("allProds", products);
+		model.addAttribute("type", type);
 		return "moreProducts";
 	}
 
@@ -213,24 +225,16 @@ public class MainController {
 	}
 
 	@GetMapping("/products/{type}")
-	public String seeCategorizedProds(
-			@PathVariable String type,
-			Model model,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int size) {
+	public String getMethodName(@PathVariable String type, Model model) {
 
-		Page<Product> productsPage = productService.getAcceptedProductsByType(type, PageRequest.of(page, size));
-		List<Product> products = productsPage.getContent();
+		List<Product> products = productService.getAcceptedProductsByType(type, PageRequest.of(0, 5)).getContent();
 		addImageDataToProducts(products);
-
 		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", productsPage.getTotalPages());
 		model.addAttribute("tittle", true);
-
 		return "products";
 	}
+	
 
 	@GetMapping("/product/{id}")
 	public String productDescription(@PathVariable Long id, Model model, Authentication autentication)
