@@ -92,6 +92,7 @@ public class MainController {
 		Object principal = authentication.getPrincipal();
 
 		if (principal instanceof OAuth2User oAuth2User) {
+			model.addAttribute("name", oAuth2User.getAttribute("name"));
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
 			model.addAttribute("email", oAuth2User.getAttribute("email"));
 			model.addAttribute("profile_image", oAuth2User.getAttribute("picture"));
@@ -133,7 +134,7 @@ public class MainController {
 		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
-
+		model.addAttribute("hasMore", productsPage.getTotalPages() -1 > page);
 		model.addAttribute("allProds", products);
 		return "moreProducts";
 	}
@@ -144,9 +145,23 @@ public class MainController {
 		Page<Product> productsPage = productService.getAcceptedProductsByType(type, pageable);
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
-
+		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
 		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
+		return "moreProducts";
+	}
+
+	@GetMapping("/moreProdsCompany")
+	public String loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company, Model model) {
+		Pageable pageable = Pageable.ofSize(5).withPage(page);
+		Page<Product> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
+		List<Product> products = productsPage.getContent();
+		addImageDataToProducts(products);
+
+		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
+		model.addAttribute("allProds", products);
+		model.addAttribute("company", company);
+		model.addAttribute("isCompany", true);
 		return "moreProducts";
 	}
 

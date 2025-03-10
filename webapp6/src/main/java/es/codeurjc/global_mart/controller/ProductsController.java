@@ -56,6 +56,7 @@ public class ProductsController {
         addImageDataToProducts(products);
         model.addAttribute("allProds", products);
         model.addAttribute("tittle", false);
+        model.addAttribute("hasNextProd", productService.getAcceptedProducts(PageRequest.of(1, 5)).hasContent());
 
         Principal principal = request.getUserPrincipal();
         if (principal == null) {
@@ -63,8 +64,9 @@ public class ProductsController {
         } else {
             Optional<User> user = userService.findByUsername(principal.getName());
             if (user.isPresent() && user.get().isCompany()) {
-                List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.get().getUsername());
+                List<Product> companyProducts = productService.getAcceptedCompanyProducts(user.get().getUsername(), PageRequest.of(0, 5)).getContent();
                 addImageDataToProducts(companyProducts);
+                model.addAttribute("companyName", user.get().getName());
                 model.addAttribute("allCompanyProds", companyProducts);
             } else {
                 model.addAttribute("allCompanyProds", Collections.emptyList());
@@ -81,6 +83,7 @@ public class ProductsController {
         model.addAttribute("allProds", products);
         model.addAttribute("type", type);
         model.addAttribute("tittle", true);
+        model.addAttribute("hasNextProd", productService.getAcceptedProductsByType(type, PageRequest.of(1, 5)).hasContent());
         return "products";
     }
 
