@@ -1,6 +1,8 @@
 package es.codeurjc.global_mart.model;
 
+import java.sql.Timestamp;
 import java.sql.Blob;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,12 @@ public class Product {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
+    private Timestamp date;
+
+   
+
+    
+
     // ----------------- Constructor -----------------
     public Product() {
     }
@@ -57,6 +65,7 @@ public class Product {
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;
         this.views_count = 0;
+        this.date = new Timestamp(System.currentTimeMillis());
     }
 
     // ----------------- Methods -----------------
@@ -105,6 +114,10 @@ public class Product {
         return reviews;
     }
 
+    public Timestamp getDate() {
+        return date;
+    }
+
     // !Setters
     public void setIsAccepted(Boolean isAccepted) {
         this.isAccepted = isAccepted;
@@ -148,6 +161,10 @@ public class Product {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 
     public void addReview(Review review) {
