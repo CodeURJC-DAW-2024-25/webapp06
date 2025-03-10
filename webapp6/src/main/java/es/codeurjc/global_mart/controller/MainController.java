@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -178,7 +179,7 @@ public class MainController {
 
 	@GetMapping("/moreProds")
 	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
-		PageRequest pageable = PageRequest.of(page, 5);
+		Pageable pageable = Pageable.ofSize(5).withPage(page);
 		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
