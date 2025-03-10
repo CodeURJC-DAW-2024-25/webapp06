@@ -133,7 +133,7 @@ public class MainController {
 		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
-
+		model.addAttribute("hasMore", productsPage.getTotalPages() -1 > page);
 		model.addAttribute("allProds", products);
 		return "moreProducts";
 	}
@@ -144,7 +144,7 @@ public class MainController {
 		Page<Product> productsPage = productService.getAcceptedProductsByType(type, pageable);
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
-
+		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
 		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
 		return "moreProducts";
@@ -157,6 +157,7 @@ public class MainController {
 		List<Product> products = productsPage.getContent();
 		addImageDataToProducts(products);
 
+		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
 		model.addAttribute("allProds", products);
 		model.addAttribute("company", company);
 		model.addAttribute("isCompany", true);
