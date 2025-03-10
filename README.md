@@ -277,11 +277,11 @@ Acceder en el navegador a la url: https://localhost:8443
 
 | **Descripción** | **Link**     |
 |-----------------|--------------|
-| Commit 1        | [Link 1]     |
-| Commit 2        | [Link 2]     |
-| Commit 3        | [Link 3]     |
-| Commit 4        | [Link 4]     |
-| Commit 5        | [Link 5]     |
+| Commit en el que se ha aplicado la funcionalidad base de AJAX (se ha ido retocando con commits futuros)       | [Link Commit 1 Luis](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/699e64b42fbd1efd322fa1c89641db34eedad371)     |
+| Commit en el que se ha implementado la posibilidad de registro desde una cuenta de la plataforma google       | [Link Commit 2 Luis](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/a021b735c768df52e518ebf91d18ed09d6e862c1)     |
+| Commit en el que se ha implementado la correcta visualización de los productos       | [Link Commit 3 Luis](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/2edc130217277e00bf35a17891e70f803e52db5f)     |
+| Commit en el que se ha implementado la funcionalidad de la página de los administradores      | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/02ef00424dc21eea547535221e942d6938a24b75)     |
+| Commit en el que se utiliza mustache para la correcta renderización de los elementos en el html aplicando los respectivos roles de cada usuario, además se mejora la carga de los productos permitiendo la carga de los productos propios de la compañía (en caso de iniciar sesión)        | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/8120cc28516db47317e622c0c449b109e82f34d2)     |
 
 ### Cristian
 
