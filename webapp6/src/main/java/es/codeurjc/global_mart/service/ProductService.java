@@ -144,12 +144,12 @@ public class ProductService {
     }
  */
     public List<Product> searchProductsByName(String query) {
-        return productRepository.findByNameContainingIgnoreCase(query);
+        return productRepository.findByNameContainingIgnoreCaseAndIsAcceptedTrue(query);
     }
     
 
     public List<Product> searchProductsByNameAndType(String query, String type) {
-        return productRepository.findByNameContainingIgnoreCaseAndType(query, type);
+        return productRepository.findByNameContainingIgnoreCaseAndTypeAndIsAcceptedTrue(query, type);
     }
 
     public List<Product> getAcceptedCompanyProducts(String company) {

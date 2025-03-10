@@ -40,38 +40,6 @@ public class MainController {
 		this.CSRFHandlerConfiguration = CSRFHandlerConfiguration;
 	}
 
-	@ModelAttribute
-	public void addAtributes(Model model, HttpServletRequest request, Authentication authentication) {
-		if (authentication != null) {
-			Object principal = authentication.getPrincipal();
-			model.addAttribute("logged", true);
-
-			if (principal instanceof OAuth2User oAuth2User) {
-				model.addAttribute("username", oAuth2User.getAttribute("name"));
-				model.addAttribute("isUser", true);
-
-			} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-				Optional<User> user = userService.findByUsername(userDetails.getUsername());
-				model.addAttribute("username", user.get().getUsername());
-				if (user.isPresent() && user.get().isAdmin()) {
-					model.addAttribute("isAdmin", true);
-					model.addAttribute("isCompany", false);
-					model.addAttribute("isUser", false);
-				} else if (user.isPresent() && user.get().isCompany()) {
-					model.addAttribute("isAdmin", false);
-					model.addAttribute("isCompany", true);
-					model.addAttribute("isUser", false);
-				} else {
-					model.addAttribute("isAdmin", false);
-					model.addAttribute("isCompany", false);
-					model.addAttribute("isUser", true);
-				}
-			}
-		} else {
-			model.addAttribute("logged", false);
-		}
-	}
-
 	// Functions to redirect to the different pages of the application
 	// Initial page (index.html)
 	@GetMapping("/")

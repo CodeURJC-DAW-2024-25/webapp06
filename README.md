@@ -170,6 +170,57 @@ Este proyecto ha sido desarrollado por los siguientes colaboradores:
 - **Diagrama de navegación de GlobalMart**
 ![Diagrama de Páginas GlobalMart](./images_readme/Practica1/navegationDiagram.png)
 
+# Instrucciones de Ejecución
+
+## Requisitos Previos  
+Antes de ejecutar la aplicación, asegúrate de tener instalados los siguientes componentes:  
+
+- **Java** (versión 21)  
+- **Apache Maven** (versión 3.8 o superior)  
+- **MySQL Server** (versión 8.0 o superior)  
+- **Git**  
+
+---
+
+## Clonar el repositorio  
+- Ejecuta el siguiente comando en la terminal para descargar el código fuente:
+
+git clone <URL_DEL_REPOSITORIO>
+cd <NOMBRE_DEL_PROYECTO>
+
+---
+
+## MYSQL
+- Iniciar Sesión:
+
+mysql -u root -p 1234password?
+
+- Crear la base de datos:
+
+CREATE DATABASE global_mart;
+
+- Salir de MYSQL:
+
+EXIT;
+
+---
+
+## Construir y Ejecutar la aplicación
+- Construir la aplicación:
+
+mvn clean package
+
+- Ejecutar la aplicación:
+
+java -jar target/webapp6.jar
+
+---
+
+## Acceder a la aplicación
+Acceder en el navegador a la url: https://localhost:8443
+
+---
+
 - **Diagrama de relaciones de base de datos**
 ![Diagrama de base de datos](./images_readme/Practica1/databaseDiagram.png)
 
