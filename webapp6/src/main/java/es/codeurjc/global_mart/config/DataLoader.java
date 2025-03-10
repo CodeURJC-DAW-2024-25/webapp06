@@ -16,7 +16,7 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.annotation.PostConstruct;
 
-// @Controller
+@Controller
 public class DataLoader {
 
         @Autowired
