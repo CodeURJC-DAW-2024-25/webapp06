@@ -41,7 +41,8 @@ public class GlobalMartSecurityConfig {
                                                                // función
                                                                // anterior
         http.authorizeHttpRequests(authorize -> authorize
-
+                .anyRequest().permitAll()
+/* 
                 // -------------- STYLE PAGES ----------------
                 .requestMatchers("/css/**").permitAll()
                 .requestMatchers("/js/**").permitAll()
@@ -77,7 +78,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/showUserGraphic").permitAll()
 
                 .anyRequest().authenticated()
-
+*/
         )
                 // configure login and logout
                 .formLogin(formLogin -> formLogin
