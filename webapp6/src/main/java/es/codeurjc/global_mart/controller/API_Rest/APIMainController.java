@@ -34,7 +34,6 @@ public class APIMainController {
             this.profileImage = profileImage;
             this.isGoogleUser = isGoogleUser;
         }
-        
     }
 
     @Autowired
@@ -72,7 +71,12 @@ public class APIMainController {
     }
 
     @GetMapping("/acceptedCompanyProducts")
-    public ResponseEntity<List<Product>> getAcceptedCompanyProducts(@RequestParam String company) {
+    public ResponseEntity<List<Product>> getAcceptedCompanyProducts(Authentication authentication) {
+        UserProfile userProfile = (UserProfile) getProfile(authentication).getBody();
+        if (userProfile == null) {
+            return ResponseEntity.status(401).body(null);
+        }
+        String company = userProfile.username;
         List<Product> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company);
         addImageDataToProducts(acceptedCompanyProducts);
         return ResponseEntity.ok(acceptedCompanyProducts);
@@ -166,6 +170,4 @@ public class APIMainController {
             e.printStackTrace();
         }
     }
-
-    
 }
