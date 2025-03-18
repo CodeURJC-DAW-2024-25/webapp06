@@ -47,11 +47,11 @@ public class APIProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
         if (productService.getProductById(id).isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
             return ResponseEntity.notFound().build();
         }
+    
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 }
