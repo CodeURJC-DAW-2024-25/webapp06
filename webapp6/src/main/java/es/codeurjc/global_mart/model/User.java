@@ -11,14 +11,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import java.sql.Blob;
+import java.sql.SQLException;
 
 @Entity(name = "Users")
 public class User {
 
-    // ----------------- Atributes -----------------
+    // ----------------- Attributes -----------------
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -206,5 +208,18 @@ public class User {
     public void emptyCart() {
         this.cart.clear();
         this.cartPrice = 0;
+    }
+
+    // Method to convert Blob to Base64-encoded string
+    public String getImageBase64() {
+        if (this.image != null) {
+            try {
+                byte[] imageBytes = this.image.getBytes(1, (int) this.image.length());
+                return Base64.getEncoder().encodeToString(imageBytes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

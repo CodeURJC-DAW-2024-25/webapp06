@@ -5,6 +5,8 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,6 +32,7 @@ public class Product {
     private String description;
     private Integer views_count;
 
+    @JsonIgnore
     @Lob
     private Blob image;
 
