@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import es.codeurjc.global_mart.repository.OrderRepository;
 import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.dto.Orders.OrderDTO;
+import es.codeurjc.global_mart.dto.Orders.OrderMapper;
 import es.codeurjc.global_mart.model.Order;
 import es.codeurjc.global_mart.repository.ProductRepository;
 import es.codeurjc.global_mart.model.Product;
@@ -22,7 +24,10 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
-    public Order createOrder(User user) {
+    @Autowired 
+    private OrderMapper orderMapper;
+
+    public OrderDTO createOrder(User user) {
         Order order = new Order(user.getUsername(), user.getTotalPrice(), user, new ArrayList<>(user.getCart()));
 
         user.getHistoricalOrderPrices().add(order.getTotal());
@@ -32,46 +37,50 @@ public class OrderService {
 
         userRepository.save(user);
         orderRepository.save(order);
-        return order;
+        return orderMapper.toOrderDTO(order);
     }
 
-    public List<Order> findAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderDTO> findAllOrders() {
+        return orderMapper.toOrdersDTO(orderRepository.findAll());
     }
 
-    public Order findOrderById(Long id) {
+    public OrderDTO findOrderById(Long id) {
 
         try {
             return orderRepository.findById(id)
+                    .map(orderMapper::toOrderDTO)
                     .orElseThrow(() -> new RuntimeException("Order not found with id " + id));
+                    
         } catch (Exception e) {
             throw new RuntimeException("Error finding order with id " + id, e);
         }
 
     }
 
-    public Order addProductToOrder(Long orderId, Long productId) {
+    public OrderDTO addProductToOrder(Long orderId, Long productId) {
         try {
             Order order = orderRepository.findById(orderId)
                     .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
             order.addProduct(product);
-            return orderRepository.save(order);
+            Order savedOrder = orderRepository.save(order);
+            return orderMapper.toOrderDTO(savedOrder);
         } catch (Exception e) {
             throw new RuntimeException("Error adding product to order with id " + orderId, e);
         }
 
     }
 
-    public Order deleteProductFromOrder(Long orderId, Long productId) {
+    public OrderDTO deleteProductFromOrder(Long orderId, Long productId) {
         try {
             Order order = orderRepository.findById(orderId)
                     .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found with id " + productId));
             order.deleteProduct(product);
-            return orderRepository.save(order);
+            Order savedOrder = orderRepository.save(order);
+            return orderMapper.toOrderDTO(savedOrder);
         } catch (Exception e) {
             throw new RuntimeException("Error deleting product from order with id " + orderId, e);
         }

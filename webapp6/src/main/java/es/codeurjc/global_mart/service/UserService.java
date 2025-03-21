@@ -2,6 +2,12 @@ package es.codeurjc.global_mart.service;
 
 import es.codeurjc.global_mart.repository.UserRepository;
 import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
+import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.User.UserDTO;
+import es.codeurjc.global_mart.dto.User.HistoricalOrdersDTO;
+import es.codeurjc.global_mart.dto.User.UserCartPriceDTO;
+import es.codeurjc.global_mart.dto.User.UserMapper;
 import es.codeurjc.global_mart.model.Product;
 
 import org.springframework.stereotype.Service;
@@ -23,6 +29,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private ProductMapper productMapper;
+
+
     public User createUser(MultipartFile image, String name, String username, String email, String password,
             List<String> role) throws IOException {
         User user = new User(name, username, email, password, role);
@@ -36,29 +49,30 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userMapper.toUsersDTO(userRepository.findAll());
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> getUserById(Long id) {
+         return userRepository.findById(id).map(userMapper::toUserDTO);  // transform an optional user into an optional userdto
     }
 
-    public User updateUser(Long id, String username, String email, String password) {
-        Optional<User> optionalUser = getUserById(id);
+    public UserDTO updateUser(Long id, String username, String email, String password) {
+        Optional<UserDTO> optionalUser = getUserById(id);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+            User user = userMapper.toUser(optionalUser.get());           // from DTO tu entity 
             user.setUsername(username);
             user.setEmail(email);
             user.setPassword(passwordEncoder.encode(password));
-            return userRepository.save(user);
+            userRepository.save(user);
+            return userMapper.toUserDTO(user);
         } else {
             throw new RuntimeException("User not found with id " + id);
         }
     }
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<UserDTO> findByUsername(String username) {
+        return userRepository.findByUsername(username).map(userMapper::toUserDTO);
     }
 
     public void deleteUser(Long id) {
@@ -69,8 +83,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<Product> getCartProducts(User user) {
-        return user.getCart();
+    public List<ProductDTO> getCartProducts(User user) {
+        return productMapper.toProductsDTO(user.getCart());     // return a a productsDTO list
     }
 
     public void addProductToCart(User user, Product product) {
@@ -83,8 +97,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public double getTotalPrice(User user) {
-        return user.getCartPrice();
+    public UserCartPriceDTO getTotalPrice(User user) {
+        return userMapper.toCartPriceDTO(user);
     }
 
     public void restartCart(User user) {
@@ -92,16 +106,17 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Optional<User> findByEmail(String email) {
+    public Optional<UserDTO> findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        return user;
+        return user.map(userMapper::toUserDTO);
     }
 
-    public List<Double> getLast15OrderPrices(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        List<Double> ordersPrices = user.get().getHistoricalOrderPrices();
-        int size = ordersPrices.size();
-        return ordersPrices.subList(Math.max(size - 15, 0), size);
+    public HistoricalOrdersDTO getUserStads(String name){
+        User user = userRepository.findByUsername(name).orElseThrow(() -> new RuntimeException("User not found with username " + name));
+
+        return new HistoricalOrdersDTO(user.getHistoricalOrderPrices());
     }
+
+    
 
 }

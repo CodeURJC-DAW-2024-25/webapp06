@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.dto;
+package es.codeurjc.global_mart.dto.Reviewss;
 
 import java.time.LocalDate;
 

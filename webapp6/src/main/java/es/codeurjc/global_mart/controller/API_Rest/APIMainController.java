@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+import es.codeurjc.global_mart.dto.User.UserCartPriceDTO;
+import es.codeurjc.global_mart.dto.User.UserDTO;
 
 import java.sql.Blob;
 import java.util.Base64;
@@ -109,15 +111,15 @@ public class APIMainController {
                     true
             ));
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            Optional<es.codeurjc.global_mart.model.User> user = userService.findByUsername(userDetails.getUsername());
+            Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
             if (user.isPresent()) {
-                es.codeurjc.global_mart.model.User u = user.get();
+                UserDTO u = user.get();
                 return ResponseEntity.ok(new UserProfile(
-                        u.getName(),
-                        u.getUsername(),
-                        u.getEmail(),
-                        u.getImageBase64(),
-                        false
+                    u.name(),
+                    u.username(),
+                    u.email(),
+                    null, // reviw this 
+                    false
                 ));
             }
         }

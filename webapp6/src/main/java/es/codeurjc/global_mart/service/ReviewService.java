@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
+import es.codeurjc.global_mart.dto.Reviewss.ReviewMapper;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.repository.ReviewRepository;
 
@@ -15,30 +17,36 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public Review createReview(String username, String comment, int calification) {
+    @Autowired
+    private ReviewMapper reviewMapper;
+
+    public ReviewDTO createReview(String username, String comment, int calification) {
         Review review = new Review(username, comment, calification);
-        return reviewRepository.save(review);
+        reviewRepository.save(review);
+        return reviewMapper.toReviewDTO(review);
     }
 
-    public Review addReview(Review review) {
-        return reviewRepository.save(review);
+    public ReviewDTO addReview(Review review) {
+        reviewRepository.save(review);
+        return reviewMapper.toReviewDTO(review);
     }
 
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+    public List<ReviewDTO> getAllReviews() {
+        return reviewMapper.toReviewsDTO(reviewRepository.findAll());
     }
 
-    public Optional<Review> getReviewById(Long id) {
-        return reviewRepository.findById(id);
+    public Optional<ReviewDTO> getReviewById(Long id) {
+        return reviewRepository.findById(id).map(reviewMapper::toReviewDTO);
     }
 
-    public Review updateReview(Long id, String comment, int calification) {
+    public ReviewDTO updateReview(Long id, String comment, int calification) {
         Optional<Review> optionalReview = reviewRepository.findById(id);
         if (optionalReview.isPresent()) {
             Review review = optionalReview.get();
             review.setComment(comment);
             review.setCalification(calification);
-            return reviewRepository.save(review);
+            reviewRepository.save(review);
+            return reviewMapper.toReviewDTO(review);
         } else {
             throw new RuntimeException("Review not found with id " + id);
         }
