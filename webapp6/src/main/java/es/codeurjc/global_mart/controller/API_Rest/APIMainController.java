@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import es.codeurjc.global_mart.dto.User.UserCartPriceDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
+import es.codeurjc.global_mart.dto.Product.ProductMapper;
 
 import java.sql.Blob;
 import java.util.Base64;
@@ -39,37 +41,45 @@ public class APIMainController {
     }
 
     @Autowired
+    private ProductMapper productMapper;
+
+    @Autowired
+    private ProductDTO productDto;
+
+    @Autowired
     private ProductService productService;
 
     @Autowired
     private UserService userService;
 
     @GetMapping("/mostViewedProducts")
-    public ResponseEntity<List<Product>> getMostViewedProducts(@RequestParam int limit) {
-        List<Product> mostViewedProducts = productService.getMostViewedProducts(limit);
+    public ResponseEntity<List<ProductDTO>> getMostViewedProducts(@RequestParam int limit) {
+        List<ProductDTO> mostViewedProducts = productService.getMostViewedProducts(limit);
         addImageDataToProducts(mostViewedProducts);
         return ResponseEntity.ok(mostViewedProducts);
     }
 
     @GetMapping("/lastProducts")
-    public ResponseEntity<List<Product>> getLastProducts(@RequestParam int limit) {
-        List<Product> lastProducts = productService.getLastProducts(limit);
+    public ResponseEntity<List<ProductDTO>> getLastProducts() {
+        List<ProductDTO> lastProducts = productService.getLastProducts();
         addImageDataToProducts(lastProducts);
         return ResponseEntity.ok(lastProducts);
     }
 
     @GetMapping("/acceptedProducts")
     public ResponseEntity<List<Product>> getAcceptedProducts() {
-        List<Product> acceptedProducts = productService.getAcceptedProducts();
+        List<ProductDTO> acceptedProducts = productService.getAcceptedProducts();
         addImageDataToProducts(acceptedProducts);
-        return ResponseEntity.ok(acceptedProducts);
+        List<Product> products = productMapper.toProducts(acceptedProducts);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/acceptedProductsByType")
     public ResponseEntity<List<Product>> getAcceptedProductsByType(@RequestParam String type) {
-        List<Product> acceptedProductsByType = productService.getAcceptedProductsByType(type);
+        List<ProductDTO> acceptedProductsByType = productService.getAcceptedProductsByType(type);
         addImageDataToProducts(acceptedProductsByType);
-        return ResponseEntity.ok(acceptedProductsByType);
+        List<Product> products = productMapper.toProducts(acceptedProductsByType);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/acceptedCompanyProducts")
@@ -79,19 +89,21 @@ public class APIMainController {
             return ResponseEntity.status(401).body(null);
         }
         String company = userProfile.username;
-        List<Product> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company);
+        List<ProductDTO> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company);
         addImageDataToProducts(acceptedCompanyProducts);
-        return ResponseEntity.ok(acceptedCompanyProducts);
+        List<Product> products = productMapper.toProducts(acceptedCompanyProducts);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return productService.getProductById(id)
-                .map(product -> {
-                    addImageDataToProduct(product);
-                    return ResponseEntity.ok(product);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        Optional<ProductDTO> product = productService.getProductById(id);
+        if (product.isPresent()) {
+            addImageDataToProduct(product.get());
+            return ResponseEntity.ok(product.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/profile")
@@ -130,38 +142,42 @@ public class APIMainController {
     @GetMapping("/moreProdsAll")
     public ResponseEntity<List<Product>> loadMoreProducts(@RequestParam int page) {
         Pageable pageable = Pageable.ofSize(5).withPage(page);
-        Page<Product> productsPage = productService.getAcceptedProducts(pageable);
-        List<Product> products = productsPage.getContent();
+        Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
+        List<ProductDTO> products = productsPage.getContent();
         addImageDataToProducts(products);
-        return ResponseEntity.ok(products);
+        List<Product> productsThrow = productMapper.toProducts(products);
+        return ResponseEntity.ok(productsThrow);
     }
 
     @GetMapping("/moreProdsTypes")
     public ResponseEntity<List<Product>> loadMoreProductsByType(@RequestParam int page, @RequestParam String type) {
         Pageable pageable = Pageable.ofSize(5).withPage(page);
-        Page<Product> productsPage = productService.getAcceptedProductsByType(type, pageable);
-        List<Product> products = productsPage.getContent();
+        Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
+        List<ProductDTO> products = productsPage.getContent();
         addImageDataToProducts(products);
-        return ResponseEntity.ok(products);
+        List<Product> productsThrow = productMapper.toProducts(products);
+        return ResponseEntity.ok(productsThrow);
     }
 
     @GetMapping("/moreProdsCompany")
     public ResponseEntity<List<Product>> loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company) {
         Pageable pageable = Pageable.ofSize(5).withPage(page);
-        Page<Product> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
-        List<Product> products = productsPage.getContent();
+        Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
+        List<ProductDTO> products = productsPage.getContent();
         addImageDataToProducts(products);
-        return ResponseEntity.ok(products);
+        List<Product> productsThrow = productMapper.toProducts(products);
+        return ResponseEntity.ok(productsThrow);
     }
 
-    private void addImageDataToProducts(List<Product> products) {
-        for (Product product : products) {
+    private void addImageDataToProducts(List<ProductDTO> products) {
+        for (ProductDTO product : products) {
             addImageDataToProduct(product);
         }
     }
 
-    private void addImageDataToProduct(Product product) {
+    private void addImageDataToProduct(ProductDTO productDTO) {
         try {
+            Product product = productMapper.toProduct(productDTO);
             Blob imageBlob = product.getImage();
             if (imageBlob != null) {
                 byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());

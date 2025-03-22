@@ -10,3 +10,5 @@ public record ProductDTO(
     Integer views_count,
     Boolean isAccepted) {
 }
+
+

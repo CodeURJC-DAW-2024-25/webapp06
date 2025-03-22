@@ -236,7 +236,8 @@ public class ProductService {
         return productMapper.toProductsDTO(acceptedProducts.subList(0, size));
     }
 
-    public List<ProductDTO> getLastProducts(int limit) {
+    public List<ProductDTO> getLastProducts() {
+        int limit=4;
         List<Product> acceptedProducts = productRepository.findByIsAcceptedTrue();
         
         // sort accepted products by creation date

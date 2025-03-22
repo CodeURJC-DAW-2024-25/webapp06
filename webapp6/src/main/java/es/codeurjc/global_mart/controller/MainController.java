@@ -96,7 +96,7 @@ public class MainController {
 		}
 		// Regular user
 		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			Optional<User> user = userService.findByUsername(userDetails.getUsername());
+			Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
 			if (user.isPresent()) {
 				model.addAttribute("name", user.get().getName());
 				model.addAttribute("username", user.get().getUsername());
