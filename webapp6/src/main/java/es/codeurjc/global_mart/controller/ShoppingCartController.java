@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
+import es.codeurjc.global_mart.dto.User.ShoppingCartDTO;
+import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.OrderService;
@@ -38,23 +41,24 @@ public class ShoppingCartController {
         Object principal = autentication.getPrincipal();
         if (principal instanceof OAuth2User oAuth2User) {
             model.addAttribute("username", oAuth2User.getAttribute("name"));
-            User user = userService.findByUsername(oAuth2User.getAttribute("name")).get();
-            List<Product> cartProducts = userService.getCartProducts(user);
-            addImageDataToProducts(cartProducts);
-            model.addAttribute("products", cartProducts);
-            double totalPrice = userService.getTotalPrice(user);
-            model.addAttribute("totalPrice", totalPrice);
-            model.addAttribute("isEmpty", totalPrice == 0);
+            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name")).get();
+
+            ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user);
+            userService.addImageDataToProducts(shoppingCart.cartProducts());
+            model.addAttribute("cart", shoppingCart);
+            model.addAttribute("isEmpty", 0);
+            
+
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            Optional<User> user = userService.findByUsername(userDetails.getUsername());
+            Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
             if (user.isPresent()) {
-                model.addAttribute("username", user.get().getUsername());
-                List<Product> cartProducts = userService.getCartProducts(user.get());
-                addImageDataToProducts(cartProducts);
-                model.addAttribute("products", userService.getCartProducts(user.get()));
-                double totalPrice = userService.getTotalPrice(user.get());
-                model.addAttribute("totalPrice", totalPrice);
-                model.addAttribute("isEmpty", totalPrice == 0);
+                model.addAttribute("username", user.get().username());
+                // UserDTO u = userService.findByUsername(user.get().username()).get();
+
+                ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user.get());
+                userService.addImageDataToProducts(shoppingCart.cartProducts());
+                model.addAttribute("cart", shoppingCart);
+                model.addAttribute("isEmpty", 0);
             }
         }
 
@@ -66,15 +70,15 @@ public class ShoppingCartController {
     public String addProductToCart(@PathVariable Long productId, Authentication autentication) {
         Object principal = autentication.getPrincipal();
         if (principal instanceof OAuth2User oAuth2User) {
-            User user = userService.findByUsername(oAuth2User.getAttribute("name"))
+            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            Product product = productService.getProductById(productId)
+            ProductDTO product = productService.getProductById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             userService.addProductToCart(user, product);
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            User user = userService.findByUsername(userDetails.getUsername())
+            UserDTO user = userService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            Product product = productService.getProductById(productId)
+            ProductDTO product = productService.getProductById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             userService.addProductToCart(user, product);
         }
@@ -87,20 +91,20 @@ public class ShoppingCartController {
     public String removeProductFromCart(@PathVariable Long id, Authentication autentication) {
         Object principal = autentication.getPrincipal();
         if (principal instanceof OAuth2User oAuth2User) {
-            User user = userService.findByUsername(oAuth2User.getAttribute("name"))
+            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            Product product = productService.getProductById(id)
+            ProductDTO product = productService.getProductById(id)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (user.getCart().contains(product)) {
+            if (userService.productInCart(user, product)) {
                 userService.removeProductFromCart(user, product); // call the user method to remove
 
             }
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            User user = userService.findByUsername(userDetails.getUsername())
+            UserDTO user = userService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            Product product = productService.getProductById(id)
+            ProductDTO product = productService.getProductById(id)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (user.getCart().contains(product)) {
+            if (userService.productInCart(user, product)) {
                 userService.removeProductFromCart(user, product);
             }
         } else {
@@ -117,32 +121,35 @@ public class ShoppingCartController {
         Object principal = autentication.getPrincipal();
 
         if (principal instanceof OAuth2User oAuth2User) {
-            User user = userService.findByUsername(oAuth2User.getAttribute("name"))
+            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
             orderService.createOrder(user); // all the payment logic is in the orderService
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            User user = userService.findByUsername(userDetails.getUsername())
+            UserDTO user = userService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
             orderService.createOrder(user); // all the payment logic is in the orderService
         } else {
             System.out.println("No furula");
         }
         return "redirect:/";
-    }
-
-    private void addImageDataToProducts(List<Product> products) {
-		for (Product product : products) {
-			try {
-				Blob imageBlob = product.getImage();
-				if (imageBlob != null) {
-					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-					product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
+    }    
 }
+
+//     private void addImageDataToProducts(List<ProductDTO> products) {
+
+//         userService.addImageDataToProducts(products);
+// 		for (Product product : products) {
+// 			try {
+// 				Blob imageBlob = product.getImage();
+// 				if (imageBlob != null) {
+// 					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+// 					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+// 					product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
+// 				}
+// 			} catch (Exception e) {
+// 				e.printStackTrace();
+// 			}
+// 		}
+// 	}
+
+// }

@@ -6,6 +6,7 @@ import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
 import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.dto.User.HistoricalOrdersDTO;
+import es.codeurjc.global_mart.dto.User.ShoppingCartDTO;
 import es.codeurjc.global_mart.dto.User.UserCartPriceDTO;
 import es.codeurjc.global_mart.dto.User.UserMapper;
 import es.codeurjc.global_mart.model.Product;
@@ -17,6 +18,8 @@ import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.IOException;
+import java.sql.Blob;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,16 +86,48 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<ProductDTO> getCartProducts(User user) {
-        return productMapper.toProductsDTO(user.getCart());     // return a a productsDTO list
+    public ShoppingCartDTO getShoppingCartData(UserDTO user) {
+        User u = userMapper.toUser(user);
+        List<ProductDTO> cartProducts = productMapper.toProductsDTO(u.getCart());     // return a a productsDTO list
+        Double price = u.getCartPrice();
+        return new ShoppingCartDTO(cartProducts, price);
     }
 
-    public void addProductToCart(User user, Product product) {
+    public void addImageDataToProducts(List<ProductDTO> products){
+
+        List<Product> productsList = productMapper.toProducts(products);
+        for (Product product : productsList) {
+            try {
+                Blob imageBlob = product.getImage();
+                if (imageBlob != null) {
+                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void addProductToCart(UserDTO userDTO, ProductDTO productDTO) {
+        User user = userMapper.toUser(userDTO);
+        Product product = productMapper.toProduct(productDTO);
         user.addProductToCart(product);
         userRepository.save(user);
     }
 
-    public void removeProductFromCart(User user, Product product) {
+    public boolean  productInCart(UserDTO userDTO, ProductDTO productDTO){
+        User user = userMapper.toUser(userDTO);
+        Product product = productMapper.toProduct(productDTO);
+
+        return user.getCart().contains(product);
+
+    }
+    public void removeProductFromCart(UserDTO userDTO, ProductDTO productDTO) {
+        User user = userMapper.toUser(userDTO);
+        Product product = productMapper.toProduct(productDTO);
         user.removeProductFromCart(product);
         userRepository.save(user);
     }
@@ -116,6 +151,8 @@ public class UserService {
 
         return new HistoricalOrdersDTO(user.getHistoricalOrderPrices());
     }
+
+    
 
     
 

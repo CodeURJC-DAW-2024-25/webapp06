@@ -11,6 +11,7 @@ import es.codeurjc.global_mart.model.Review;
 public interface ReviewMapper {
 
     ReviewDTO toReviewDTO(Review review);
+    Review toReview(ReviewDTO reviewDTO);
 
     List<ReviewDTO> toReviewsDTO(Collection<Review> reviews);
     

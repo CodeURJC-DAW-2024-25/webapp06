@@ -9,6 +9,8 @@ import es.codeurjc.global_mart.repository.OrderRepository;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.dto.Orders.OrderDTO;
 import es.codeurjc.global_mart.dto.Orders.OrderMapper;
+import es.codeurjc.global_mart.dto.User.UserDTO;
+import es.codeurjc.global_mart.dto.User.UserMapper;
 import es.codeurjc.global_mart.model.Order;
 import es.codeurjc.global_mart.repository.ProductRepository;
 import es.codeurjc.global_mart.model.Product;
@@ -27,7 +29,10 @@ public class OrderService {
     @Autowired 
     private OrderMapper orderMapper;
 
-    public OrderDTO createOrder(User user) {
+    @Autowired UserMapper userMapper;
+
+    public OrderDTO createOrder(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
         Order order = new Order(user.getUsername(), user.getTotalPrice(), user, new ArrayList<>(user.getCart()));
 
         user.getHistoricalOrderPrices().add(order.getTotal());

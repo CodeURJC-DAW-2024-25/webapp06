@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import es.codeurjc.global_mart.dto.Product.CompanyStadsDTO;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
+import es.codeurjc.global_mart.dto.Reviewss.ReviewMapper;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.repository.ProductRepository;
@@ -36,6 +38,8 @@ public class ProductService {
     private ProductService productService;
 
     @Autowired ProductMapper productMapper;
+
+    @Autowired ReviewMapper reviewMapper;
 
 
     public ProductDTO createProduct(String type, String name, String business, Double price, String description,
@@ -74,9 +78,16 @@ public class ProductService {
         return productMapper.toProductDTO(product);
     }
 
-    public ProductDTO addProduct(Product product) {
-        productRepository.save(product);
-        return productMapper.toProductDTO(product);
+    public ProductDTO addProduct(ProductDTO product) {
+        Product product2 = productMapper.toProduct(product);
+        productRepository.save(product2);
+        return productMapper.toProductDTO(product2);
+    }
+
+    public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO){
+        Product product = productMapper.toProduct(productDTO);
+        Review review = reviewMapper.toReview(reviewDTO);
+        product.addReview(review);
     }
 
     public ProductDTO updateProduct(Long id, Product product) {

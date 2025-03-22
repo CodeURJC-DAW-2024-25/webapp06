@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.controller;
 
+import es.codeurjc.global_mart.dto.User.UserMapper;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
