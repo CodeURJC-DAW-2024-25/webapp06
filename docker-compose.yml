@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  webapp6:
+    build: .
+    container_name: webapp6
+    ports:
+      - "8443:8443"
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=1234password?
+      - SSL_KEYSTORE_PASSWORD=password
+      - SSL_KEY_PASSWORD=secret
+      - GOOGLE_CLIENT_ID=389777574291-rmp4b5i48svh9coiqhv2dm6fdgfvsshk.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=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
+    depends_on:
+      - mysql
+
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234password?
+      - MYSQL_DATABASE=globalmart
+    ports:
+      - "3306:3306"
+
