@@ -6,22 +6,17 @@ services:
     ports:
       - "8443:8443"
     environment:
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASS=1234password?
-      - SSL_KEYSTORE_PASSWORD=password
-      - SSL_KEY_PASSWORD=secret
-      - GOOGLE_CLIENT_ID=389777574291-rmp4b5i48svh9coiqhv2dm6fdgfvsshk.apps.googleusercontent.com
-      - GOOGLE_CLIENT_SECRET=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
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/globalmart?useSSL=true&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234password?
     depends_on:
-      - mysql
-
-
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
+      - db
     restart: always
+
+
+  db:
+    image: mysql:8.3.0
+    container_name: db
     environment:
       - MYSQL_ROOT_PASSWORD=1234password?
       - MYSQL_DATABASE=globalmart
