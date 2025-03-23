@@ -14,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
+import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
@@ -35,12 +38,12 @@ public class MainController {
 	@GetMapping("/")
 	public String greeting(Model model) {
 		// get the most viewed and last products
-		List<Product> mostViewedProducts = productService.getMostViewedProducts(4);
-		List<Product> lastProducts = productService.getLastProducts(4);
+		List<ProductDTO> mostViewedProducts = productService.getMostViewedProducts(4);
+		List<ProductDTO> lastProducts = productService.getLastProducts();
 
 		// Add image data to the products
-		addImageDataToProducts(mostViewedProducts);
-		addImageDataToProducts(lastProducts);
+		userService.addImageDataToProducts(mostViewedProducts);
+		userService.addImageDataToProducts(lastProducts);
 
 		// Add the products to the model
 		model.addAttribute("mostViewedProducts", mostViewedProducts);
@@ -73,8 +76,8 @@ public class MainController {
 
 	@GetMapping("/adminPage")
 	public String admin(Model model) {
-		List<Product> products = productService.getNotAcceptedProducts();
-		searchController.convertBlobToBase64(products);
+		List<ProductDTO> products = productService.getNotAcceptedProducts();
+		productService.convertBlobToBase64(products);
 		model.addAttribute("productsNotAccepted", products);
 		return "administrator";
 	}
@@ -86,7 +89,6 @@ public class MainController {
 		}
 
 		Object principal = authentication.getPrincipal();
-
 		if (principal instanceof OAuth2User oAuth2User) {
 			model.addAttribute("name", oAuth2User.getAttribute("name"));
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
@@ -98,10 +100,7 @@ public class MainController {
 		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
 			if (user.isPresent()) {
-				model.addAttribute("name", user.get().getName());
-				model.addAttribute("username", user.get().getUsername());
-				model.addAttribute("email", user.get().getEmail());
-				model.addAttribute("profile_image", user.get().getImage());
+				model.addAttribute("userDTO", user.get());
 				model.addAttribute("isGoogleUser", false); // add flag to indicate authentication with username and
 															// password
 			}
@@ -128,9 +127,9 @@ public class MainController {
 	@GetMapping("/moreProdsAll")
 	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
 		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
+		Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
+		List<ProductDTO> products = productsPage.getContent();
+		productService.addImageDataToProducts(products);
 		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
 		model.addAttribute("allProds", products);
 		return "moreProducts";
@@ -139,9 +138,9 @@ public class MainController {
 	@GetMapping("/moreProdsTypes")
 	public String loadMoreProductsByType(@RequestParam int page, @RequestParam String type, Model model) {
 		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<Product> productsPage = productService.getAcceptedProductsByType(type, pageable);
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
+		Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
+		List<ProductDTO> products = productsPage.getContent();
+		productService.addImageDataToProducts(products);
 		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
 		model.addAttribute("allProds", products);
 		model.addAttribute("type", type);
@@ -151,10 +150,9 @@ public class MainController {
 	@GetMapping("/moreProdsCompany")
 	public String loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company, Model model) {
 		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<Product> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
-
+		Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
+		List<ProductDTO> products = productsPage.getContent();
+		productService.addImageDataToProducts(products);
 		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
 		model.addAttribute("allProds", products);
 		model.addAttribute("company", company);

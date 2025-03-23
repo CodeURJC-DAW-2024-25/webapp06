@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.controller;
 
+import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.UserService;
 
@@ -32,7 +33,7 @@ public class LoginRegisterController {
             @RequestParam MultipartFile image,
             @RequestParam String role) throws Exception {
 
-        Optional<User> user = userService.findByUsername(username);
+        Optional<UserDTO> user = userService.findByUsername(username);
         if (user.isPresent()) {
             return "errors";
         } else {
@@ -47,7 +48,7 @@ public class LoginRegisterController {
         OAuth2User oAuth2User = authentication.getPrincipal();
         String email = oAuth2User.getAttribute("email");
 
-        Optional<User> existingUser = userService.findByEmail(email);
+        Optional<UserDTO> existingUser = userService.findByEmail(email);
 
         if (existingUser.isEmpty()) {
             User newUser = new User();
