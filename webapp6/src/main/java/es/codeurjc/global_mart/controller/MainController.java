@@ -95,8 +95,10 @@ public class MainController {
 		// Regular user
 		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
+
 			if (user.isPresent()) {
-				model.addAttribute("userDTO", user.get());
+				UserDTO userDTO = userService.addImageBase64ToUser(user.get());
+				model.addAttribute("userDTO", userDTO);
 				model.addAttribute("isGoogleUser", false); // add flag to indicate authentication with username and
 															// password
 			}

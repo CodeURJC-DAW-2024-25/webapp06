@@ -11,11 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import java.sql.Blob;
-import java.sql.SQLException;
 
 @Entity(name = "Users")
 public class User {
@@ -46,6 +44,7 @@ public class User {
     private List<Product> cart;
 
     private double cartPrice;
+    private String imageBase64;
 
     @ElementCollection(fetch = FetchType.EAGER) // EAGER: fetch the data when the object is created
     private List<Double> historicalOrderPrices;
@@ -138,6 +137,10 @@ public class User {
         return cartPrice;
     }
 
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;
@@ -183,6 +186,10 @@ public class User {
         this.cartPrice = cartPrice;
     }
 
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
+
     // Reviews
     public void addReview(Review review) {
         this.reviews.add(review);
@@ -208,18 +215,5 @@ public class User {
     public void emptyCart() {
         this.cart.clear();
         this.cartPrice = 0;
-    }
-
-    // Method to convert Blob to Base64-encoded string
-    public String getImageBase64() {
-        if (this.image != null) {
-            try {
-                byte[] imageBytes = this.image.getBytes(1, (int) this.image.length());
-                return Base64.getEncoder().encodeToString(imageBytes);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 }

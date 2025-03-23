@@ -26,6 +26,19 @@
 
     <div class="user_container">
         <div class="profile_section">
+            {{#userDTO}}
+            <img src={{imageBase64}} alt="">
+            <div class="user_data">
+                <h2>{{name}}</h2>
+                <p>Username: {{username}}</p>
+                <p>Email: {{email}}</p>
+                {{^isGoogleUser}}
+                <a href="/edit_profile" class="edit_profile_button">Edit Profile</a>
+                {{/isGoogleUser}}
+            </div>
+            {{/userDTO}}
+
+            {{^userDTO}}
             <img src={{profile_image}} alt="">
             <div class="user_data">
                 <h2>{{name}}</h2>
@@ -35,6 +48,7 @@
                 <a href="/edit_profile" class="edit_profile_button">Edit Profile</a>
                 {{/isGoogleUser}}
             </div>
+            {{/userDTO}}
         </div>
     </div>
 

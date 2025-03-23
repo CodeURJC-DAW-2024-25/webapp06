@@ -93,47 +93,22 @@ public class UserService {
         return new ShoppingCartDTO(cartProducts, price);
     }
 
-    // public void addImageDataToProducts(List<ProductDTO> products) {
-    // for (ProductDTO productDTO : products) {
-    // try {
-    // Product product = productMapper.toProduct(productDTO);
-    // Blob imageBlob = product.getImage();
-    // if (imageBlob != null) {
-    // byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-    // String imageBase64 = "data:image/jpeg;base64," +
-    // Base64.getEncoder().encodeToString(bytes);
+    public UserDTO addImageBase64ToUser(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
+        // convert Blob to Base64 encoded string
+        try {
+            Blob imageBlob = user.getImage();
+            if (imageBlob != null) {
+                byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                user.setImageBase64(imageBase64);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    // // necesitamos crear un nuevo DTO con la imagen en base64 para actualizarlo,
-    // ya
-    // // que asignando otra vez lo unico que hacemos es actualizar la variable
-    // local
-    // // de este codigo
-    // var updatedProduct = new ProductDTO(
-    // productDTO.id(),
-    // productDTO.type(),
-    // productDTO.name(),
-    // productDTO.company(),
-    // productDTO.price(),
-    // productDTO.description(),
-    // productDTO.image(),
-    // productDTO.stock(),
-    // productDTO.isAccepted(),
-    // productDTO.date(),
-    // productDTO.views_count(),
-    // productDTO.reviews(),
-    // imageBase64 // Set the imageBase64 field
-    // );
-
-    // int index = products.indexOf(productDTO);
-    // if (index != -1) {
-    // products.set(index, updatedProduct);
-    // }
-    // }
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // }
-    // }
+        return userMapper.toUserDTO(user);
+    }
 
     public void addProductToCart(UserDTO userDTO, ProductDTO productDTO) {
         User user = userMapper.toUser(userDTO);
