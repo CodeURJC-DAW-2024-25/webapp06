@@ -40,19 +40,15 @@ public class GraphsController {
             model.addAttribute("username", oAuth2User.getAttribute("name"));
         }
         if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            // Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
-            // // model.addAttribute("username", user.);
 
-            
-            try{
+            try {
 
                 List<CompanyStadsDTO> dataList = productService.getCompanyStadistics(userDetails.getUsername());
                 model.addAttribute("dataList", dataList);
                 System.out.println("Company stadistics" + dataList);
                 return "companyGraphs";
 
-            } catch (NoSuchElementException e){
-
+            } catch (NoSuchElementException e) {
                 System.out.println("Error al devolver los datos");
                 return "error";
             }
@@ -70,9 +66,7 @@ public class GraphsController {
             HistoricalOrdersDTO orderPrices = userService.getUserStads(oAuth2User.getName().toString());
             model.addAttribute("orderPrices", orderPrices);
         }
-
         return "userGraph";
-
     }
 
 }

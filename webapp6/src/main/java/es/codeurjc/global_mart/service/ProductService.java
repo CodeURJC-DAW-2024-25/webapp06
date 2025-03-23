@@ -3,6 +3,7 @@ package es.codeurjc.global_mart.service;
 import java.io.IOException;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import es.codeurjc.global_mart.dto.Product.CompanyStadsDTO;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.Product.SearchProductDTO;
 import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
 import es.codeurjc.global_mart.dto.Reviewss.ReviewMapper;
 import es.codeurjc.global_mart.model.Product;
@@ -37,10 +39,11 @@ public class ProductService {
     @Autowired
     private ProductService productService;
 
-    @Autowired ProductMapper productMapper;
+    @Autowired
+    ProductMapper productMapper;
 
-    @Autowired ReviewMapper reviewMapper;
-
+    @Autowired
+    ReviewMapper reviewMapper;
 
     public ProductDTO createProduct(String type, String name, String business, Double price, String description,
             Blob image, Integer stock, Boolean isAccepted) throws IOException {
@@ -84,7 +87,7 @@ public class ProductService {
         return productMapper.toProductDTO(product2);
     }
 
-    public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO){
+    public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO) {
         Product product = productMapper.toProduct(productDTO);
         Review review = reviewMapper.toReview(reviewDTO);
         product.addReview(review);
@@ -114,8 +117,16 @@ public class ProductService {
         return productMapper.toProductsDTO(productRepository.findAll());
     }
 
+    public List<SearchProductDTO> getAllProductsToSearch() {
+        return productMapper.toSearchProductsDTO(productRepository.findAll());
+    }
+
     public List<ProductDTO> getProductsByType(String type) {
         return productMapper.toProductsDTO(productRepository.findByType(type));
+    }
+
+    public List<SearchProductDTO> getProductsByTypeToSearch(String type) {
+        return productMapper.toSearchProductsDTO(productRepository.findByType(type));
     }
 
     public Optional<ProductDTO> getProductById(Long id) {
@@ -168,12 +179,15 @@ public class ProductService {
 
     }
 
-    public List<ProductDTO> searchProductsByName(String query) {
-        return productMapper.toProductsDTO(productRepository.findByNameContainingIgnoreCaseAndIsAcceptedTrue(query));
+    public List<SearchProductDTO> searchProductsByName(String query) {
+        return productMapper
+                .toSearchProductsDTO(productRepository.findByNameContainingIgnoreCaseAndIsAcceptedTrue(query));
     }
 
-    public List<ProductDTO> searchProductsByNameAndType(String query, String type) {
-        return productMapper.toProductsDTO(productRepository.findByNameContainingIgnoreCaseAndTypeAndIsAcceptedTrue(query, type));
+    public List<SearchProductDTO> searchProductsByNameAndType(String query, String type) {
+        return productMapper
+                .toSearchProductsDTO(
+                        productRepository.findByNameContainingIgnoreCaseAndTypeAndIsAcceptedTrue(query, type));
     }
 
     public List<ProductDTO> getAcceptedCompanyProducts(String company) {
@@ -193,7 +207,7 @@ public class ProductService {
         return productsPage.map(productMapper::toProductDTO);
     }
 
-    public List<CompanyStadsDTO> getCompanyStadistics(String company){
+    public List<CompanyStadsDTO> getCompanyStadistics(String company) {
 
         Map<String, Integer> dataMap = new HashMap<>();
 
@@ -208,9 +222,8 @@ public class ProductService {
         dataMap.put("Appliances", 0);
         dataMap.put("Others", 0);
 
-
         List<Product> companyProducts = productMapper.toProducts(productService.getAcceptedCompanyProducts(company));
-        
+
         for (Product product : companyProducts) {
             String type = product.getType();
             dataMap.put(type, dataMap.getOrDefault(type, 0) + 1);
@@ -218,7 +231,7 @@ public class ProductService {
 
         List<CompanyStadsDTO> dataList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : dataMap.entrySet()) {
-            dataList.add(new CompanyStadsDTO(entry.getKey(),entry.getValue()));
+            dataList.add(new CompanyStadsDTO(entry.getKey(), entry.getValue()));
         }
 
         return dataList;
@@ -227,7 +240,7 @@ public class ProductService {
 
     public List<ProductDTO> getMostViewedProducts(int limit) {
         List<Product> acceptedProducts = productRepository.findByIsAcceptedTrue();
-        
+
         // order products by visit number (high to low)
         Collections.sort(acceptedProducts, (p1, p2) -> p2.getViews_count().compareTo(p1.getViews_count()));
 
@@ -237,9 +250,9 @@ public class ProductService {
     }
 
     public List<ProductDTO> getLastProducts() {
-        int limit=4;
+        int limit = 4;
         List<Product> acceptedProducts = productRepository.findByIsAcceptedTrue();
-        
+
         // sort accepted products by creation date
         Collections.sort(acceptedProducts, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
         int size = Math.min(limit, acceptedProducts.size());
@@ -257,5 +270,45 @@ public class ProductService {
     public Page<ProductDTO> getProductsPage(Pageable pageable) {
         Page<Product> productsPage = productRepository.findAll(pageable);
         return productsPage.map(productMapper::toProductDTO);
+    }
+
+    public void convertBlobToBase64(List<ProductDTO> products) {
+        List<Product> productsList = productMapper.toProducts(products);
+        for (Product product : productsList) {
+            try {
+                Blob imageBlob = product.getImage();
+                if (imageBlob != null) {
+                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    product.setImageBase64(imageBase64);
+                } else {
+                    // Default image
+                    product.setImageBase64("/images/default-product.jpg");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                product.setImageBase64("/images/default-product.jpg");
+            }
+        }
+    }
+
+    public void convertBlobToBase64ToSearch(List<SearchProductDTO> products) {
+        List<Product> productsList = productMapper.fromSearchToProducts(products);
+        for (Product product : productsList) {
+            try {
+                Blob imageBlob = product.getImage();
+                if (imageBlob != null) {
+                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    product.setImageBase64(imageBase64);
+                } else {
+                    // Default image
+                    product.setImageBase64("/images/default-product.jpg");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                product.setImageBase64("/images/default-product.jpg");
+            }
+        }
     }
 }

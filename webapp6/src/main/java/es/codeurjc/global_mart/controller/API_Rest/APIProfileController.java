@@ -38,8 +38,6 @@ public class APIProfileController {
     @Autowired
     private UserMapper userMapper;
 
-
-
     @PutMapping
     public ResponseEntity<?> updateProfile(
             @RequestParam("username") String username,
@@ -76,4 +74,5 @@ public class APIProfileController {
 
         return ResponseEntity.status(404).body("User not found");
     }
+
 }
