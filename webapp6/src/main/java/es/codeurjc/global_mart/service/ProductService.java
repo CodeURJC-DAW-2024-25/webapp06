@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.global_mart.dto.Product.CompanyStadsDTO;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
@@ -151,7 +152,8 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public void setViews_product_count(Product product) {
+    public void setViews_product_count(ProductDTO productDTO) {
+        Product product = productMapper.toProduct(productDTO);
         product.setViews_count(product.getViews_count() + 1);
         productRepository.save(product);
     }
@@ -310,5 +312,47 @@ public class ProductService {
                 product.setImageBase64("/images/default-product.jpg");
             }
         }
+    }
+
+    public void addImageDataToProducts(List<ProductDTO> products) {
+        List<Product> productsList = productMapper.toProducts(products);
+        for (Product product : productsList) {
+            try {
+                Blob imageBlob = product.getImage();
+                if (imageBlob != null) {
+                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    product.setImageBase64(imageBase64); // add the image to the product
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock, Double price, MultipartFile image){
+
+        Product product = productMapper.toProduct(productDTO);
+        product.setName(name);
+        product.setDescription(description);
+        product.setType(type);
+        product.setStock(stock);
+        product.setPrice(price);
+
+        // update the image if it is not null
+        if (image != null && !image.isEmpty()) {
+            try {
+                product.setImage(BlobProxy.generateProxy(
+                        image.getInputStream(),
+                        image.getSize()));
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the exception as needed
+            }
+        }
+
+
+        addProduct(productMapper.toProductDTO(product));
+
     }
 }

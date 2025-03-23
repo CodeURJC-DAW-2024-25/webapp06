@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
+import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
@@ -35,25 +37,12 @@ public class ProductsController {
     @Autowired
     private UserService userService;
 
-    private void addImageDataToProducts(List<Product> products) {
-        for (Product product : products) {
-            try {
-                Blob imageBlob = product.getImage();
-                if (imageBlob != null) {
-                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-                    product.setImageBase64(imageBase64); // add the image to the product
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    
 
     @GetMapping("/products/allProducts")
     public String seeAllProds(Model model, HttpServletRequest request, Authentication authentication) {
-        List<Product> products = productService.getAcceptedProducts(PageRequest.of(0, 5)).getContent();
-        addImageDataToProducts(products);
+        List<ProductDTO> products = productService.getAcceptedProducts(PageRequest.of(0, 5)).getContent();
+        productService.addImageDataToProducts(products);
         model.addAttribute("allProds", products);
         model.addAttribute("tittle", false);
         model.addAttribute("hasNextProd", productService.getAcceptedProducts(PageRequest.of(1, 5)).hasContent());
@@ -62,12 +51,12 @@ public class ProductsController {
         if (principal == null) {
             model.addAttribute("allCompanyProds", Collections.emptyList());
         } else {
-            Optional<User> user = userService.findByUsername(principal.getName());
-            if (user.isPresent() && user.get().isCompany()) {
-                List<Product> companyProducts = productService
-                        .getAcceptedCompanyProducts(user.get().getUsername(), PageRequest.of(0, 5)).getContent();
-                addImageDataToProducts(companyProducts);
-                model.addAttribute("companyName", user.get().getName());
+            Optional<UserDTO> user = userService.findByUsername(principal.getName());
+            if (user.isPresent() && userService.isCompany(user.get())) {
+                List<ProductDTO> companyProducts = productService
+                        .getAcceptedCompanyProducts(user.get().username(), PageRequest.of(0, 5)).getContent();
+                productService.addImageDataToProducts(companyProducts);
+                model.addAttribute("companyName", user.get().name());
                 model.addAttribute("allCompanyProds", companyProducts);
             } else {
                 model.addAttribute("allCompanyProds", Collections.emptyList());
@@ -79,8 +68,8 @@ public class ProductsController {
     @GetMapping("/products/{type}")
     public String getMethodName(@PathVariable String type, Model model) {
 
-        List<Product> products = productService.getAcceptedProductsByType(type, PageRequest.of(0, 5)).getContent();
-        addImageDataToProducts(products);
+        List<ProductDTO> products = productService.getAcceptedProductsByType(type, PageRequest.of(0, 5)).getContent();
+        productService.addImageDataToProducts(products);
         model.addAttribute("allProds", products);
         model.addAttribute("type", type);
         model.addAttribute("tittle", true);
@@ -92,19 +81,15 @@ public class ProductsController {
     @GetMapping("/product/{id}")
     public String productDescription(@PathVariable Long id, Model model, Authentication autentication)
             throws Exception {
-        Optional<Product> product = productService.getProductById(id); // Extract the product by its id
+        Optional<ProductDTO> product = productService.getProductById(id); // Extract the product by its id
 
         if (product.isPresent()) {
             // Extract all the info of the product to use it in the musctache template
-            model.addAttribute("productName", product.get().getName());
-            model.addAttribute("productType", product.get().getType());
-            model.addAttribute("productCompany", product.get().getCompany());
-            model.addAttribute("productPrice", product.get().getPrice());
-            model.addAttribute("productDescription", product.get().getDescription());
+            model.addAttribute("productName", product.get());  // product dto contains all the product info review html
 
             // Convert Blob to Base64 encoded string
             String imageBase64 = null;
-            Blob imageBlob = product.get().getImage();
+            Blob imageBlob = product.get().image();
             if (imageBlob != null) {
                 byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
                 imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
@@ -112,9 +97,9 @@ public class ProductsController {
 
             productService.setViews_product_count(product.get());
             model.addAttribute("productImage", imageBase64);
-            model.addAttribute("productId", product.get().getId());
-            model.addAttribute("productStock", product.get().getStock());
-            model.addAttribute("reviews", product.get().getReviews());
+            model.addAttribute("productId", product.get().id());
+            model.addAttribute("productStock", product.get().stock());
+            model.addAttribute("reviews", product.get().reviews());
 
             return "descriptionProduct";
         } else {
@@ -159,10 +144,10 @@ public class ProductsController {
 
     @GetMapping("/acceptProduct/{id}")
     public String acceptProduct(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
+        Optional<ProductDTO> product = productService.getProductById(id);
         if (product.isPresent()) {
-            productService.updateProduct(id, product.get().getName(),
-                    product.get().getPrice());
+            productService.updateProduct(id, product.get().name(),
+                    product.get().price());
         }
         return "redirect:/adminPage";
     }
@@ -177,25 +162,15 @@ public class ProductsController {
     public String editProductForm(@PathVariable Long id, Model model) {
         model.addAttribute("form_title", "Edit Product");
 
-        Optional<Product> optionalProduct = productService.getProductById(id);
+        Optional<ProductDTO> optionalProduct = productService.getProductById(id);
         if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-
-            // convert Blob to Base64 encoded string
-            try {
-                Blob imageBlob = product.getImage();
-                if (imageBlob != null) {
-                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-                    product.setImageBase64(imageBase64);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            // Product product = optionalProduct.get();
+            userService.convertBlobToBase64(optionalProduct.get());
+            
 
             // add the product to the model
-            model.addAttribute("type_" + product.getType(), true);
-            model.addAttribute("product", product);
+            model.addAttribute("type_" + optionalProduct.get().type(), true);
+            model.addAttribute("product", optionalProduct.get());
         } else {
             return "redirect:/products/allProducts";
         }
@@ -215,27 +190,17 @@ public class ProductsController {
             Authentication autentication)
             throws Exception {
 
-        Optional<Product> optionalProduct = productService.getProductById(id);
+        Optional<ProductDTO> optionalProduct = productService.getProductById(id);
         if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            product.setName(product_name);
-            product.setDescription(product_description);
-            product.setType(product_type);
-            product.setStock(product_stock);
-            product.setPrice(product_price);
+            productService.updateProductDetails(optionalProduct.get(), product_name, product_description, product_type, product_stock, product_price, product_image);
+            
 
-            // update the image if it is not null
-            if (product_image != null && !product_image.isEmpty()) {
-                product.setImage(BlobProxy.generateProxy(
-                        product_image.getInputStream(),
-                        product_image.getSize()));
-            }
-
-            productService.addProduct(product);
+            
 
             Object principal = autentication.getPrincipal();
             if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-                if (userService.findByUsername(userDetails.getUsername()).get().isCompany()) {
+                Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
+                if (user.isPresent() && userService.isCompany(user.get())) {
                     return "redirect:/products/allProducts";
                 } else {
                     return "redirect:/adminPage";
