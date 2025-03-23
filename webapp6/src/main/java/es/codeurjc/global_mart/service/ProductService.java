@@ -314,23 +314,48 @@ public class ProductService {
         }
     }
 
-    public void addImageDataToProducts(List<ProductDTO> products) {
-        List<Product> productsList = productMapper.toProducts(products);
-        for (Product product : productsList) {
+    public List<ProductDTO> addImageDataToProducts(List<ProductDTO> products) {
+        List<ProductDTO> productsList = new ArrayList<>();
+
+        for (ProductDTO productDTO : products) {
             try {
+                Product product = productMapper.toProduct(productDTO);
                 Blob imageBlob = product.getImage();
                 if (imageBlob != null) {
                     byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
                     String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-                    product.setImageBase64(imageBase64); // add the image to the product
+
+                    // necesitamos crear un nuevo DTO con la imagen en base64 para actualizarlo, ya
+                    // que asignando otra vez lo unico que hacemos es actualizar la variable local
+                    // de este codigo
+                    ProductDTO updatedProduct = new ProductDTO(
+                            productDTO.id(),
+                            productDTO.type(),
+                            productDTO.name(),
+                            productDTO.company(),
+                            productDTO.price(),
+                            productDTO.description(),
+                            productDTO.image(),
+                            productDTO.stock(),
+                            productDTO.isAccepted(),
+                            productDTO.date(),
+                            productDTO.views_count(),
+                            productDTO.reviews(),
+                            imageBase64 // Set the imageBase64 field
+                    );
+
+                    productsList.add(updatedProduct);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        return productsList;
     }
 
-    public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock, Double price, MultipartFile image){
+    public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock,
+            Double price, MultipartFile image) {
 
         Product product = productMapper.toProduct(productDTO);
         product.setName(name);
@@ -351,8 +376,7 @@ public class ProductService {
             }
         }
 
-
         addProduct(productMapper.toProductDTO(product));
-
     }
+
 }

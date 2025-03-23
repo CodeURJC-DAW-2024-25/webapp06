@@ -1,11 +1,7 @@
 package es.codeurjc.global_mart.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,11 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import es.codeurjc.global_mart.dto.Product.CompanyStadsDTO;
-import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.User.HistoricalOrdersDTO;
-import es.codeurjc.global_mart.dto.User.UserDTO;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 

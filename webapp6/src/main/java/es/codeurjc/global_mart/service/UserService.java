@@ -38,7 +38,6 @@ public class UserService {
     @Autowired
     private ProductMapper productMapper;
 
-
     public User createUser(MultipartFile image, String name, String username, String email, String password,
             List<String> role) throws IOException {
         User user = new User(name, username, email, password, role);
@@ -57,13 +56,14 @@ public class UserService {
     }
 
     public Optional<UserDTO> getUserById(Long id) {
-         return userRepository.findById(id).map(userMapper::toUserDTO);  // transform an optional user into an optional userdto
+        return userRepository.findById(id).map(userMapper::toUserDTO); // transform an optional user into an optional
+                                                                       // userdto
     }
 
     public UserDTO updateUser(Long id, String username, String email, String password) {
         Optional<UserDTO> optionalUser = getUserById(id);
         if (optionalUser.isPresent()) {
-            User user = userMapper.toUser(optionalUser.get());           // from DTO tu entity 
+            User user = userMapper.toUser(optionalUser.get()); // from DTO tu entity
             user.setUsername(username);
             user.setEmail(email);
             user.setPassword(passwordEncoder.encode(password));
@@ -88,28 +88,52 @@ public class UserService {
 
     public ShoppingCartDTO getShoppingCartData(UserDTO user) {
         User u = userMapper.toUser(user);
-        List<ProductDTO> cartProducts = productMapper.toProductsDTO(u.getCart());     // return a a productsDTO list
+        List<ProductDTO> cartProducts = productMapper.toProductsDTO(u.getCart()); // return a a productsDTO list
         Double price = u.getCartPrice();
         return new ShoppingCartDTO(cartProducts, price);
     }
 
-    public void addImageDataToProducts(List<ProductDTO> products){
+    // public void addImageDataToProducts(List<ProductDTO> products) {
+    // for (ProductDTO productDTO : products) {
+    // try {
+    // Product product = productMapper.toProduct(productDTO);
+    // Blob imageBlob = product.getImage();
+    // if (imageBlob != null) {
+    // byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+    // String imageBase64 = "data:image/jpeg;base64," +
+    // Base64.getEncoder().encodeToString(bytes);
 
-        List<Product> productsList = productMapper.toProducts(products);
-        for (Product product : productsList) {
-            try {
-                Blob imageBlob = product.getImage();
-                if (imageBlob != null) {
-                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-                    product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    // // necesitamos crear un nuevo DTO con la imagen en base64 para actualizarlo,
+    // ya
+    // // que asignando otra vez lo unico que hacemos es actualizar la variable
+    // local
+    // // de este codigo
+    // var updatedProduct = new ProductDTO(
+    // productDTO.id(),
+    // productDTO.type(),
+    // productDTO.name(),
+    // productDTO.company(),
+    // productDTO.price(),
+    // productDTO.description(),
+    // productDTO.image(),
+    // productDTO.stock(),
+    // productDTO.isAccepted(),
+    // productDTO.date(),
+    // productDTO.views_count(),
+    // productDTO.reviews(),
+    // imageBase64 // Set the imageBase64 field
+    // );
 
-    }
+    // int index = products.indexOf(productDTO);
+    // if (index != -1) {
+    // products.set(index, updatedProduct);
+    // }
+    // }
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // }
 
     public void addProductToCart(UserDTO userDTO, ProductDTO productDTO) {
         User user = userMapper.toUser(userDTO);
@@ -118,13 +142,14 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean  productInCart(UserDTO userDTO, ProductDTO productDTO){
+    public boolean productInCart(UserDTO userDTO, ProductDTO productDTO) {
         User user = userMapper.toUser(userDTO);
         Product product = productMapper.toProduct(productDTO);
 
         return user.getCart().contains(product);
 
     }
+
     public void removeProductFromCart(UserDTO userDTO, ProductDTO productDTO) {
         User user = userMapper.toUser(userDTO);
         Product product = productMapper.toProduct(productDTO);
@@ -146,14 +171,15 @@ public class UserService {
         return user.map(userMapper::toUserDTO);
     }
 
-    public HistoricalOrdersDTO getUserStads(String name){
-        User user = userRepository.findByUsername(name).orElseThrow(() -> new RuntimeException("User not found with username " + name));
+    public HistoricalOrdersDTO getUserStads(String name) {
+        User user = userRepository.findByUsername(name)
+                .orElseThrow(() -> new RuntimeException("User not found with username " + name));
 
         return new HistoricalOrdersDTO(user.getHistoricalOrderPrices());
     }
 
-
-    // DUDA CON ESTOS TRES METODOS: es correcto transformar el DTO en un User para comprobar si es admin, company o user?
+    // DUDA CON ESTOS TRES METODOS: es correcto transformar el DTO en un User para
+    // comprobar si es admin, company o user?
     // o debería de comprobar la lista del DTO?
     public boolean isAdmin(UserDTO userDTO) {
         User user = userMapper.toUser(userDTO);
@@ -163,14 +189,14 @@ public class UserService {
     public boolean isCompany(UserDTO userDTO) {
         User user = userMapper.toUser(userDTO);
         return user.isCompany();
-    }  
+    }
 
     public boolean isUser(UserDTO userDTO) {
         User user = userMapper.toUser(userDTO);
         return user.isUser();
     }
 
-    public void convertBlobToBase64(ProductDTO productDTO){
+    public void convertBlobToBase64(ProductDTO productDTO) {
         Product product = productMapper.toProduct(productDTO);
         // convert Blob to Base64 encoded string
         try {

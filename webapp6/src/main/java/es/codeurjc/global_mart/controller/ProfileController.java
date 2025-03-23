@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +37,6 @@ public class ProfileController {
 
     @Autowired
     private UserMapper userMapper;
-
 
     @GetMapping("/edit_profile")
     public String showEditProfile(Model model, Authentication authentication, HttpServletRequest request) {
@@ -77,7 +75,7 @@ public class ProfileController {
         Optional<UserDTO> optionalUser = userService.getUserById(userId);
 
         if (optionalUser.isPresent()) {
-            
+
             UserDTO userDTO = optionalUser.get();
             User user = userMapper.toUser(userDTO);
 

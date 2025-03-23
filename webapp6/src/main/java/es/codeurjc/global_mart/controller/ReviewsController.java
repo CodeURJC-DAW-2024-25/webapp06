@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.service.ProductService;
 
 @Controller
@@ -49,7 +47,7 @@ public class ReviewsController {
 
         if (product.isPresent()) {
             productService.addReviewToProduct(product.get(), review);
-            
+
             productService.addProduct(product.get());
             return "redirect:/product/" + id;
         } else {

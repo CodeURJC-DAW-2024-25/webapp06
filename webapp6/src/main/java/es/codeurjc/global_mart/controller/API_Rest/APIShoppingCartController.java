@@ -12,8 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/shoppingcart")
 public class APIShoppingCartController {
@@ -38,13 +36,13 @@ public class APIShoppingCartController {
             UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
             ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user);
-            userService.addImageDataToProducts(shoppingCart.cartProducts());
+            productService.addImageDataToProducts(shoppingCart.cartProducts());
             return ResponseEntity.ok(shoppingCart);
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             UserDTO user = userService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
             ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user);
-            userService.addImageDataToProducts(shoppingCart.cartProducts());
+            productService.addImageDataToProducts(shoppingCart.cartProducts());
             return ResponseEntity.ok(shoppingCart);
         }
 

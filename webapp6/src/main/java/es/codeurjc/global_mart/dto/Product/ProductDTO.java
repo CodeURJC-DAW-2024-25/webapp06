@@ -1,21 +1,23 @@
 package es.codeurjc.global_mart.dto.Product;
 
+import java.sql.Blob; // Cambiar este import
 import java.util.List;
+import java.util.Date;
 
-import com.mysql.cj.jdbc.Blob;
-
-import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
+import es.codeurjc.global_mart.model.Review;
 
 public record ProductDTO(
-        Long id,
-        String type,
-        String name,
-        String company,
-        Double price,
-        String description,
-        Integer views_count,
-        Boolean isAccepted,
-        // Blob image,
-        List<ReviewDTO> reviews,
-        Integer stock) {
+                Long id,
+                String type,
+                String name,
+                String company,
+                Double price,
+                String description,
+                Blob image,
+                Integer stock,
+                Boolean isAccepted,
+                Date date,
+                Integer views_count,
+                List<Review> reviews,
+                String imageBase64) {
 }

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
-import es.codeurjc.global_mart.dto.User.UserCartPriceDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
@@ -42,8 +41,6 @@ public class APIMainController {
 
     @Autowired
     private ProductMapper productMapper;
-
-    private ProductDTO productDto;
 
     @Autowired
     private ProductService productService;

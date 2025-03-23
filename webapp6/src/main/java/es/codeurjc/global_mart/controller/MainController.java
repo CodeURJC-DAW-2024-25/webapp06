@@ -1,7 +1,5 @@
 package es.codeurjc.global_mart.controller;
 
-import java.sql.Blob;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,8 +38,8 @@ public class MainController {
 		List<ProductDTO> lastProducts = productService.getLastProducts();
 
 		// Add image data to the products
-		userService.addImageDataToProducts(mostViewedProducts);
-		userService.addImageDataToProducts(lastProducts);
+		mostViewedProducts = productService.addImageDataToProducts(mostViewedProducts);
+		lastProducts = productService.addImageDataToProducts(lastProducts);
 
 		// Add the products to the model
 		model.addAttribute("mostViewedProducts", mostViewedProducts);
@@ -107,21 +103,6 @@ public class MainController {
 		}
 
 		return "user";
-	}
-
-	private void addImageDataToProducts(List<Product> products) {
-		for (Product product : products) {
-			try {
-				Blob imageBlob = product.getImage();
-				if (imageBlob != null) {
-					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-					product.setImageBase64(imageBase64);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	@GetMapping("/moreProdsAll")

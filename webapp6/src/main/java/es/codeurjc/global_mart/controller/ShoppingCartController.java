@@ -1,8 +1,5 @@
 package es.codeurjc.global_mart.controller;
 
-import java.sql.Blob;
-import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.User.ShoppingCartDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.OrderService;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
@@ -44,10 +39,9 @@ public class ShoppingCartController {
             UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name")).get();
 
             ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user);
-            userService.addImageDataToProducts(shoppingCart.cartProducts());
+            productService.addImageDataToProducts(shoppingCart.cartProducts());
             model.addAttribute("cart", shoppingCart);
             model.addAttribute("isEmpty", 0);
-            
 
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
@@ -56,7 +50,7 @@ public class ShoppingCartController {
                 // UserDTO u = userService.findByUsername(user.get().username()).get();
 
                 ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user.get());
-                userService.addImageDataToProducts(shoppingCart.cartProducts());
+                productService.addImageDataToProducts(shoppingCart.cartProducts());
                 model.addAttribute("cart", shoppingCart);
                 model.addAttribute("isEmpty", 0);
             }
@@ -132,24 +126,26 @@ public class ShoppingCartController {
             System.out.println("No furula");
         }
         return "redirect:/";
-    }    
+    }
 }
 
-//     private void addImageDataToProducts(List<ProductDTO> products) {
+// private void addImageDataToProducts(List<ProductDTO> products) {
 
-//         userService.addImageDataToProducts(products);
-// 		for (Product product : products) {
-// 			try {
-// 				Blob imageBlob = product.getImage();
-// 				if (imageBlob != null) {
-// 					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-// 					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-// 					product.setImageBase64(imageBase64); // Necesitas añadir este campo a la clase Product
-// 				}
-// 			} catch (Exception e) {
-// 				e.printStackTrace();
-// 			}
-// 		}
-// 	}
+// userService.addImageDataToProducts(products);
+// for (Product product : products) {
+// try {
+// Blob imageBlob = product.getImage();
+// if (imageBlob != null) {
+// byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+// String imageBase64 = "data:image/jpeg;base64," +
+// Base64.getEncoder().encodeToString(bytes);
+// product.setImageBase64(imageBase64); // Necesitas añadir este campo a la
+// clase Product
+// }
+// } catch (Exception e) {
+// e.printStackTrace();
+// }
+// }
+// }
 
 // }

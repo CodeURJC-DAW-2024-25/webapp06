@@ -1,8 +1,6 @@
 package es.codeurjc.global_mart.controller;
 
 import java.security.Principal;
-import java.sql.Blob;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +36,7 @@ public class ProductsController {
     @GetMapping("/products/allProducts")
     public String seeAllProds(Model model, HttpServletRequest request, Authentication authentication) {
         List<ProductDTO> products = productService.getAcceptedProducts(PageRequest.of(0, 5)).getContent();
-        productService.addImageDataToProducts(products);
+        products = productService.addImageDataToProducts(products);
         model.addAttribute("allProds", products);
         model.addAttribute("tittle", false);
         model.addAttribute("hasNextProd", productService.getAcceptedProducts(PageRequest.of(1, 5)).hasContent());
@@ -64,10 +60,11 @@ public class ProductsController {
     }
 
     @GetMapping("/products/{type}")
-    public String getMethodName(@PathVariable String type, Model model) {
+    public String productsByType(@PathVariable String type, Model model) {
 
         List<ProductDTO> products = productService.getAcceptedProductsByType(type, PageRequest.of(0, 5)).getContent();
-        productService.addImageDataToProducts(products);
+        products = productService.addImageDataToProducts(products);
+
         model.addAttribute("allProds", products);
         model.addAttribute("type", type);
         model.addAttribute("tittle", true);
