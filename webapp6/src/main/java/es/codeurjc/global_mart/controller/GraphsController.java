@@ -53,11 +53,29 @@ public class GraphsController {
     @GetMapping("/showUserGraphic")
     public String displayUserGraph(Model model, Authentication authentication) {
         Object principal = authentication.getPrincipal();
+        String userName = null;
+
         if (principal instanceof OAuth2User oAuth2User) {
-            model.addAttribute("username", oAuth2User.getAttribute("name"));
-            HistoricalOrdersDTO orderPrices = userService.getUserStads(oAuth2User.getName().toString());
-            model.addAttribute("orderPrices", orderPrices);
+            userName = oAuth2User.getAttribute("name");
+        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+            userName = userDetails.getUsername();
         }
+        
+        try {
+            if (userName != null) {
+                model.addAttribute("username", userName);
+                HistoricalOrdersDTO orderPrices = userService.getUserStads(userName);
+                System.out.println("order prices: " + orderPrices);
+                model.addAttribute("orderPrices", orderPrices);
+            } else {
+                System.out.println("Error: No se pudo obtener el nombre de usuario.");
+                return "error";
+            }
+        } catch (Exception e) {
+            return "error";
+        }
+        
+    
         return "userGraph";
     }
 

@@ -150,7 +150,11 @@ public class UserService {
         User user = userRepository.findByUsername(name)
                 .orElseThrow(() -> new RuntimeException("User not found with username " + name));
 
-        return new HistoricalOrdersDTO(user.getHistoricalOrderPrices());
+        List<Double> list = user.getHistoricalOrderPrices();
+        System.out.println("Order prices list" + list);
+
+        HistoricalOrdersDTO orders = new HistoricalOrdersDTO(list);
+        return orders;
     }
 
     // DUDA CON ESTOS TRES METODOS: es correcto transformar el DTO en un User para

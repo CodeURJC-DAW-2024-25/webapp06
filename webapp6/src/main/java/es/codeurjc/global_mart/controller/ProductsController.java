@@ -80,22 +80,23 @@ public class ProductsController {
 
         if (product.isPresent()) {
             // Extract all the info of the product to use it in the musctache template
-            model.addAttribute("productName", product.get()); // product dto contains all the product info review html
-
+            model.addAttribute("product", product.get()); // product dto contains all the product info review html
+            System.out.println("Product details" + product.get());
+            
             // Convert Blob to Base64 encoded string
             String imageBase64 = null;
             // Blob imageBlob = product.get().image();
             // if (imageBlob != null) {
-            // byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-            // imageBase64 = "data:image/jpeg;base64," +
-            // Base64.getEncoder().encodeToString(bytes);
-            // }
-
-            productService.setViews_product_count(product.get());
-            model.addAttribute("productImage", imageBase64);
-            model.addAttribute("productId", product.get().id());
-            model.addAttribute("productStock", product.get().stock());
-            model.addAttribute("reviews", product.get().reviews());
+                // byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                // imageBase64 = "data:image/jpeg;base64," +
+                // Base64.getEncoder().encodeToString(bytes);
+                // }
+                
+                productService.setViews_product_count(product.get());
+                model.addAttribute("productImage", imageBase64);
+                model.addAttribute("productId", product.get().id());
+                model.addAttribute("productStock", product.get().stock());
+                model.addAttribute("reviews", product.get().reviews());
 
             return "descriptionProduct";
         } else {
