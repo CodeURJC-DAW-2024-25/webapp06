@@ -9,6 +9,7 @@ import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import es.codeurjc.global_mart.model.Review;
@@ -16,7 +17,7 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.annotation.PostConstruct;
 
-@Controller
+@Component
 public class DataLoader {
 
         @Autowired
@@ -31,38 +32,41 @@ public class DataLoader {
         @PostConstruct
         public void loadData() throws IOException {
 
-                byte[] image1 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/diariogreg.jpg").getFile().toPath());
-                byte[] image2 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/iphone16.jpg").getFile().toPath());
-                byte[] image3 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/macbook.jpg").getFile().toPath());
-                byte[] image4 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/at10.jpg").getFile().toPath());
-                byte[] image5 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/disco.jpg").getFile().toPath());
-                byte[] image6 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/lavadora_samsung.jpg").getFile()
-                                                .toPath());
-                byte[] image7 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/tv_55.jpg").getFile().toPath());
-                byte[] image8 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/conjunto-mesa-sillas.jpg").getFile()
-                                                .toPath());
-                byte[] image9 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/cortacesped.jpeg").getFile().toPath());
-                byte[] image10 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/zapatillas.jpg").getFile().toPath());
-                byte[] image11 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/codigo_davinci.jpg").getFile().toPath());
-                byte[] image12 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/tablet_galaxy.jpg").getFile().toPath());
-                byte[] image13 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/smartwatch.jpg").getFile().toPath());
-                byte[] image14 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/cafetera.jpg").getFile().toPath());
-                byte[] image15 = Files.readAllBytes(
-                                new ClassPathResource("static/images/products/mancuernas.jpg").getFile().toPath());
+                if (!userService.getAllUsers().isEmpty()) return;
+
+
+                byte[] image1 = new ClassPathResource("static/images/products/diariogreg.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image2 = new ClassPathResource("static/images/products/iphone16.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image3 = new ClassPathResource("static/images/products/macbook.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image4 = new ClassPathResource("static/images/products/at10.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image5 = new ClassPathResource("static/images/products/disco.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image6 = new ClassPathResource("static/images/products/lavadora_samsung.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image7 = new ClassPathResource("static/images/products/tv_55.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image8 = new ClassPathResource("static/images/products/conjunto-mesa-sillas.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image9 = new ClassPathResource("static/images/products/cortacesped.jpeg")
+                                .getInputStream().readAllBytes();
+                byte[] image10 = new ClassPathResource("static/images/products/zapatillas.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image11 = new ClassPathResource("static/images/products/codigo_davinci.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image12 = new ClassPathResource("static/images/products/tablet_galaxy.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image13 = new ClassPathResource("static/images/products/smartwatch.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image14 = new ClassPathResource("static/images/products/cafetera.jpg")
+                                .getInputStream().readAllBytes();
+                byte[] image15 = new ClassPathResource("static/images/products/mancuernas.jpg")
+                                .getInputStream().readAllBytes();  
+                byte[] image16 = new ClassPathResource("static/images/products/don_quijote.jpg")
+                .getInputStream().readAllBytes();
 
                 // Create and associate reviews before persisting
                 Review review1 = new Review("user1", "Muy bueno", 5);
@@ -71,7 +75,7 @@ public class DataLoader {
                 // Create product
                 productService.createProduct("Books", "Libro El Quijote", "LaCasaDelLibro", 20.0,
                                 "Una versión abreviada de las aventuras de un excéntrico caballero rural y su fiel compañero...",
-                                BlobProxy.generateProxy(image6), 10, true, List.of(review1, review2));
+                                BlobProxy.generateProxy(image16), 10, true, List.of(review1, review2));
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
                                 BlobProxy.generateProxy(image1), 10, true);

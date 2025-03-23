@@ -14,7 +14,6 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "ORDERS")
-
 public class Order {
 
     @Id

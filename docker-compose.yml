@@ -1,18 +1,18 @@
 version: '3.8'
 services:
   webapp6:
-    build: .
+    image: webapp6manual
     container_name: webapp6
     ports:
       - "8443:8443"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/globalmart?useSSL=true&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/globalmart
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234password?
     depends_on:
       - db
     restart: always
-
+  
 
   db:
     image: mysql:8.3.0
@@ -21,5 +21,5 @@ services:
       - MYSQL_ROOT_PASSWORD=1234password?
       - MYSQL_DATABASE=globalmart
     ports:
-      - "3306:3306"
+      - "3307:3306"
 

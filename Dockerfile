@@ -18,7 +18,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy JAR from builder stage
-COPY --from=builder /app/target/global_mart-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
 # Expose the application port
 EXPOSE 8443
