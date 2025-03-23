@@ -43,7 +43,6 @@ public class APIMainController {
     @Autowired
     private ProductMapper productMapper;
 
-    @Autowired
     private ProductDTO productDto;
 
     @Autowired
@@ -120,19 +119,17 @@ public class APIMainController {
                     oAuth2User.getAttribute("name"),
                     oAuth2User.getAttribute("email"),
                     oAuth2User.getAttribute("picture"),
-                    true
-            ));
+                    true));
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
             if (user.isPresent()) {
                 UserDTO u = user.get();
                 return ResponseEntity.ok(new UserProfile(
-                    u.name(),
-                    u.username(),
-                    u.email(),
-                    null, // reviw this 
-                    false
-                ));
+                        u.name(),
+                        u.username(),
+                        u.email(),
+                        null, // reviw this
+                        false));
             }
         }
 
@@ -160,7 +157,8 @@ public class APIMainController {
     }
 
     @GetMapping("/moreProdsCompany")
-    public ResponseEntity<List<Product>> loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company) {
+    public ResponseEntity<List<Product>> loadMoreProductsByCompany(@RequestParam int page,
+            @RequestParam String company) {
         Pageable pageable = Pageable.ofSize(5).withPage(page);
         Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
         List<ProductDTO> products = productsPage.getContent();

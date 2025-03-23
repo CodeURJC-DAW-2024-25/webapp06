@@ -37,8 +37,6 @@ public class ProductsController {
     @Autowired
     private UserService userService;
 
-    
-
     @GetMapping("/products/allProducts")
     public String seeAllProds(Model model, HttpServletRequest request, Authentication authentication) {
         List<ProductDTO> products = productService.getAcceptedProducts(PageRequest.of(0, 5)).getContent();
@@ -85,15 +83,16 @@ public class ProductsController {
 
         if (product.isPresent()) {
             // Extract all the info of the product to use it in the musctache template
-            model.addAttribute("productName", product.get());  // product dto contains all the product info review html
+            model.addAttribute("productName", product.get()); // product dto contains all the product info review html
 
             // Convert Blob to Base64 encoded string
             String imageBase64 = null;
-            Blob imageBlob = product.get().image();
-            if (imageBlob != null) {
-                byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-            }
+            // Blob imageBlob = product.get().image();
+            // if (imageBlob != null) {
+            // byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+            // imageBase64 = "data:image/jpeg;base64," +
+            // Base64.getEncoder().encodeToString(bytes);
+            // }
 
             productService.setViews_product_count(product.get());
             model.addAttribute("productImage", imageBase64);
@@ -166,7 +165,6 @@ public class ProductsController {
         if (optionalProduct.isPresent()) {
             // Product product = optionalProduct.get();
             userService.convertBlobToBase64(optionalProduct.get());
-            
 
             // add the product to the model
             model.addAttribute("type_" + optionalProduct.get().type(), true);
@@ -192,10 +190,8 @@ public class ProductsController {
 
         Optional<ProductDTO> optionalProduct = productService.getProductById(id);
         if (optionalProduct.isPresent()) {
-            productService.updateProductDetails(optionalProduct.get(), product_name, product_description, product_type, product_stock, product_price, product_image);
-            
-
-            
+            productService.updateProductDetails(optionalProduct.get(), product_name, product_description, product_type,
+                    product_stock, product_price, product_image);
 
             Object principal = autentication.getPrincipal();
             if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {

@@ -55,7 +55,8 @@ public class BaseController {
                 if (user.isPresent()) {
                     model.addAttribute("username", user.get().username());
                     model.addAttribute("email", user.get().email());
-                    model.addAttribute("profile_image", user.get().image());  // TO FIX--------------------------------
+                    // model.addAttribute("profile_image", user.get().image()); // TO
+                    // FIX--------------------------------
                     model.addAttribute("isGoogleUser", false);
 
                     if (userService.isAdmin(user.get())) {
