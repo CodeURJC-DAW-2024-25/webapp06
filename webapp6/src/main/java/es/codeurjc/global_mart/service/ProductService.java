@@ -37,8 +37,8 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private ProductService productService;
+    // @Autowired
+    // private ProductService productService;
 
     @Autowired
     ProductMapper productMapper;
@@ -224,7 +224,7 @@ public class ProductService {
         dataMap.put("Appliances", 0);
         dataMap.put("Others", 0);
 
-        List<Product> companyProducts = productMapper.toProducts(productService.getAcceptedCompanyProducts(company));
+        List<Product> companyProducts = productMapper.toProducts(getAcceptedCompanyProducts(company));
 
         for (Product product : companyProducts) {
             String type = product.getType();

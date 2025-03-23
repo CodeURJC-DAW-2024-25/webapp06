@@ -170,4 +170,19 @@ public class UserService {
         return user.isUser();
     }
 
+    public void convertBlobToBase64(ProductDTO productDTO){
+        Product product = productMapper.toProduct(productDTO);
+        // convert Blob to Base64 encoded string
+        try {
+            Blob imageBlob = product.getImage();
+            if (imageBlob != null) {
+                byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                product.setImageBase64(imageBase64);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
