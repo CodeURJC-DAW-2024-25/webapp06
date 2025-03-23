@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import es.codeurjc.global_mart.model.User;
+import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.security.CSRFHandlerConfiguration;
 import es.codeurjc.global_mart.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,18 +51,18 @@ public class BaseController {
             }
             // Regular user
             else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-                Optional<User> user = userService.findByUsername(userDetails.getUsername());
+                Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
                 if (user.isPresent()) {
-                    model.addAttribute("username", user.get().getUsername());
-                    model.addAttribute("email", user.get().getEmail());
-                    model.addAttribute("profile_image", user.get().getImage());
+                    model.addAttribute("username", user.get().username());
+                    model.addAttribute("email", user.get().email());
+                    model.addAttribute("profile_image", user.get().image());  // TO FIX--------------------------------
                     model.addAttribute("isGoogleUser", false);
 
-                    if (user.get().isAdmin()) {
+                    if (userService.isAdmin(user.get())) {
                         model.addAttribute("isAdmin", true);
                         model.addAttribute("isCompany", false);
                         model.addAttribute("isUser", false);
-                    } else if (user.get().isCompany()) {
+                    } else if (userService.isCompany(user.get())) {
                         model.addAttribute("isAdmin", false);
                         model.addAttribute("isCompany", true);
                         model.addAttribute("isUser", false);
@@ -78,14 +78,6 @@ public class BaseController {
 
     public CSRFHandlerConfiguration getCSRFHandlerConfiguration() {
         return CSRFHandlerConfiguration;
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 
 }

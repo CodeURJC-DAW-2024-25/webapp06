@@ -152,8 +152,22 @@ public class UserService {
         return new HistoricalOrdersDTO(user.getHistoricalOrderPrices());
     }
 
-    
 
-    
+    // DUDA CON ESTOS TRES METODOS: es correcto transformar el DTO en un User para comprobar si es admin, company o user?
+    // o debería de comprobar la lista del DTO?
+    public boolean isAdmin(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
+        return user.isAdmin();
+    }
+
+    public boolean isCompany(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
+        return user.isCompany();
+    }  
+
+    public boolean isUser(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
+        return user.isUser();
+    }
 
 }
