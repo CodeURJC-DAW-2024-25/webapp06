@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.controller.API_Rest;
 
+import es.codeurjc.global_mart.dto.User.UserCreationDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.dto.User.UserMapper;
 import es.codeurjc.global_mart.model.User;
@@ -7,30 +8,16 @@ import es.codeurjc.global_mart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import java.io.IOException;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/profile")
-public class APIProfileController {
-
-    private static class UserProfile {
-        public String name;
-        public String username;
-        public String email;
-        public String profileImage;
-        public boolean isGoogleUser;
-
-        public UserProfile(String name, String username, String email, String profileImage, boolean isGoogleUser) {
-            this.name = name;
-            this.username = username;
-            this.email = email;
-            this.profileImage = profileImage;
-            this.isGoogleUser = isGoogleUser;
-        }
-
-    }
+@RequestMapping("/api/users")
+public class APIUserController {
 
     @Autowired
     private UserService userService;
@@ -38,7 +25,36 @@ public class APIProfileController {
     @Autowired
     private UserMapper userMapper;
 
-    @GetMapping("/editProfile")
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        Optional<UserDTO> user = userService.getUserById(id);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+        return ResponseEntity.ok(user.get());
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<?> createUser(@RequestBody UserCreationDTO userDto) {
+        Optional<UserDTO> user = userService.findByUsername(userDto.username());
+        if (user.isPresent()) {
+            return ResponseEntity.badRequest().body("Username already exists");
+        } else {
+            try {
+                userService.createUser(null, userDto.name(), userDto.username(), userDto.email(), passwordEncoder.encode(userDto.password()), userDto.role());
+            } catch (IOException e) {
+                return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
+            }
+        }
+    
+        return ResponseEntity.ok("User registered successfully");
+    }
+    
+ 
+    @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(
             @RequestParam("username") String username,
             @RequestParam("email") String email,

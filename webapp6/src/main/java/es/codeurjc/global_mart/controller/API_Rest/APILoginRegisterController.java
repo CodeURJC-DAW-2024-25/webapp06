@@ -24,7 +24,7 @@ public class APILoginRegisterController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/newUser")
     public ResponseEntity<?> registerUser(
             @RequestParam String name,
             @RequestParam String username,
