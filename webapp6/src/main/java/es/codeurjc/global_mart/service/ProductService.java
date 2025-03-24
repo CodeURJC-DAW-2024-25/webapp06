@@ -64,9 +64,16 @@ public class ProductService {
     }
 
     public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO) {
-        Product product = productMapper.toProduct(productDTO);
-        Review review = reviewMapper.toReview(reviewDTO);
-        product.addReview(review);
+        Optional<Product> optionalProduct = productRepository.findById(productDTO.id());
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            Review review = reviewMapper.toReview(reviewDTO);
+            product.addReview(review);
+            productRepository.save(product);
+        } else {
+            throw new RuntimeException("Product not found with id " + productDTO.id());
+        }
     }
 
     public ProductDTO updateProduct(Long id, Product product) {
@@ -311,6 +318,51 @@ public class ProductService {
         List<ProductDTO> productsList = new ArrayList<>();
 
         for (ProductDTO productDTO : products) {
+            if (productDTO.imageBase64() != null) {
+                productsList.add(productDTO);
+            } else {
+                String imageBase64 = null;
+
+                try {
+                    Product product = productMapper.toProduct(productDTO);
+                    Long id = product.getId();
+                    Blob imageBlob = getImageById(id);
+
+                    if (imageBlob != null) {
+                        byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                        imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    } else {
+                        logger.info("No image found for product id: " + id);
+                    }
+                } catch (Exception e) {
+                    logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
+                }
+
+                // Always return a ProductDTO with either the converted image or default
+                productsList.add(new ProductDTO(
+                        productDTO.id(),
+                        productDTO.type(),
+                        productDTO.name(),
+                        productDTO.company(),
+                        productDTO.price(),
+                        productDTO.description(),
+                        productDTO.stock(),
+                        productDTO.isAccepted(),
+                        productDTO.date(),
+                        productDTO.views_count(),
+                        productDTO.reviews(),
+                        imageBase64));
+            }
+        }
+        return productsList;
+    }
+
+    public ProductDTO addImageToASingleProduct(ProductDTO productDTO) {
+        if (productDTO.imageBase64() != null) {
+            return productDTO;
+        } else {
+            String imageBase64 = null;
+
             try {
                 Product product = productMapper.toProduct(productDTO);
                 Long id = product.getId();
@@ -318,62 +370,29 @@ public class ProductService {
 
                 if (imageBlob != null) {
                     byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-
-                    ProductDTO uploadedProduct = new ProductDTO(
-                            productDTO.id(),
-                            productDTO.type(),
-                            productDTO.name(),
-                            productDTO.company(),
-                            productDTO.price(),
-                            productDTO.description(),
-                            productDTO.stock(),
-                            productDTO.isAccepted(),
-                            productDTO.date(),
-                            productDTO.views_count(),
-                            productDTO.reviews(),
-                            imageBase64);
-                    productsList.add(uploadedProduct);
+                    imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                } else {
+                    logger.info("No image found for product id: " + id);
                 }
             } catch (Exception e) {
-                logger.error("Error converting image to base64", e);
+                logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
             }
+
+            // Always return a ProductDTO with either the converted image or default
+            return new ProductDTO(
+                    productDTO.id(),
+                    productDTO.type(),
+                    productDTO.name(),
+                    productDTO.company(),
+                    productDTO.price(),
+                    productDTO.description(),
+                    productDTO.stock(),
+                    productDTO.isAccepted(),
+                    productDTO.date(),
+                    productDTO.views_count(),
+                    productDTO.reviews(),
+                    imageBase64);
         }
-        return productsList;
-    }
-
-    public ProductDTO addImageToASingleProduct(ProductDTO productDTO) {
-        String imageBase64 = "/images/default-product.jpg"; // Default image path
-
-        try {
-            Product product = productMapper.toProduct(productDTO);
-            Long id = product.getId();
-            Blob imageBlob = getImageById(id);
-
-            if (imageBlob != null) {
-                byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-            } else {
-                logger.info("No image found for product id: " + id);
-            }
-        } catch (Exception e) {
-            logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
-        }
-
-        // Always return a ProductDTO with either the converted image or default
-        return new ProductDTO(
-                productDTO.id(),
-                productDTO.type(),
-                productDTO.name(),
-                productDTO.company(),
-                productDTO.price(),
-                productDTO.description(),
-                productDTO.stock(),
-                productDTO.isAccepted(),
-                productDTO.date(),
-                productDTO.views_count(),
-                productDTO.reviews(),
-                imageBase64);
     }
 
     public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock,

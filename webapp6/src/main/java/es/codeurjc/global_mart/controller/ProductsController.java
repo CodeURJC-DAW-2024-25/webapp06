@@ -7,7 +7,9 @@ import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -62,6 +64,44 @@ public class ProductsController {
         return "products";
     }
 
+    @GetMapping("/moreProdsAll")
+    public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
+        List<ProductDTO> products = productsPage.getContent();
+        products = productService.addImageDataToProducts(products);
+
+        model.addAttribute("hasMore", productsPage.hasNext());
+        model.addAttribute("allProds", products);
+
+        return "moreProducts";
+    }
+
+    @GetMapping("/moreProdsTypes")
+    public String loadMoreProductsByType(@RequestParam int page, @RequestParam String type, Model model) {
+        Pageable pageable = Pageable.ofSize(5).withPage(page);
+        Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
+        List<ProductDTO> products = productsPage.getContent();
+        productService.addImageDataToProducts(products);
+        model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
+        model.addAttribute("allProds", products);
+        model.addAttribute("type", type);
+        return "moreProducts";
+    }
+
+    @GetMapping("/moreProdsCompany")
+    public String loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company, Model model) {
+        Pageable pageable = Pageable.ofSize(5).withPage(page);
+        Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
+        List<ProductDTO> products = productsPage.getContent();
+        productService.addImageDataToProducts(products);
+        model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
+        model.addAttribute("allProds", products);
+        model.addAttribute("company", company);
+        model.addAttribute("isCompany", true);
+        return "moreProducts";
+    }
+
     @GetMapping("/products/{type}")
     public String productsByType(@PathVariable String type, Model model) {
 
@@ -81,6 +121,7 @@ public class ProductsController {
             throws Exception {
         Optional<ProductDTO> product = productService.getProductById(id); // Extract the product by its id
         ProductDTO productWithImage = productService.addImageToASingleProduct(product.get());
+        System.out.println("product image: " + productWithImage.imageBase64());
         product = Optional.of(productWithImage);
 
         if (product.isPresent()) {

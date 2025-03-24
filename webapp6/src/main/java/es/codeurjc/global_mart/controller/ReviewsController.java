@@ -32,23 +32,20 @@ public class ReviewsController {
             Authentication autentication, @PathVariable Long id) {
 
         Optional<ProductDTO> product = productService.getProductById(id);
-        // Review review = new Review();
-        // review.setCalification(calification);
-        // review.setComment(comment);
         Object principal = autentication.getPrincipal();
         ReviewDTO review = null;
+        String username = null;
         if (principal instanceof OAuth2User oAuth2User) {
-            String username = oAuth2User.getAttribute("name");
-            review = reviewService.createReview(username, comment, calification);
+            username = oAuth2User.getAttribute("name");
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            String username = userDetails.getUsername();
-            review = reviewService.createReview(username, comment, calification);
+            username = userDetails.getUsername();
         }
+
+        review = reviewService.createReview(username, comment, calification);
 
         if (product.isPresent()) {
             productService.addReviewToProduct(product.get(), review);
 
-            productService.addProduct(product.get());
             return "redirect:/product/" + id;
         } else {
             return "redirect:/error";

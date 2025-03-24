@@ -37,11 +37,9 @@ public class GraphsController {
 
                 List<CompanyStadsDTO> dataList = productService.getCompanyStadistics(userDetails.getUsername());
                 model.addAttribute("dataList", dataList);
-                System.out.println("Company stadistics" + dataList);
                 return "companyGraphs";
 
             } catch (NoSuchElementException e) {
-                System.out.println("Error al devolver los datos");
                 return "error";
             }
         }
@@ -60,7 +58,7 @@ public class GraphsController {
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             userName = userDetails.getUsername();
         }
-        
+
         try {
             if (userName != null) {
                 model.addAttribute("username", userName);
@@ -74,8 +72,7 @@ public class GraphsController {
         } catch (Exception e) {
             return "error";
         }
-        
-    
+
         return "userGraph";
     }
 

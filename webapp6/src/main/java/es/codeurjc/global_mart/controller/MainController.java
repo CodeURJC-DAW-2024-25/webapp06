@@ -4,20 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
@@ -73,8 +69,11 @@ public class MainController {
 	@GetMapping("/adminPage")
 	public String admin(Model model) {
 		List<ProductDTO> products = productService.getNotAcceptedProducts();
-		productService.convertBlobToBase64(products);
-		model.addAttribute("productsNotAccepted", products);
+
+		List<ProductDTO> productsWithImages = productService.addImageDataToProducts(products);
+
+		model.addAttribute("productsNotAccepted", productsWithImages);
+
 		return "administrator";
 	}
 
@@ -105,42 +104,6 @@ public class MainController {
 		}
 
 		return "user";
-	}
-
-	@GetMapping("/moreProdsAll")
-	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
-		List<ProductDTO> products = productsPage.getContent();
-		productService.addImageDataToProducts(products);
-		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
-		model.addAttribute("allProds", products);
-		return "moreProducts";
-	}
-
-	@GetMapping("/moreProdsTypes")
-	public String loadMoreProductsByType(@RequestParam int page, @RequestParam String type, Model model) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
-		List<ProductDTO> products = productsPage.getContent();
-		productService.addImageDataToProducts(products);
-		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
-		model.addAttribute("allProds", products);
-		model.addAttribute("type", type);
-		return "moreProducts";
-	}
-
-	@GetMapping("/moreProdsCompany")
-	public String loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company, Model model) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
-		List<ProductDTO> products = productsPage.getContent();
-		productService.addImageDataToProducts(products);
-		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
-		model.addAttribute("allProds", products);
-		model.addAttribute("company", company);
-		model.addAttribute("isCompany", true);
-		return "moreProducts";
 	}
 
 	public ProductService getProductService() {

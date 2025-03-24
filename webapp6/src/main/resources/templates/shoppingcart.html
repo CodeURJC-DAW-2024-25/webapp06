@@ -37,7 +37,6 @@
                 <p>Price: {{price}}€</p>
                 <div>
                     <form action="/removeProductFromCart/{{id}}" method="POST">
-                        <input type="hidden" name="_csrf" value="{{token}}">
                         <button type="submit" class="remove">Remove product</button>
                     </form>
                 </div>
@@ -50,7 +49,6 @@
         {{/cart.cartProducts}}
         <div class="subtotal_and_payment_div">
             <form action="/payment" method="POST">
-                <input type="hidden" name="_csrf" value="{{token}}">
                 {{^isEmpty}}
                 <button class="buy_button" type="submit">Buy</button>
                 {{/isEmpty}}

@@ -22,6 +22,7 @@ public class ReviewService {
 
     public ReviewDTO createReview(String username, String comment, int calification) {
         Review review = new Review(username, comment, calification);
+        System.out.println("Review created: " + review);
         reviewRepository.save(review);
         return reviewMapper.toReviewDTO(review);
     }
