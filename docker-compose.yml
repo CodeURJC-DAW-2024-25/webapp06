@@ -4,7 +4,7 @@ services:
     image: alvaro3517/webapp6manual:v1  
     container_name: webapp6
     ports:
-      - "8443:8443"
+      - "443:8443"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/globalmart
       - SPRING_DATASOURCE_USERNAME=root
