@@ -267,6 +267,18 @@ Acceder en el navegador a la url: https://localhost:8443
 
 ---
 
+## Usuarios de la aplicación
+- **Administrador**: 
+    - **username**: user1
+    - **password**: user1
+- **Compañía**: 
+    - **username**: comp   
+    - **password**: comp
+- **Usuario registrado**: 
+    - **username**: a
+    - **password**: a
+---
+
 **Diagrama de relaciones de base de datos**
 ![Diagrama de base de datos](./images_readme/Practica1/databaseDiagram.png)
 ![Diagrama de base de datos 2](./images_readme/Practica1/diagramaClases.png)
@@ -357,3 +369,115 @@ Acceder en el navegador a la url: https://localhost:8443
 | ProductsController.java       | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ProductsController.java)     |
 | DataLoader.java       | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/config/DataLoader.java)     |
 | Review.java       | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/model/Review.java)     |
+
+---
+
+## Práctica 2
+
+### Documentación de la API Rest
+
+### Instrucciones de ejecución de la aplicación dockerizada
+
+### Documentación para contrucción de la imagen docker
+
+### Documentación para desplegar la máquina virtual
+
+### URL de la aplicación desplegada en la máquina virtual
+https://appWeb06.dawgis.etsii.urjc.es:443
+
+### Participación de miembros
+
+#### Cristian
+
+##### Descripción textual
+Mi labor en esta práctica ha constado de la revisión y el análisis de errores al transformar la aplicación, ya que al transformar las clases en diferentes DTOs, nos ha llevado a cabo varios errores que hemos tenido que solucionar. Además de revisar y analizar errores, he llevado a cabo la adaptación del código a los DTOs. También me he encargado de gestionar la documentación tanto el README como la documentación de la API.
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|Convertir todas las clases en diferentes DTOs según la funcionalidad                |              |
+|Añadir SearchProductDTO y actualizar ProductMapper                  |              |
+|Arreglar AJAX                 |              |
+|Arreglar Imágenes                |              |
+|Arreglar Reviews                 |              |
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+|ReviewsController.java                 |              |
+|ProductsController.java                 |              |
+|MainController.java                 |              |
+|SearchController.java                 |              |
+|ProductService.java                 |              |
+
+---
+
+#### Juan Manuel
+
+##### Descripción textual
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+---
+
+#### Álvaro
+
+##### Descripción textual
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+---
+
+#### Luis
+
+##### Descripción textual
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
