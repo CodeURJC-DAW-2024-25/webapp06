@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   webapp6:
-    image: alvaro3517/webapp6manual:v1  
+    image: alvaro3517/webapp6  
     container_name: webapp6
     ports:
       - "443:8443"
