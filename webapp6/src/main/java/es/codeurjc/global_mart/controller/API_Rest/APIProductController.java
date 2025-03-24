@@ -33,17 +33,16 @@ public class APIProductController {
     private ProductMapper productMapper;
     
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAcceptedProducts();
-        List<Product> productsThrow = productMapper.toProducts(products);
-        return ResponseEntity.ok(productsThrow);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Optional<ProductDTO> product = productService.getProductById(id);
         if (product.isPresent()) {
-            return ResponseEntity.ok(productMapper.toProduct(product.get()));
+            return ResponseEntity.ok(product.get());
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -52,7 +51,7 @@ public class APIProductController {
     @PostMapping("/")
 	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) throws IOException {
 
-		productDTO = productService.createProduct(productDTO.type(), productDTO.name(), productDTO.company(), productDTO.price(),productDTO.description(), productDTO.image(),productDTO.stock(), productDTO.isAccepted());
+		productDTO = productService.createProduct(productDTO.type(), productDTO.name(), productDTO.company(), productDTO.price(),productDTO.description(),null,productDTO.stock(), productDTO.isAccepted());
 											
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(productDTO.id()).toUri();
 

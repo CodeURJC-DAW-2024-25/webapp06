@@ -60,6 +60,15 @@ public class ProductService {
         return productMapper.toProductDTO(product);
     }
 
+    public ProductDTO createProduct(String type, String name, String business, Double price, String description,
+            Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
+        Product product = new Product(type, name, business, price, description, stock, isAccepted);
+        product.setReviews(reviews);
+
+        productRepository.save(product);
+        return productMapper.toProductDTO(product);
+    }
+
 
     public ProductDTO addProduct(ProductDTO product) {
         Product product2 = productMapper.toProduct(product);
@@ -321,7 +330,6 @@ public class ProductService {
                             productDTO.company(),
                             productDTO.price(),
                             productDTO.description(),
-                            productDTO.image(),
                             productDTO.stock(),
                             productDTO.isAccepted(),
                             productDTO.date(),
@@ -358,7 +366,6 @@ public class ProductService {
                         productDTO.company(),
                         productDTO.price(),
                         productDTO.description(),
-                        productDTO.image(),
                         productDTO.stock(),
                         productDTO.isAccepted(),
                         productDTO.date(),
