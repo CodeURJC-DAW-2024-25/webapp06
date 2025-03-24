@@ -42,9 +42,6 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    // @Autowired
-    // private ProductService productService;
-
     @Autowired
     ProductMapper productMapper;
 
@@ -343,6 +340,40 @@ public class ProductService {
             }
         }
         return productsList;
+    }
+
+    public ProductDTO addImageToASingleProduct(ProductDTO productDTO) {
+        String imageBase64 = "/images/default-product.jpg"; // Default image path
+
+        try {
+            Product product = productMapper.toProduct(productDTO);
+            Long id = product.getId();
+            Blob imageBlob = getImageById(id);
+
+            if (imageBlob != null) {
+                byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+            } else {
+                logger.info("No image found for product id: " + id);
+            }
+        } catch (Exception e) {
+            logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
+        }
+
+        // Always return a ProductDTO with either the converted image or default
+        return new ProductDTO(
+                productDTO.id(),
+                productDTO.type(),
+                productDTO.name(),
+                productDTO.company(),
+                productDTO.price(),
+                productDTO.description(),
+                productDTO.stock(),
+                productDTO.isAccepted(),
+                productDTO.date(),
+                productDTO.views_count(),
+                productDTO.reviews(),
+                imageBase64);
     }
 
     public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock,

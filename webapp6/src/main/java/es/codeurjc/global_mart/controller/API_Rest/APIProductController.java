@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,8 +24,8 @@ import java.util.Optional;
 @RequestMapping("/api/products")
 public class APIProductController {
 
-    @Autowired
-    private ProductService productService;
+	@Autowired
+	private ProductService productService;
 
     @Autowired
     private ProductMapper productMapper;
@@ -53,18 +52,21 @@ public class APIProductController {
         }
     }
 
-    @PostMapping("/")
+	@PostMapping("/")
 	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) throws IOException {
 
-		productDTO = productService.createProduct(productDTO.type(), productDTO.name(), productDTO.company(), productDTO.price(),productDTO.description(),null,productDTO.stock(), productDTO.isAccepted());
-											
+		productDTO = productService.createProduct(productDTO.type(), productDTO.name(), productDTO.company(),
+				productDTO.price(), productDTO.description(), null, productDTO.stock(), productDTO.isAccepted(),
+				productDTO.reviews());
+
 		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(productDTO.id()).toUri();
 
 		return ResponseEntity.created(location).body(productDTO);
 	}
 
 	@PutMapping("/{id}")
-	public ProductDTO updateProduct(@PathVariable long id, @RequestBody ProductDTO updatedProductDTO) throws SQLException {
+	public ProductDTO updateProduct(@PathVariable long id, @RequestBody ProductDTO updatedProductDTO)
+			throws SQLException {
 		Product updatedBookDTO = productMapper.toProduct(updatedProductDTO);
 		return productService.updateProduct(id, updatedBookDTO);
 	}

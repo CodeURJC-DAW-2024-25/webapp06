@@ -118,13 +118,13 @@ public class ProductsController {
                     product_price,
                     product_description,
                     BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
-                    product_stock, false);
+                    product_stock, false, null);
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             productService.createProduct(product_type, product_name, userDetails.getUsername(),
                     product_price,
                     product_description,
                     BlobProxy.generateProxy(product_image.getInputStream(), product_image.getSize()),
-                    product_stock, false);
+                    product_stock, false, null);
         }
 
         return "redirect:/products/allProducts";
