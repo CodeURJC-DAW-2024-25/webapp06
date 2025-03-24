@@ -4,10 +4,20 @@ import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+
+import java.io.IOException;
+import java.net.URI;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,46 +32,82 @@ public class APIProductController {
     private ProductMapper productMapper;
     
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAcceptedProducts();
-        List<Product> productsThrow = productMapper.toProducts(products);
-        return ResponseEntity.ok(productsThrow);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Optional<ProductDTO> product = productService.getProductById(id);
         if (product.isPresent()) {
-            return ResponseEntity.ok(productMapper.toProduct(product.get()));
+            return ResponseEntity.ok(product.get());
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product productPassed) {
-        ProductDTO product = productMapper.toProductDTO(productPassed);
-        ProductDTO savedProduct = productService.addProduct(product);
-        return ResponseEntity.ok(productMapper.toProduct(savedProduct));
-    }
+    @PostMapping("/")
+	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) throws IOException {
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        ProductDTO updatedProduct = productService.updateProduct(id, product);
-        if (updatedProduct != null) {
-            return ResponseEntity.ok(productMapper.toProduct(updatedProduct));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+		productDTO = productService.createProduct(productDTO.type(), productDTO.name(), productDTO.company(), productDTO.price(),productDTO.description(),null,productDTO.stock(), productDTO.isAccepted());
+											
+		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(productDTO.id()).toUri();
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        if (productService.getProductById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-    
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
-    }
+		return ResponseEntity.created(location).body(productDTO);
+	}
+
+
+
+	@PutMapping("/{id}")
+	public ProductDTO updateProduct(@PathVariable long id, @RequestBody ProductDTO updatedProductDTO) throws SQLException {
+		Product updatedBookDTO = productMapper.toProduct(updatedProductDTO);
+		return productService.updateProduct(id, updatedBookDTO);
+	}
+
+	@DeleteMapping("/{id}")
+	public ProductDTO deleteProduct(@PathVariable long id) {
+
+		return productService.deleteProduct(id);
+	}
+
+	@PostMapping("/{id}/image")
+	public ResponseEntity<Object> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+			throws IOException {
+
+		productService.createProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+		URI location = fromCurrentRequest().build().toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+
+	@GetMapping("/{id}/image")
+	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
+
+		Resource postImage = productService.getProductImage(id);
+
+		return ResponseEntity
+				.ok()
+				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+				.body(postImage);
+
+	}
+
+	@PutMapping("/{id}/image")
+	public ResponseEntity<Object> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+			throws IOException {
+
+		productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/{id}/image")
+	public ResponseEntity<Object> deleteProductImage(@PathVariable long id) throws IOException {
+
+		productService.deleteProductImage(id);
+
+		return ResponseEntity.noContent().build();
+	}
 }

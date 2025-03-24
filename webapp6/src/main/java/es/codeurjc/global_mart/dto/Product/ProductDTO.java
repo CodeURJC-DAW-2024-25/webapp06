@@ -13,7 +13,6 @@ public record ProductDTO(
                 String company,
                 Double price,
                 String description,
-                Blob image,
                 Integer stock,
                 Boolean isAccepted,
                 Date date,

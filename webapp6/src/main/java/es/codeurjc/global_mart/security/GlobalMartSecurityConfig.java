@@ -3,11 +3,13 @@ package es.codeurjc.global_mart.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 
 @Configuration
@@ -21,6 +23,13 @@ public class GlobalMartSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                   .authenticationProvider(authenticationProvider())
+                   .build();
     }
 
     @Bean
@@ -83,13 +92,16 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/api/main/lastProducts").permitAll()
                 .requestMatchers("/api/main/acceptedProducts").permitAll()
                 .requestMatchers("/api/main/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers("/api/main/acceptedCompanyProducts").hasRole("COMPANY")
+                .requestMatchers("/api/main/acceptedCompanyProducts").permitAll()
                 .requestMatchers("/api/main/product/{id}").permitAll()
                 .requestMatchers("/api/main/profile").authenticated()
                 .requestMatchers("/api/main/moreProdsAll").permitAll()
                 .requestMatchers("/api/main/moreProdsTypes/{type}").permitAll()
                 .requestMatchers("/api/main/moreProdsCompany").hasRole("COMPANY")
-
+                
+                .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/refresh").permitAll()
+                .requestMatchers("/api/auth/logout").permitAll()
 
                 .anyRequest().permitAll()
 

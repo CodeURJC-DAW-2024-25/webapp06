@@ -1,13 +1,16 @@
 package es.codeurjc.global_mart.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
@@ -15,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,14 +56,6 @@ public class ProductService {
 
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
 
-        if (image != null) {
-            product.setImage(image); // set image from blob
-        } else {
-            product.setImage(BlobProxy.generateProxy(
-                    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
-                            .getBytes()));
-        }
-
         productRepository.save(product);
         return productMapper.toProductDTO(product);
     }
@@ -68,19 +65,10 @@ public class ProductService {
         Product product = new Product(type, name, business, price, description, stock, isAccepted);
         product.setReviews(reviews);
 
-        logger.info("Number of reviews: " + reviews.size());
-
-        if (image != null) {
-            product.setImage(image); // set image from blob
-        } else {
-            product.setImage(BlobProxy.generateProxy(
-                    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
-                            .getBytes()));
-        }
-
         productRepository.save(product);
         return productMapper.toProductDTO(product);
     }
+
 
     public ProductDTO addProduct(ProductDTO product) {
         Product product2 = productMapper.toProduct(product);
@@ -148,8 +136,15 @@ public class ProductService {
         }
     }
 
-    public void deleteProduct(Long id) {
+    public ProductDTO deleteProduct(Long id) {
+        Product product = productRepository.findById(id).orElseThrow();
+
+        // As books are related to shops, it is needed to load the book shops
+        // before deleting it to avoid LazyInitializationException
+        ProductDTO productDTO = productMapper.toProductDTO(product);
         productRepository.deleteById(id);
+
+        return productDTO;
     }
 
     public void setViews_product_count(ProductDTO productDTO) {
@@ -335,7 +330,6 @@ public class ProductService {
                             productDTO.company(),
                             productDTO.price(),
                             productDTO.description(),
-                            productDTO.image(),
                             productDTO.stock(),
                             productDTO.isAccepted(),
                             productDTO.date(),
@@ -372,7 +366,6 @@ public class ProductService {
                         productDTO.company(),
                         productDTO.price(),
                         productDTO.description(),
-                        productDTO.image(),
                         productDTO.stock(),
                         productDTO.isAccepted(),
                         productDTO.date(),
@@ -414,5 +407,54 @@ public class ProductService {
 
         addProduct(productMapper.toProductDTO(product));
     }
+
+
+    public Resource getProductImage(long id) throws SQLException {
+
+		Product product = productRepository.findById(id).orElseThrow();
+
+		if (product.getImage() != null) {
+			return new InputStreamResource(product.getImage().getBinaryStream());
+		} else {
+			throw new NoSuchElementException();
+		}
+	}
+
+	public void createProductImage(long id, InputStream inputStream, long size) {
+
+		Product product = productRepository.findById(id).orElseThrow();
+
+		
+		product.setImage(BlobProxy.generateProxy(inputStream, size));
+
+		productRepository.save(product);
+	}
+
+	public void replaceProductImage(long id, InputStream inputStream, long size) {
+
+		Product product = productRepository.findById(id).orElseThrow();
+
+		if (product.getImage()==null) {
+			throw new NoSuchElementException();
+		}
+
+		product.setImage(BlobProxy.generateProxy(inputStream, size));
+
+		productRepository.save(product);
+	}
+
+	public void deleteProductImage(long id) {
+
+		Product product = productRepository.findById(id).orElseThrow();
+
+		if (product.getImage()==null) {
+			throw new NoSuchElementException();
+		}
+
+		product.setImage(null);
+		
+
+		productRepository.save(product);
+	}
 
 }
