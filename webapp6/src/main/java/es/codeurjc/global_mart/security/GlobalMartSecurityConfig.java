@@ -6,8 +6,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.HttpClientErrorException.Unauthorized;
+
+import es.codeurjc.global_mart.security.jwt.JwtRequestFilter;
+import es.codeurjc.global_mart.security.jwt.UnauthorizedHandlerJwt;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -25,6 +32,15 @@ public class GlobalMartSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+       
+    
+
+    @Autowired
+    private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
+    
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -40,6 +56,46 @@ public class GlobalMartSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return authenticationProvider;
+
+    }
+
+
+    @Bean
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception{
+
+            http.authenticationProvider(authenticationProvider());
+
+            http.securityMatcher("/api/**")
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+            
+            http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/main/mostViewedProducts").permitAll()
+                .requestMatchers("/api/main/lastProducts").permitAll()
+                .requestMatchers("/api/main/acceptedProducts").permitAll()
+                .requestMatchers("/api/main/acceptedProductsByType/{type}").permitAll()
+                .requestMatchers("/api/main/acceptedCompanyProducts").permitAll()
+                .requestMatchers("/api/main/product/{id}").permitAll()
+                .requestMatchers("/api/main/profile").authenticated()
+                .requestMatchers("/api/main/moreProdsAll").permitAll()
+                .requestMatchers("/api/main/moreProdsTypes/{type}").permitAll()
+                .requestMatchers("/api/main/moreProdsCompany").hasRole("COMPANY")
+                .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/api/auth/refresh").permitAll()
+                .requestMatchers("/api/auth/logout").permitAll()
+                .anyRequest().permitAll()
+            );
+            http.formLogin(formLogin -> formLogin.disable());
+            http.csrf(csrf -> csrf.disable());
+            http.httpBasic(httpBasic -> httpBasic.disable());
+            
+            http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+            return http.build();
+
+
+
+
 
     }
 
@@ -88,23 +144,6 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/deleteProduct/{id}").hasAnyRole("ADMIN")
                 .requestMatchers("/profile").permitAll()
                 .requestMatchers("/showUserGraphic").permitAll()
-
-                // -------------- API PAGES ----------------
-                // MAIN CONTROLLER
-                .requestMatchers("/api/main/mostViewedProducts").permitAll()
-                .requestMatchers("/api/main/lastProducts").permitAll()
-                .requestMatchers("/api/main/acceptedProducts").permitAll()
-                .requestMatchers("/api/main/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers("/api/main/acceptedCompanyProducts").permitAll()
-                .requestMatchers("/api/main/product/{id}").permitAll()
-                .requestMatchers("/api/main/profile").authenticated()
-                .requestMatchers("/api/main/moreProdsAll").permitAll()
-                .requestMatchers("/api/main/moreProdsTypes/{type}").permitAll()
-                .requestMatchers("/api/main/moreProdsCompany").hasRole("COMPANY")
-
-                .requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers("/api/auth/refresh").permitAll()
-                .requestMatchers("/api/auth/logout").permitAll()
 
                 .anyRequest().permitAll()
 
