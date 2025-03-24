@@ -66,7 +66,7 @@ public class GraphsController {
                 model.addAttribute("username", userName);
                 HistoricalOrdersDTO orderPrices = userService.getUserStads(userName);
                 System.out.println("order prices: " + orderPrices);
-                model.addAttribute("orderPrices", orderPrices);
+                model.addAttribute("orderPrices", orderPrices.historicalOrdersPrices());
             } else {
                 System.out.println("Error: No se pudo obtener el nombre de usuario.");
                 return "error";
