@@ -16,32 +16,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-public class APILoginRegisterController {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+public class APILoginController {
 
     @Autowired
     private UserService userService;
-
-    @PostMapping("/newUser")
-    public ResponseEntity<?> registerUser(
-            @RequestParam String name,
-            @RequestParam String username,
-            @RequestParam String mail,
-            @RequestParam String password,
-            @RequestParam MultipartFile image,
-            @RequestParam String role) throws Exception {
-
-        Optional<UserDTO> user = userService.findByUsername(username);
-        if (user.isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists");
-        } else {
-            userService.createUser(image, name, username, mail, passwordEncoder.encode(password), List.of(role));
-        }
-
-        return ResponseEntity.ok("User registered successfully");
-    }
 
     @GetMapping("/loginComprobation")
     public ResponseEntity<?> loginComprobation(OAuth2AuthenticationToken authentication) {

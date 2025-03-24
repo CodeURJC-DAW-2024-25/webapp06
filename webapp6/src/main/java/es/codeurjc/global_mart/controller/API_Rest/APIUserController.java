@@ -28,6 +28,12 @@ public class APIUserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @GetMapping("/")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         Optional<UserDTO> user = userService.getUserById(id);
@@ -54,41 +60,48 @@ public class APIUserController {
     }
     
  
-    @PutMapping("/profile")
+    @PutMapping("/")
     public ResponseEntity<?> updateProfile(
-            @RequestParam("username") String username,
-            @RequestParam("email") String email,
-            @RequestParam("name") String name,
-            @RequestParam(value = "password", required = false) String password,
+            @RequestBody UserCreationDTO userUpdateDTO,
             Authentication authentication) {
-
+    
         if (authentication == null) {
             return ResponseEntity.status(401).body("Unauthorized");
         }
-
+    
         Object principal = authentication.getPrincipal();
-
+    
         if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             Optional<UserDTO> optionalUser = userService.findByUsername(userDetails.getUsername());
-
+    
             if (optionalUser.isPresent()) {
                 UserDTO userDTO = optionalUser.get();
                 User user = userMapper.toUser(userDTO);
-
-                user.setUsername(username);
-                user.setEmail(email);
-                user.setName(name);
-
-                if (password != null && !password.isEmpty()) {
-                    user.setPassword(password); // Assuming password encoding is handled in the service layer
+    
+                user.setUsername(userUpdateDTO.username());
+                user.setEmail(userUpdateDTO.email());
+                user.setName(userUpdateDTO.name());
+    
+                if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
+                    user.setPassword(passwordEncoder.encode(userUpdateDTO.password())); 
                 }
-
+    
                 userService.save(user);
                 return ResponseEntity.ok("Profile updated successfully");
             }
         }
-
+    
         return ResponseEntity.status(404).body("User not found");
+    }   
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        Optional<UserDTO> user = userService.getUserById(id);
+        if (user.isEmpty()) {
+            return ResponseEntity.status(404).body("User not found");
+        }
+        userService.deleteUser(id);
+        return ResponseEntity.ok("User deleted successfully");
     }
 
 }
