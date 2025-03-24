@@ -354,6 +354,42 @@ public class ProductService {
         return productsList;
     }
 
+    public ProductDTO addImageToASingleProduct(ProductDTO productDTO) {
+        try {
+            Product product = productMapper.toProduct(productDTO);
+            Blob imageBlob = product.getImage();
+            if (imageBlob != null) {
+                byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+
+                // necesitamos crear un nuevo DTO con la imagen en base64 para actualizarlo, ya
+                // que asignando otra vez lo unico que hacemos es actualizar la variable local
+                // de este codigo
+                ProductDTO updatedProduct = new ProductDTO(
+                        productDTO.id(),
+                        productDTO.type(),
+                        productDTO.name(),
+                        productDTO.company(),
+                        productDTO.price(),
+                        productDTO.description(),
+                        productDTO.image(),
+                        productDTO.stock(),
+                        productDTO.isAccepted(),
+                        productDTO.date(),
+                        productDTO.views_count(),
+                        productDTO.reviews(),
+                        imageBase64 // Set the imageBase64 field
+                );
+
+                return updatedProduct;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return productDTO;
+    }
+
     public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock,
             Double price, MultipartFile image) {
 

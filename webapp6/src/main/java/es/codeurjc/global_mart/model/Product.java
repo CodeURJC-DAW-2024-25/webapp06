@@ -8,6 +8,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +39,8 @@ public class Product {
 
     private Integer stock;
     private Boolean isAccepted;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String imageBase64;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

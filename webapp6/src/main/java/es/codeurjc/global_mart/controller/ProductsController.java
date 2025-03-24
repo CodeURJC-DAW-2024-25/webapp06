@@ -49,7 +49,10 @@ public class ProductsController {
             if (user.isPresent() && userService.isCompany(user.get())) {
                 List<ProductDTO> companyProducts = productService
                         .getAcceptedCompanyProducts(user.get().username(), PageRequest.of(0, 5)).getContent();
-                productService.addImageDataToProducts(companyProducts);
+
+                companyProducts = productService.addImageDataToProducts(companyProducts);
+
+                model.addAttribute("isCompany", true);
                 model.addAttribute("companyName", user.get().name());
                 model.addAttribute("allCompanyProds", companyProducts);
             } else {
@@ -77,29 +80,23 @@ public class ProductsController {
     public String productDescription(@PathVariable Long id, Model model, Authentication autentication)
             throws Exception {
         Optional<ProductDTO> product = productService.getProductById(id); // Extract the product by its id
+        ProductDTO productWithImage = productService.addImageToASingleProduct(product.get());
+        product = Optional.of(productWithImage);
 
         if (product.isPresent()) {
-            // Extract all the info of the product to use it in the musctache template
+            System.out.println("Hola");
             model.addAttribute("product", product.get()); // product dto contains all the product info review html
-            System.out.println("Product details" + product.get());
-            
-            // Convert Blob to Base64 encoded string
-            String imageBase64 = null;
-            // Blob imageBlob = product.get().image();
-            // if (imageBlob != null) {
-                // byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                // imageBase64 = "data:image/jpeg;base64," +
-                // Base64.getEncoder().encodeToString(bytes);
-                // }
-                
-                productService.setViews_product_count(product.get());
-                model.addAttribute("productImage", imageBase64);
-                model.addAttribute("productId", product.get().id());
-                model.addAttribute("productStock", product.get().stock());
-                model.addAttribute("reviews", product.get().reviews());
+            // System.out.println("Product details" + product.get());
+
+            productService.setViews_product_count(product.get());
+            model.addAttribute("productImage", product.get().imageBase64());
+            model.addAttribute("productId", product.get().id());
+            model.addAttribute("productStock", product.get().stock());
+            model.addAttribute("reviews", product.get().reviews());
 
             return "descriptionProduct";
         } else {
+            System.out.println("Adios");
             return "redirect:/allProducts";
         }
     }

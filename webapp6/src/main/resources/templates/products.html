@@ -17,7 +17,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Itim&display=swap"
         rel="stylesheet">
-    
+
 </head>
 
 <body>
@@ -59,17 +59,13 @@
             {{/tittle}}
             <div class="products_container" id="productsContainer">
                 {{#allCompanyProds}}
-                
-                <div class="products_container" >
-                    <div class="product">
-                        <a href="/product/{{id}}">
-                            <img src="{{imageBase64}}" alt="{{name}}" class="product_image">
-                            <h3 class="product_title">{{name}}</h3>
-                            <p class="product_price">{{price}}€</p>
-                        </a>
-                    </div>
+                <div class="product"> <!-- Removed the nested products_container div -->
+                    <a href="/product/{{id}}">
+                        <img src="{{imageBase64}}" alt="{{name}}" class="product_image">
+                        <h3 class="product_title">{{name}}</h3>
+                        <p class="product_price">{{price}}€</p>
+                    </a>
                 </div>
-                
                 {{/allCompanyProds}}
                 {{^allCompanyProds}}
                 <h3>No products registered</h3>
@@ -92,13 +88,13 @@
     <button id="loadMoreCompany" class="load-more-btn" onclick="loadMoreCompany('{{companyName}}')">Load More</button>
     {{/isCompany}}
     {{/hasNextProd}}
-  
+
 
     <!-- ----------------- Footer ----------------- -->
     <br>
     {{>./components/footer}}
 
-    
+
 </body>
 <script src="/js/loadMore.js"></script>
 <script src="/js/loadMoreTypes.js"></script>

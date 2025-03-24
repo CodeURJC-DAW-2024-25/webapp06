@@ -28,20 +28,19 @@
     <!-- ----------------- Product Details ----------------- -->
     <div class="container mt-5">
         <div class="row">
-            {{/product}}
+            {{#product}}
             <div class="col-md-6">
                 <img src="{{imageBase64}}" class="img-fluid" alt="Product Image">
             </div>
             <div class="col-md-6">
-                    <h2 class="product-title">{{name}}</h2>
-                    <p class="product-company">Company: {{company}}</p>
-                    <p class="product-type">Type: {{type}}</p>
-                    <p class="product-price">{{price}}€</p>
-                    <p class="product-description">{{description}}</p>
+                <h2 class="product-title">{{name}}</h2>
+                <p class="product-company">Company: {{company}}</p>
+                <p class="product-type">Type: {{type}}</p>
+                <p class="product-price">{{price}}€</p>
+                <p class="product-description">{{description}}</p>
 
-                    <p class="product-stock">Stock: {{stock}}</p>
+                <p class="product-stock">Stock: {{stock}}</p>
 
-            {{#product}}
                 <div class="buttons_div">
                     {{^isAdmin}}
                     {{^isCompany}}
@@ -65,9 +64,6 @@
 
                     {{/isCompany}}
 
-
-
-
                     {{#isCompany}}
                     <!-- Solo mostrar el botón al propietario del producto -->
                     {{#isOwner}}
@@ -80,6 +76,8 @@
                     <a href="/products/allProducts" class="back2products_button">Back to Products</a>
                 </div>
             </div>
+            {{/product}}
+
 
             {{>/components/reviews}}
         </div>
