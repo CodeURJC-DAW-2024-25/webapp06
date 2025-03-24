@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.IOException;
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +76,12 @@ public class UserService {
     }
 
     public Optional<UserDTO> findByUsername(String username) {
-        return userRepository.findByUsername(username).map(userMapper::toUserDTO);
+        List<User> users = userRepository.findAllByUsername(username);
+        if (users.isEmpty()) {
+            return Optional.empty();
+        }
+        // Use the first user found
+        return Optional.of(userMapper.toUserDTO(users.get(0)));
     }
 
     public void deleteUser(Long id) {
@@ -88,7 +94,7 @@ public class UserService {
 
     public ShoppingCartDTO getShoppingCartData(UserDTO user) {
         User u = userMapper.toUser(user);
-        List<ProductDTO> cartProducts = productMapper.toProductsDTO(u.getCart()); // return a a productsDTO list
+        List<ProductDTO> cartProducts = productMapper.toProductsDTO(u.getCart());
         Double price = u.getCartPrice();
         return new ShoppingCartDTO(cartProducts, price);
     }
@@ -111,9 +117,22 @@ public class UserService {
     }
 
     public void addProductToCart(UserDTO userDTO, ProductDTO productDTO) {
-        User user = userMapper.toUser(userDTO);
+        // Obtener el usuario completo de la base de datos
+        User user = userRepository.findByUsername(userDTO.username())
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + userDTO.username()));
+
+        // Obtener el producto completo
         Product product = productMapper.toProduct(productDTO);
+
+        // Asegurarse de que el carrito está inicializado
+        if (user.getCart() == null) {
+            user.setCart(new ArrayList<>());
+        }
+
+        // Añadir el producto al carrito
         user.addProductToCart(product);
+
+        // Guardar el usuario actualizado
         userRepository.save(user);
     }
 
@@ -126,10 +145,51 @@ public class UserService {
     }
 
     public void removeProductFromCart(UserDTO userDTO, ProductDTO productDTO) {
-        User user = userMapper.toUser(userDTO);
-        Product product = productMapper.toProduct(productDTO);
-        user.removeProductFromCart(product);
-        userRepository.save(user);
+        try {
+            // Get existing user from database by username
+            User user = userRepository.findByUsername(userDTO.username())
+                    .orElseThrow(() -> new RuntimeException("User not found with username: " + userDTO.username()));
+
+            System.out.println("Removing product for user: " + user.getUsername() + " (ID: " + user.getId() + ")");
+
+            // Get the product
+            Product product = productMapper.toProduct(productDTO);
+
+            // Find matching product in cart by ID
+            Product productToRemove = null;
+            if (user.getCart() != null) {
+                for (Product p : user.getCart()) {
+                    if (p.getId().equals(product.getId())) {
+                        productToRemove = p;
+                        break;
+                    }
+                }
+            }
+
+            // Remove product if found
+            if (productToRemove != null) {
+                // Get price before removing for subtraction
+                double productPrice = productToRemove.getPrice();
+
+                // Remove product
+                user.getCart().remove(productToRemove);
+
+                // Update cart price
+                user.setCartPrice(user.getCartPrice() - productPrice);
+
+                System.out.println("Product removed successfully. New cart size: " + user.getCart().size());
+                System.out.println("New cart total: " + user.getCartPrice());
+
+                // Save changes
+                userRepository.save(user);
+            } else {
+                System.out.println("Product not found in cart");
+            }
+        } catch (Exception e) {
+            System.err.println("Error removing product from cart: " + e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
     public UserCartPriceDTO getTotalPrice(User user) {

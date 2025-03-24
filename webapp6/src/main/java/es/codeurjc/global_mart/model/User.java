@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,10 @@ public class User {
     private Blob image;
 
     private String name;
+
+    @Column(unique = true)
     private String username;
+
     private String email;
     private String encodedPassword;
 
@@ -209,11 +213,27 @@ public class User {
     public void removeProductFromCart(Product product) {
         this.cart.remove(product);
         this.cartPrice -= product.getPrice();
-
     }
 
     public void emptyCart() {
         this.cart.clear();
         this.cartPrice = 0;
     }
+
+    public String getEncodedPassword() {
+        return encodedPassword;
+    }
+
+    public void setEncodedPassword(String encodedPassword) {
+        this.encodedPassword = encodedPassword;
+    }
+
+    public void setCart(List<Product> cart) {
+        this.cart = cart;
+    }
+
+    public void setCartPrice(double cartPrice) {
+        this.cartPrice = cartPrice;
+    }
+
 }

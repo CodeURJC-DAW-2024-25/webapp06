@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,27 +33,58 @@ public class ShoppingCartController {
 
     @GetMapping("/shoppingcart")
     public String shoppingCart(Model model, Authentication autentication) {
-
         Object principal = autentication.getPrincipal();
         if (principal instanceof OAuth2User oAuth2User) {
             model.addAttribute("username", oAuth2User.getAttribute("name"));
-            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name")).get();
+            UserDTO userDTO = userService.findByUsername(oAuth2User.getAttribute("name")).get();
 
-            ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user);
-            productService.addImageDataToProducts(shoppingCart.cartProducts());
-            model.addAttribute("cart", shoppingCart);
-            model.addAttribute("isEmpty", 0);
+            // Obtener los datos del carrito
+            ShoppingCartDTO shoppingCart = userService.getShoppingCartData(userDTO);
+
+            // Asegurarse de que los productos tengan las imágenes en base64
+            List<ProductDTO> productsWithImages = productService.addImageDataToProducts(shoppingCart.cartProducts());
+
+            // Crear un nuevo objeto ShoppingCartDTO con los productos actualizados
+            ShoppingCartDTO updatedCart = new ShoppingCartDTO(
+                    productsWithImages,
+                    shoppingCart.totalPrice() // Nota: en tu DTO se llama totalPrice, no price
+            );
+
+            // Añadir al modelo
+            model.addAttribute("cart", updatedCart);
+            model.addAttribute("totalPrice", updatedCart.totalPrice() + "€");
+            model.addAttribute("isEmpty", updatedCart.cartProducts().isEmpty());
+
+            // Añadir para depuración
+            System.out.println("Cart products: " + updatedCart.cartProducts().size());
+            System.out.println("Total price: " + updatedCart.totalPrice());
 
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
             if (user.isPresent()) {
                 model.addAttribute("username", user.get().username());
-                // UserDTO u = userService.findByUsername(user.get().username()).get();
 
+                // Obtener los datos del carrito
                 ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user.get());
-                productService.addImageDataToProducts(shoppingCart.cartProducts());
-                model.addAttribute("cart", shoppingCart);
-                model.addAttribute("isEmpty", 0);
+
+                // Asegurarse de que los productos tengan las imágenes en base64
+                List<ProductDTO> productsWithImages = productService
+                        .addImageDataToProducts(shoppingCart.cartProducts());
+
+                // Crear un nuevo objeto ShoppingCartDTO con los productos actualizados
+                ShoppingCartDTO updatedCart = new ShoppingCartDTO(
+                        productsWithImages,
+                        shoppingCart.totalPrice() // Nota: en tu DTO se llama totalPrice, no price
+                );
+
+                // Añadir al modelo
+                model.addAttribute("cart", updatedCart);
+                model.addAttribute("totalPrice", updatedCart.totalPrice() + "€");
+                model.addAttribute("isEmpty", updatedCart.cartProducts().isEmpty());
+
+                // Añadir para depuración
+                System.out.println("Cart products: " + updatedCart.cartProducts().size());
+                System.out.println("Total price: " + updatedCart.totalPrice());
             }
         }
 
@@ -66,6 +98,7 @@ public class ShoppingCartController {
         if (principal instanceof OAuth2User oAuth2User) {
             UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
+
             ProductDTO product = productService.getProductById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
             userService.addProductToCart(user, product);
@@ -74,6 +107,7 @@ public class ShoppingCartController {
                     .orElseThrow(() -> new RuntimeException("User not found"));
             ProductDTO product = productService.getProductById(productId)
                     .orElseThrow(() -> new RuntimeException("Product not found"));
+
             userService.addProductToCart(user, product);
         }
 
@@ -82,29 +116,28 @@ public class ShoppingCartController {
 
     // removes a product from the user cart
     @PostMapping("/removeProductFromCart/{id}")
-    public String removeProductFromCart(@PathVariable Long id, Authentication autentication) {
-        Object principal = autentication.getPrincipal();
-        if (principal instanceof OAuth2User oAuth2User) {
-            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            ProductDTO product = productService.getProductById(id)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (userService.productInCart(user, product)) {
-                userService.removeProductFromCart(user, product); // call the user method to remove
+    public String removeProductFromCart(@PathVariable Long id, Authentication authentication) {
+        UserDTO user = null;
 
-            }
-        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            UserDTO user = userService.findByUsername(userDetails.getUsername())
+        // Obtener el usuario
+        if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
+            user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            ProductDTO product = productService.getProductById(id)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (userService.productInCart(user, product)) {
-                userService.removeProductFromCart(user, product);
-            }
+        } else if (authentication
+                .getPrincipal() instanceof org.springframework.security.core.userdetails.User userDetails) {
+            user = userService.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
         } else {
-            System.out.println("No user found");
-            return "redirect:/";
+            return "redirect:/login";
         }
+
+        // Obtener el producto
+        ProductDTO product = productService.getProductById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        // Eliminar el producto sin verificación previa (la verificación se hace dentro
+        // del método)
+        userService.removeProductFromCart(user, product);
 
         return "redirect:/shoppingcart";
     }
