@@ -101,12 +101,6 @@ public class ProductsController {
         }
     }
 
-    @GetMapping("/descriptionProduct")
-    public String descriptionProduct(Model model) {
-        // model.addAttribute("token", ); // take token for the post method
-        return "descriptionProduct";
-    }
-
     @GetMapping("/new_product")
     public String new_product(Model model) {
         model.addAttribute("form_title", "New product");

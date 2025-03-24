@@ -31,13 +31,19 @@ public class APIProductController {
     @Autowired
     private ProductMapper productMapper;
     
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAcceptedProducts();
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{id}")
+	@GetMapping("/type/{type}")
+	public ResponseEntity<List<ProductDTO>> getProductsByType(@PathVariable String type) {
+		List<ProductDTO> products = productService.getProductsByType(type);
+		return ResponseEntity.ok(products);
+	}
+
+	@GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Optional<ProductDTO> product = productService.getProductById(id);
         if (product.isPresent()) {
@@ -57,8 +63,6 @@ public class APIProductController {
 		return ResponseEntity.created(location).body(productDTO);
 	}
 
-
-
 	@PutMapping("/{id}")
 	public ProductDTO updateProduct(@PathVariable long id, @RequestBody ProductDTO updatedProductDTO) throws SQLException {
 		Product updatedBookDTO = productMapper.toProduct(updatedProductDTO);
@@ -71,17 +75,6 @@ public class APIProductController {
 		return productService.deleteProduct(id);
 	}
 
-	@PostMapping("/{id}/image")
-	public ResponseEntity<Object> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
-
-		productService.createProductImage(id, imageFile.getInputStream(), imageFile.getSize());
-
-		URI location = fromCurrentRequest().build().toUri();
-
-		return ResponseEntity.created(location).build();
-	}
-
 	@GetMapping("/{id}/image")
 	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
 
@@ -92,6 +85,17 @@ public class APIProductController {
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
 				.body(postImage);
 
+	}
+
+	@PostMapping("/{id}/image")
+	public ResponseEntity<Object> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+			throws IOException {
+
+		productService.createProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+		URI location = fromCurrentRequest().build().toUri();
+
+		return ResponseEntity.created(location).build();
 	}
 
 	@PutMapping("/{id}/image")

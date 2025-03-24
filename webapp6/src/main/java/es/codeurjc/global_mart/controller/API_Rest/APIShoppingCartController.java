@@ -25,7 +25,7 @@ public class APIShoppingCartController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<?> getShoppingCart(Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(401).body("Unauthorized");

@@ -22,7 +22,17 @@ public class APIReviewsController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/product/{id}/new_review")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getReviewsByProductId(@PathVariable Long id) {
+        Optional<ProductDTO> product = productService.getProductById(id);
+        if (product.isEmpty()) {
+            return ResponseEntity.status(404).body("Product not found");
+        }
+
+        return ResponseEntity.ok(product.get().reviews());
+    }
+
+    @PostMapping("/{id}")
     public ResponseEntity<?> postNewReview(
             @RequestParam int calification,
             @RequestParam String comment,

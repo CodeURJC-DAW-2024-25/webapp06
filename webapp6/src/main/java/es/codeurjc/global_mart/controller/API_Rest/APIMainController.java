@@ -85,17 +85,6 @@ public class APIMainController {
         return ResponseEntity.ok(acceptedCompanyProducts);
     }
 
-    @GetMapping("/product/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        Optional<ProductDTO> productObtained = productService.getProductById(id);
-        if (productObtained.isPresent()) {
-            ProductDTO productDTO = productObtained.get();
-            return ResponseEntity.ok(productDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(Authentication authentication) {
         if (authentication == null) {
