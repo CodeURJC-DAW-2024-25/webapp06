@@ -38,7 +38,7 @@ public class APIProfileController {
     @Autowired
     private UserMapper userMapper;
 
-    @PutMapping
+    @GetMapping("/editProfile")
     public ResponseEntity<?> updateProfile(
             @RequestParam("username") String username,
             @RequestParam("email") String email,

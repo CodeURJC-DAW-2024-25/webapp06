@@ -146,14 +146,16 @@ public class ShoppingCartController {
     @PostMapping("/payment")
     public String payment(Authentication autentication) {
         Object principal = autentication.getPrincipal();
-
+        UserDTO user = null;
         if (principal instanceof OAuth2User oAuth2User) {
-            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
+            user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
+            System.out.println("Order username" + user.username());
             orderService.createOrder(user); // all the payment logic is in the orderService
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            UserDTO user = userService.findByUsername(userDetails.getUsername())
+            user = userService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
+                System.out.println("Order username" + user.username());
             orderService.createOrder(user); // all the payment logic is in the orderService
         } else {
             System.out.println("No furula");
