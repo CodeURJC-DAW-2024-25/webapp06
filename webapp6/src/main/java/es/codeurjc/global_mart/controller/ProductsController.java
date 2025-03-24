@@ -81,6 +81,7 @@ public class ProductsController {
             throws Exception {
         Optional<ProductDTO> product = productService.getProductById(id); // Extract the product by its id
         ProductDTO productWithImage = productService.addImageToASingleProduct(product.get());
+        System.out.println("product image: " + productWithImage.imageBase64());
         product = Optional.of(productWithImage);
 
         if (product.isPresent()) {

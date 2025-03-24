@@ -28,8 +28,8 @@ public class GlobalMartSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
-                   .authenticationProvider(authenticationProvider())
-                   .build();
+                .authenticationProvider(authenticationProvider())
+                .build();
     }
 
     @Bean
@@ -49,8 +49,11 @@ public class GlobalMartSecurityConfig {
         http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la
                                                                // función
                                                                // anterior
+
+        // Disable CSRF protection
+        http.csrf(csrf -> csrf.disable());
+
         http.authorizeHttpRequests(authorize -> authorize
-                
 
                 // -------------- STYLE PAGES ----------------
                 .requestMatchers("/css/**").permitAll()
@@ -87,7 +90,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/showUserGraphic").permitAll()
 
                 // -------------- API PAGES ----------------
-                //MAIN CONTROLLER
+                // MAIN CONTROLLER
                 .requestMatchers("/api/main/mostViewedProducts").permitAll()
                 .requestMatchers("/api/main/lastProducts").permitAll()
                 .requestMatchers("/api/main/acceptedProducts").permitAll()
@@ -98,7 +101,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/api/main/moreProdsAll").permitAll()
                 .requestMatchers("/api/main/moreProdsTypes/{type}").permitAll()
                 .requestMatchers("/api/main/moreProdsCompany").hasRole("COMPANY")
-                
+
                 .requestMatchers("/api/auth/login").permitAll()
                 .requestMatchers("/api/auth/refresh").permitAll()
                 .requestMatchers("/api/auth/logout").permitAll()
