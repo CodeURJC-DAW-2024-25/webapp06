@@ -3,6 +3,7 @@ package es.codeurjc.global_mart.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -69,7 +70,7 @@ public class GlobalMartSecurityConfig {
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
             
             http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/main/mostViewedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/main/mostViewedProducts").permitAll()
                 .requestMatchers("/api/main/lastProducts").permitAll()
                 .requestMatchers("/api/main/acceptedProducts").permitAll()
                 .requestMatchers("/api/main/acceptedProductsByType/{type}").permitAll()
@@ -79,9 +80,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/api/main/moreProdsAll").permitAll()
                 .requestMatchers("/api/main/moreProdsTypes/{type}").permitAll()
                 .requestMatchers("/api/main/moreProdsCompany").hasRole("COMPANY")
-                .requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers("/api/auth/refresh").permitAll()
-                .requestMatchers("/api/auth/logout").permitAll()
+       
                 .anyRequest().permitAll()
             );
             http.formLogin(formLogin -> formLogin.disable());
