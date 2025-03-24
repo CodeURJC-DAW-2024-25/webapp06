@@ -52,23 +52,13 @@ public class ProductService {
     ReviewMapper reviewMapper;
 
     public ProductDTO createProduct(String type, String name, String business, Double price, String description,
-            Blob image, Integer stock, Boolean isAccepted) throws IOException {
-
-        Product product = new Product(type, name, business, price, description, stock, isAccepted);
-
-        productRepository.save(product);
-        return productMapper.toProductDTO(product);
-    }
-
-    public ProductDTO createProduct(String type, String name, String business, Double price, String description,
             Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
-        Product product = new Product(type, name, business, price, description, stock, isAccepted);
+        Product product = new Product(type, name, business, price, description, image, stock, isAccepted);
         product.setReviews(reviews);
 
         productRepository.save(product);
         return productMapper.toProductDTO(product);
     }
-
 
     public ProductDTO addProduct(ProductDTO product) {
         Product product2 = productMapper.toProduct(product);
@@ -309,21 +299,31 @@ public class ProductService {
         }
     }
 
+    public Blob getImageById(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            System.out.println("Product name: " + product.getName());
+            System.out.println("Product image: " + product.getImage());
+            return product.getImage();
+        }
+        return null;
+    }
+
     public List<ProductDTO> addImageDataToProducts(List<ProductDTO> products) {
         List<ProductDTO> productsList = new ArrayList<>();
 
         for (ProductDTO productDTO : products) {
             try {
                 Product product = productMapper.toProduct(productDTO);
-                Blob imageBlob = product.getImage();
+                Long id = product.getId();
+                Blob imageBlob = getImageById(id);
+
                 if (imageBlob != null) {
                     byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
                     String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
 
-                    // necesitamos crear un nuevo DTO con la imagen en base64 para actualizarlo, ya
-                    // que asignando otra vez lo unico que hacemos es actualizar la variable local
-                    // de este codigo
-                    ProductDTO updatedProduct = new ProductDTO(
+                    ProductDTO uploadedProduct = new ProductDTO(
                             productDTO.id(),
                             productDTO.type(),
                             productDTO.name(),
@@ -335,52 +335,14 @@ public class ProductService {
                             productDTO.date(),
                             productDTO.views_count(),
                             productDTO.reviews(),
-                            imageBase64 // Set the imageBase64 field
-                    );
-
-                    productsList.add(updatedProduct);
+                            imageBase64);
+                    productsList.add(uploadedProduct);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error converting image to base64", e);
             }
         }
-
         return productsList;
-    }
-
-    public ProductDTO addImageToASingleProduct(ProductDTO productDTO) {
-        try {
-            Product product = productMapper.toProduct(productDTO);
-            Blob imageBlob = product.getImage();
-            if (imageBlob != null) {
-                byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-                String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-
-                // necesitamos crear un nuevo DTO con la imagen en base64 para actualizarlo, ya
-                // que asignando otra vez lo unico que hacemos es actualizar la variable local
-                // de este codigo
-                ProductDTO updatedProduct = new ProductDTO(
-                        productDTO.id(),
-                        productDTO.type(),
-                        productDTO.name(),
-                        productDTO.company(),
-                        productDTO.price(),
-                        productDTO.description(),
-                        productDTO.stock(),
-                        productDTO.isAccepted(),
-                        productDTO.date(),
-                        productDTO.views_count(),
-                        productDTO.reviews(),
-                        imageBase64 // Set the imageBase64 field
-                );
-
-                return updatedProduct;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return productDTO;
     }
 
     public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock,
@@ -408,53 +370,50 @@ public class ProductService {
         addProduct(productMapper.toProductDTO(product));
     }
 
-
     public Resource getProductImage(long id) throws SQLException {
 
-		Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow();
 
-		if (product.getImage() != null) {
-			return new InputStreamResource(product.getImage().getBinaryStream());
-		} else {
-			throw new NoSuchElementException();
-		}
-	}
+        if (product.getImage() != null) {
+            return new InputStreamResource(product.getImage().getBinaryStream());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
 
-	public void createProductImage(long id, InputStream inputStream, long size) {
+    public void createProductImage(long id, InputStream inputStream, long size) {
 
-		Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow();
 
-		
-		product.setImage(BlobProxy.generateProxy(inputStream, size));
+        product.setImage(BlobProxy.generateProxy(inputStream, size));
 
-		productRepository.save(product);
-	}
+        productRepository.save(product);
+    }
 
-	public void replaceProductImage(long id, InputStream inputStream, long size) {
+    public void replaceProductImage(long id, InputStream inputStream, long size) {
 
-		Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow();
 
-		if (product.getImage()==null) {
-			throw new NoSuchElementException();
-		}
+        if (product.getImage() == null) {
+            throw new NoSuchElementException();
+        }
 
-		product.setImage(BlobProxy.generateProxy(inputStream, size));
+        product.setImage(BlobProxy.generateProxy(inputStream, size));
 
-		productRepository.save(product);
-	}
+        productRepository.save(product);
+    }
 
-	public void deleteProductImage(long id) {
+    public void deleteProductImage(long id) {
 
-		Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow();
 
-		if (product.getImage()==null) {
-			throw new NoSuchElementException();
-		}
+        if (product.getImage() == null) {
+            throw new NoSuchElementException();
+        }
 
-		product.setImage(null);
-		
+        product.setImage(null);
 
-		productRepository.save(product);
-	}
+        productRepository.save(product);
+    }
 
 }

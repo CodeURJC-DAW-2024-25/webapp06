@@ -52,13 +52,15 @@ public class Product {
     public Product() {
     }
 
-    public Product(String type, String name, String company, Double price, String description, Integer stock,
+    public Product(String type, String name, String company, Double price, String description, Blob image,
+            Integer stock,
             Boolean isAccepted) {
         this.type = type;
         this.name = name;
         this.company = company;
         this.price = price;
         this.description = description;
+        this.image = image;
         this.stock = stock;
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;
