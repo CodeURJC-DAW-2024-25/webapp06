@@ -6,12 +6,17 @@ import es.codeurjc.global_mart.dto.User.UserMapper;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URI;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,44 +60,42 @@ public class APIUserController {
                 return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
             }
         }
-    
         return ResponseEntity.ok("User registered successfully");
     }
-    
- 
+
     @PutMapping("/")
     public ResponseEntity<?> updateProfile(
             @RequestBody UserCreationDTO userUpdateDTO,
             Authentication authentication) {
-    
+
         if (authentication == null) {
             return ResponseEntity.status(401).body("Unauthorized");
         }
-    
+
         Object principal = authentication.getPrincipal();
-    
+
         if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             Optional<UserDTO> optionalUser = userService.findByUsername(userDetails.getUsername());
-    
+
             if (optionalUser.isPresent()) {
                 UserDTO userDTO = optionalUser.get();
                 User user = userMapper.toUser(userDTO);
-    
+
                 user.setUsername(userUpdateDTO.username());
                 user.setEmail(userUpdateDTO.email());
                 user.setName(userUpdateDTO.name());
-    
+
                 if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
-                    user.setPassword(passwordEncoder.encode(userUpdateDTO.password())); 
+                    user.setPassword(passwordEncoder.encode(userUpdateDTO.password()));
                 }
-    
+
                 userService.save(user);
                 return ResponseEntity.ok("Profile updated successfully");
             }
         }
-    
+
         return ResponseEntity.status(404).body("User not found");
-    }   
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
@@ -104,4 +107,40 @@ public class APIUserController {
         return ResponseEntity.ok("User deleted successfully");
     }
 
+    @GetMapping("/{id}/image")
+    public ResponseEntity<Object> getUserImage(@PathVariable long id) throws SQLException, IOException {
+
+        Resource userImage = userService.getUserImage(id);
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+                .body(userImage);
+    }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<Object> createUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+            throws IOException {
+
+        userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+        return ResponseEntity.ok("User image created successfully");
+    }
+
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+            throws IOException {
+
+        userService.replaceUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+
+        return ResponseEntity.ok("User image replaced successfully");
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Object> deleteUserImage(@PathVariable long id) throws IOException {
+
+        userService.deleteUserImage(id);
+
+        return ResponseEntity.ok("User image deleted successfully");
+    }
 }
