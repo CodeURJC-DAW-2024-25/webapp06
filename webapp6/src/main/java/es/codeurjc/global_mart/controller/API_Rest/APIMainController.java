@@ -49,17 +49,19 @@ public class APIMainController {
     private UserService userService;
 
     @GetMapping("/mostViewedProducts")
-    public ResponseEntity<List<ProductDTO>> getMostViewedProducts(@RequestParam int limit) {
-        List<ProductDTO> mostViewedProducts = productService.getMostViewedProducts(limit);
+    public ResponseEntity<List<Product>> getMostViewedProducts() {
+        List<ProductDTO> mostViewedProducts = productService.getMostViewedProducts(4);
         addImageDataToProducts(mostViewedProducts);
-        return ResponseEntity.ok(mostViewedProducts);
+        List<Product> products = productMapper.toProducts(mostViewedProducts);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/lastProducts")
-    public ResponseEntity<List<ProductDTO>> getLastProducts() {
+    public ResponseEntity<List<Product>> getLastProducts() {
         List<ProductDTO> lastProducts = productService.getLastProducts();
         addImageDataToProducts(lastProducts);
-        return ResponseEntity.ok(lastProducts);
+        List<Product> products = productMapper.toProducts(lastProducts);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/acceptedProducts")
@@ -70,8 +72,8 @@ public class APIMainController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/acceptedProductsByType")
-    public ResponseEntity<List<Product>> getAcceptedProductsByType(@RequestParam String type) {
+    @GetMapping("/acceptedProductsByType/{type}")
+    public ResponseEntity<List<Product>> getAcceptedProductsByType(@PathVariable String type) {
         List<ProductDTO> acceptedProductsByType = productService.getAcceptedProductsByType(type);
         addImageDataToProducts(acceptedProductsByType);
         List<Product> products = productMapper.toProducts(acceptedProductsByType);
@@ -92,11 +94,13 @@ public class APIMainController {
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        Optional<ProductDTO> product = productService.getProductById(id);
-        if (product.isPresent()) {
-            addImageDataToProduct(product.get());
-            return ResponseEntity.ok(product.get());
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Optional<ProductDTO> productObtained = productService.getProductById(id);
+        if (productObtained.isPresent()) {
+            ProductDTO productDTO = productObtained.get();
+            addImageDataToProduct(productDTO);
+            Product product = productMapper.toProduct(productDTO);
+            return ResponseEntity.ok(product);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -143,8 +147,8 @@ public class APIMainController {
         return ResponseEntity.ok(productsThrow);
     }
 
-    @GetMapping("/moreProdsTypes")
-    public ResponseEntity<List<Product>> loadMoreProductsByType(@RequestParam int page, @RequestParam String type) {
+    @GetMapping("/moreProdsTypes/{type}")
+    public ResponseEntity<List<Product>> loadMoreProductsByType(@RequestParam int page, @PathVariable String type) {
         Pageable pageable = Pageable.ofSize(5).withPage(page);
         Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
         List<ProductDTO> products = productsPage.getContent();
