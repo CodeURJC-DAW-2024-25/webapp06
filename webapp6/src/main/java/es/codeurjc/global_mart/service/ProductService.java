@@ -67,6 +67,7 @@ public class ProductService {
         Product product = productMapper.toProduct(productDTO);
         Review review = reviewMapper.toReview(reviewDTO);
         product.addReview(review);
+        productRepository.save(product);
     }
 
     public ProductDTO updateProduct(Long id, Product product) {
