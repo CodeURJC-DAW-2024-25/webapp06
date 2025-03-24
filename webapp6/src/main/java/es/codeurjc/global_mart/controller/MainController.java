@@ -69,8 +69,11 @@ public class MainController {
 	@GetMapping("/adminPage")
 	public String admin(Model model) {
 		List<ProductDTO> products = productService.getNotAcceptedProducts();
-		productService.convertBlobToBase64(products);
-		model.addAttribute("productsNotAccepted", products);
+
+		List<ProductDTO> productsWithImages = productService.addImageDataToProducts(products);
+
+		model.addAttribute("productsNotAccepted", productsWithImages);
+
 		return "administrator";
 	}
 
