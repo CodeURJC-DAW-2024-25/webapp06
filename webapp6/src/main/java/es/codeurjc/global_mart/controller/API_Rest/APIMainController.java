@@ -137,6 +137,8 @@ public class APIMainController {
         return ResponseEntity.status(404).body("User not found");
     }
 
+//Not working the ajax, it doesnt find the url
+
     @GetMapping("/moreProdsAll")
     public ResponseEntity<List<Product>> loadMoreProducts(@RequestParam int page) {
         Pageable pageable = Pageable.ofSize(5).withPage(page);

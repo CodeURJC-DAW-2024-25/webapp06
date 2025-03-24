@@ -86,9 +86,9 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/api/main/acceptedCompanyProducts").hasRole("COMPANY")
                 .requestMatchers("/api/main/product/{id}").permitAll()
                 .requestMatchers("/api/main/profile").authenticated()
-                .requestMatchers("api/main/moreProdsAll").permitAll()
+                .requestMatchers("/api/main/moreProdsAll").permitAll()
                 .requestMatchers("/api/main/moreProdsTypes/{type}").permitAll()
-                .requestMatchers("api/main/moreProdsCompany").hasRole("COMPANY")
+                .requestMatchers("/api/main/moreProdsCompany").hasRole("COMPANY")
 
 
                 .anyRequest().permitAll()
