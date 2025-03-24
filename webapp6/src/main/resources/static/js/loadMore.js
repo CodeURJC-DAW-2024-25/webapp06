@@ -1,18 +1,55 @@
-let page=0;
+let page = 0;
 
-async function loadMoreAll(){
-    page++;
+async function loadMoreAll() {
+    try {
+        page++;
 
-    document.getElementById("loadMoreBtn").style.display = "block";
+        // Show loading state
+        const loadMoreBtn = document.getElementById("loadMoreBtn");
+        if (loadMoreBtn) {
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.textContent = "Loading...";
+        }
 
+        // Fetch more products
+        const response = await fetch(`/moreProdsAll?page=${page}`);
 
-    let response = await fetch(`/moreProdsAll?page=${page}`);
-    let data = await response.text();
-    document.getElementById("productsContainer").innerHTML += data;
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-    if (data.includes("<!--HasMoreElements-->")){
-        document.getElementById("loadMoreBtn").style.display = "block";
-    }else{
-        document.getElementById("loadMoreBtn").style.display = "none";
+        const data = await response.text();
+        const productsContainer = document.getElementById("productsContainer");
+
+        if (productsContainer) {
+            // Append the new products to the container
+            productsContainer.innerHTML += data;
+        }
+
+        // Reset button state
+        if (loadMoreBtn) {
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = "Load More";
+        }
+
+        // Check if there are more products to load
+        if (data.includes("<!--HasMoreElements-->")) {
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = "block";
+            }
+        } else {
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = "none";
+            }
+        }
+    } catch (error) {
+        console.error('Error loading more products:', error);
+
+        // Reset button state on error
+        const loadMoreBtn = document.getElementById("loadMoreBtn");
+        if (loadMoreBtn) {
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = "Load More";
+        }
     }
 }
