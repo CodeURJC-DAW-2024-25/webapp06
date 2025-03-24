@@ -32,13 +32,15 @@ public class OrderService {
     @Autowired UserMapper userMapper;
 
     public OrderDTO createOrder(UserDTO userDTO) {
-        User user = userMapper.toUser(userDTO);
+        User user = userRepository.findByUsername(userDTO.username()).orElseThrow(() -> new RuntimeException("User not found"));
+        
         Order order = new Order(user.getUsername(), user.getTotalPrice(), user, new ArrayList<>(user.getCart()));
 
+        System.out.println();
         user.getHistoricalOrderPrices().add(order.getTotal());
         user.emptyCart();
         user.getOrders().add(order);
-        System.out.println("historicalOrderPrices: " + user.getHistoricalOrderPrices());
+        System.out.println("historicalOrderPrices: " + user.getHistoricalOrderPrices() + user.getUsername());
 
         userRepository.save(user);
         orderRepository.save(order);
