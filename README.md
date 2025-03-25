@@ -541,21 +541,22 @@ Mi labor en esta práctica ha constado de la revisión y el análisis de errores
 #### Luis
 
 ##### Descripción textual
+Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API y la configuración de de la seguridad de la API
 
 ##### Listados 5 commits más significativos
 | **Descripción commit**      | **Link**     |
 |-----------------|--------------|
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
+| Security Almost Finished |[Link1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/0496ac0df8a7297778953d9aa390278cd1a74ea8)              |
+| Images Product Progress  |[Link2](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/c4f0adc694323f424229d62867ca68a1e6ebe3ae)              |
+| API Main Controller    |[Link3](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/e7e94b30c6801ed424a7c3e9c0a86b55346fa9f4)             |
+| Postman tools and functionality   | [Link4](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/0f261eb3e234062a27b4c93b6c8c2464cc3c3d5e)             |
+| API Product Controller         | [Link5](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/2153f48cf89f2a91af04d5f217942577eb22855a)             |
 
 ##### Listado 5 ficheros con mayor participación
 | **Fichero** | **Link**     |
 |-----------------|--------------|
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
+| APIMainController.java                |  [Link1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blame/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIMainController.java)            |
+| APIProductsController.java                | [Link2](https://github.com/CodeURJC-DAW-2024-25/webapp06/blame/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIProductController.java)             |
+|  GlobalMartSecurityConfig.java               | [Link3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/security/GlobalMartSecurityConfig.java)             |
+|  ProductService.java               | [Link4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/service/ProductService.java)             |
+|  APIReviewsController.java               | [Link5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blame/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIReviewsController.java)             |
