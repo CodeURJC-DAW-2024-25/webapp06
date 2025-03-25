@@ -497,11 +497,11 @@ Mi labor en esta práctica ha constado de la revisión y el análisis de errores
 ##### Listados 5 commits más significativos
 | **Descripción commit**      | **Link**     |
 |-----------------|--------------|
-|  DTO structure             |              |[Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/ed0d1e4626311530cd2be13c3f2add41cc4d64c2)
-|  Adapt controllers to dto               |              |[Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/6788820862726d7524c33ae1da125ba51a601db3)
-|  Modifies DTOs services, mappers etc         |              |[Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/e9d43254e53c451d6671206729f1275fa2283517)
-|  Api Graphs Controller         |              |[Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/1984f87a04c2b0dbd005815c08a734de9e0411b1)
-|  Shopping cart DTO, review mapper, controllers etc              |              |[Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/6788820862726d7524c33ae1da125ba51a601db3)
+| DTO structure             | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/ed0d1e4626311530cd2be13c3f2add41cc4d64c2) |
+| Adapt controllers to dto               | [Link 2](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/6788820862726d7524c33ae1da125ba51a601db3) |
+| Modifies DTOs services, mappers etc         | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/e9d43254e53c451d6671206729f1275fa2283517) |
+| Api Graphs Controller         | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/1984f87a04c2b0dbd005815c08a734de9e0411b1) |
+| Shopping cart DTO, review mapper, controllers etc              | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/6788820862726d7524c33ae1da125ba51a601db3) |
 
 ##### Listado 5 ficheros con mayor participación
 | **Fichero** | **Link**     |
@@ -511,7 +511,6 @@ Mi labor en esta práctica ha constado de la revisión y el análisis de errores
 | DTOs               |              |
 | Services              |              |
 | Controllers             |              |
-
 ---
 
 #### Álvaro
