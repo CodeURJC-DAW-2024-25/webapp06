@@ -78,7 +78,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/main/lastProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/main/acceptedProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/main/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/main/acceptedProductsByCompany").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/api/main/acceptedCompanyProducts").hasRole("COMPANY")
                 .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/main/moreProdsAll").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/main/moreProdsType/{type}").permitAll()
