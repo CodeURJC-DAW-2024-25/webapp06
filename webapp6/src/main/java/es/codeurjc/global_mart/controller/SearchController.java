@@ -42,7 +42,7 @@ public class SearchController {
         }
 
         // Convert the image to base64
-        productService.convertBlobToBase64ToSearch(searchResults);
+        searchResults = productService.addImageDataToSearchProducts(searchResults);
 
         model.addAttribute("products", searchResults);
         model.addAttribute("searchQuery", search_text);
@@ -50,5 +50,4 @@ public class SearchController {
 
         return "search";
     }
-
 }
