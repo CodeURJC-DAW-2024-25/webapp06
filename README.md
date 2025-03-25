@@ -381,12 +381,87 @@ Acceder en el navegador a la url: https://localhost:8443
 
 ### Instrucciones de ejecución de la aplicación dockerizada
 
-### Documentación para contrucción de la imagen docker
+- #### Requisitos previos:
+  Para poder descargar y ejecutar la aplicación dockerizada tan sólo es necesario:
+  - [Docker](https://www.docker.com/products/docker-desktop)
 
-### Documentación para desplegar la máquina virtual
+- #### Pasos para la instalación:
+1. Descarga la imagen de la aplicación desde el repositorio de Docker Hub:
+    ```
+    docker pull alvaro3517/webapp6
+    ```
+2. Ubica tu terminal en la carpeta donde tengas el archivo [docker-compose.yml].
+    ```
+3. Ejecuta el archivo docker-compose.yml:
+    ```
+    docker-compose up
+    ```
+4. Una vez haya terminado de ejecutarse, abre en tu navegador de preferencia dicha [dirección](https://localhost:443).
 
-### URL de la aplicación desplegada en la máquina virtual
-https://appWeb06.dawgis.etsii.urjc.es:443
+## 📦 Creación de imagen de la aplicación
+Para poder crear a imagen de la aplicación es necesario tener docker instalado en tu máquina. Una vez tengas docker instalado, sigue los siguientes pasos:
+1. Clona el repositorio a tu ruta deseada:    
+    ```
+     git clone https://github.com/CodeURJC-DAW-2023-24/webapp03
+    ```
+2. Inicia sesión en tu cuenta de Docker Hub. Si no tienes una, puedes crearla [aquí](https://hub.docker.com/signup). Se te pedirá introducir tu usuario y contraseña:
+    ```
+    docker login
+    ```    
+3. Ejecuta el ejecutable bash script que creará la imagen de la aplicación:
+    ```
+    ./create_image.sh
+    ```
+
+   Ten en cuenta que este script crea la imagen con el nombre "alvaro3517/webapp6" y la subirá a tu cuenta de Docker Hub. Si deseas cambiar el nombre de la imagen o el nombre de usuario, puedes hacerlo modificando el script.
+
+
+## 🛫 Despliegue de la aplicación en una máquina virtual
+### Pasos previos
+1. Descargar la clave proporcionada a través de correo electrónico por parte de los docentes.
+2. Conectarse a la red de la Universidad a través del Escritorio de Desarrollo.
+
+### Pasos para el despliegue
+1. Conectarse a la máquina virtual:
+    ```
+    ssh -i appWeb06.key vmuser@appWeb06.dawgis.etsii.urjc.es
+    ```
+
+
+2. Instalar Docker con Docker Compose en la máquina virtual:
+    ```
+
+
+3. Clonar el repositorio en la máquina virtual:
+    ```
+    git clone https://github.com/CodeURJC-DAW-2024-25/webapp06.git
+    ```
+   
+4. En la carpeta raíz del repositorio, donde se encuentra el fichero docker-compose.yml, ejecutar el siguiente comando para iniciar la aplicación:
+    ```
+    sudo docker compose up -d
+    ```
+   "-d" permite que se ejecute en segundo plano, para poder ver la consola de la aplicación, se puede omitir.
+
+
+6. Una vez haya terminado de arrancar, conectarse a:
+    ```
+    https://appWeb06.dawgis.etsii.urjc.es:443
+    ```
+
+### Detener la aplicación
+Una vez inicializada la aplicación, para detenerla se puede hacer con:
+    ```
+    sudo docker compose stop
+    ```
+
+
+
+### Volver a arrancar la aplicación
+Una vez ya ha sido detenida, se puede volver a arrancar con:
+    ```
+    sudo docker compose up -d
+    ```
 
 ### Participación de miembros
 
