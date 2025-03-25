@@ -376,6 +376,9 @@ Acceder en el navegador a la url: https://localhost:8443
 
 ### Documentación de la API Rest
 
+### Actualización de diagrama de clases
+![Diagrama de clases](./images_readme/Practica2/diagramaDeClases.jpg)
+
 ### Instrucciones de ejecución de la aplicación dockerizada
 
 ### Documentación para contrucción de la imagen docker
