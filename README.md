@@ -429,7 +429,6 @@ Para poder crear a imagen de la aplicación es necesario tener docker instalado 
 
 
 2. Instalar Docker con Docker Compose en la máquina virtual:
-    ```
 
 
 3. Clonar el repositorio en la máquina virtual:
@@ -520,20 +519,22 @@ Mi labor en esta práctica ha constado de la revisión y el análisis de errores
 ##### Listados 5 commits más significativos
 | **Descripción commit**      | **Link**     |
 |-----------------|--------------|
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
+|  Added more functionality to the UsersAPI               | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/b5f91b3a9c47ef11e560da9307431e69abb25e20)             |
+|  Added more functionality to all the APIs               | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/f7201c42d751b9b0967fe1a7420d06b70a803abc)             |
+|  Added more functionality to the UserAPI               | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/cc902771be17def3df4a7cdd91a907de5e99bf11)             |
+|  DockerCompose WIP               | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/46dee72aae10deaa47f800d13f12f7ab04675b57)             |
+|  Last docker fix               | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/3f5e9b45933b95f9c3005554b393d0bd62b26904)             |
+
 
 ##### Listado 5 ficheros con mayor participación
 | **Fichero** | **Link**     |
 |-----------------|--------------|
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
-|                 |              |
+| Dockerfile                | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/Dockerfile)             |
+| Docker-compose                | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/docker-compose.yml)             |
+| APIProductController                | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIProductController.java)             |
+| APIUserController                | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIUserController.java)             |
+| APIReviewsController                | [Link 1](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIReviewsController.java)             |
+
 
 ---
 
