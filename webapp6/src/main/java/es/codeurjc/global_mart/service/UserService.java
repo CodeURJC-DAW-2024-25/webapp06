@@ -16,12 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -249,5 +254,52 @@ public class UserService {
             e.printStackTrace();
         }
     }
+
+    public Resource getUserImage(long id) throws SQLException {
+
+        User user = userRepository.findById(id).orElseThrow();
+
+        if (user.getImage() != null) {
+            return new InputStreamResource(user.getImage().getBinaryStream());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    public void createUserImage(long id, InputStream inputStream, long size) {
+
+        User user = userRepository.findById(id).orElseThrow();
+
+        user.setImage(BlobProxy.generateProxy(inputStream, size));
+
+        userRepository.save(user);
+    }
+
+    public void replaceUserImage(long id, InputStream inputStream, long size) {
+
+        User user = userRepository.findById(id).orElseThrow();
+
+        if (user.getImage() == null) {
+            throw new NoSuchElementException();
+        }
+
+        user.setImage(BlobProxy.generateProxy(inputStream, size));
+
+        userRepository.save(user);
+    }
+
+    public void deleteUserImage(long id) {
+
+        User user = userRepository.findById(id).orElseThrow();
+
+        if (user.getImage() == null) {
+            throw new NoSuchElementException();
+        }
+
+        user.setImage(null);
+
+        userRepository.save(user);
+    }
+
 
 }
