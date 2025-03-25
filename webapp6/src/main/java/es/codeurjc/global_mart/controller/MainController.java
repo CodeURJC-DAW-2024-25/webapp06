@@ -1,24 +1,19 @@
 package es.codeurjc.global_mart.controller;
 
-import java.sql.Blob;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.model.User;
+
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
+import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
@@ -35,12 +30,12 @@ public class MainController {
 	@GetMapping("/")
 	public String greeting(Model model) {
 		// get the most viewed and last products
-		List<Product> mostViewedProducts = productService.getMostViewedProducts(4);
-		List<Product> lastProducts = productService.getLastProducts(4);
+		List<ProductDTO> mostViewedProducts = productService.getMostViewedProducts(4);
+		List<ProductDTO> lastProducts = productService.getLastProducts();
 
 		// Add image data to the products
-		addImageDataToProducts(mostViewedProducts);
-		addImageDataToProducts(lastProducts);
+		mostViewedProducts = productService.addImageDataToProducts(mostViewedProducts);
+		lastProducts = productService.addImageDataToProducts(lastProducts);
 
 		// Add the products to the model
 		model.addAttribute("mostViewedProducts", mostViewedProducts);
@@ -73,9 +68,12 @@ public class MainController {
 
 	@GetMapping("/adminPage")
 	public String admin(Model model) {
-		List<Product> products = productService.getNotAcceptedProducts();
-		searchController.convertBlobToBase64(products);
-		model.addAttribute("productsNotAccepted", products);
+		List<ProductDTO> products = productService.getNotAcceptedProducts();
+
+		List<ProductDTO> productsWithImages = productService.addImageDataToProducts(products);
+
+		model.addAttribute("productsNotAccepted", productsWithImages);
+
 		return "administrator";
 	}
 
@@ -86,7 +84,6 @@ public class MainController {
 		}
 
 		Object principal = authentication.getPrincipal();
-
 		if (principal instanceof OAuth2User oAuth2User) {
 			model.addAttribute("name", oAuth2User.getAttribute("name"));
 			model.addAttribute("username", oAuth2User.getAttribute("name"));
@@ -96,70 +93,17 @@ public class MainController {
 		}
 		// Regular user
 		else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			Optional<User> user = userService.findByUsername(userDetails.getUsername());
+			Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
+
 			if (user.isPresent()) {
-				model.addAttribute("name", user.get().getName());
-				model.addAttribute("username", user.get().getUsername());
-				model.addAttribute("email", user.get().getEmail());
-				model.addAttribute("profile_image", user.get().getImage());
+				UserDTO userDTO = userService.addImageBase64ToUser(user.get());
+				model.addAttribute("userDTO", userDTO);
 				model.addAttribute("isGoogleUser", false); // add flag to indicate authentication with username and
 															// password
 			}
 		}
 
 		return "user";
-	}
-
-	private void addImageDataToProducts(List<Product> products) {
-		for (Product product : products) {
-			try {
-				Blob imageBlob = product.getImage();
-				if (imageBlob != null) {
-					byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
-					String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
-					product.setImageBase64(imageBase64);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@GetMapping("/moreProdsAll")
-	public String loadMoreProducts(@RequestParam int page, Model model, HttpServletRequest request) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<Product> productsPage = productService.getAcceptedProducts(pageable);
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
-		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
-		model.addAttribute("allProds", products);
-		return "moreProducts";
-	}
-
-	@GetMapping("/moreProdsTypes")
-	public String loadMoreProductsByType(@RequestParam int page, @RequestParam String type, Model model) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<Product> productsPage = productService.getAcceptedProductsByType(type, pageable);
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
-		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
-		model.addAttribute("allProds", products);
-		model.addAttribute("type", type);
-		return "moreProducts";
-	}
-
-	@GetMapping("/moreProdsCompany")
-	public String loadMoreProductsByCompany(@RequestParam int page, @RequestParam String company, Model model) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<Product> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
-		List<Product> products = productsPage.getContent();
-		addImageDataToProducts(products);
-
-		model.addAttribute("hasMore", productsPage.getTotalPages() - 1 > page);
-		model.addAttribute("allProds", products);
-		model.addAttribute("company", company);
-		model.addAttribute("isCompany", true);
-		return "moreProducts";
 	}
 
 	public ProductService getProductService() {

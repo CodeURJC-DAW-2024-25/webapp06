@@ -53,7 +53,6 @@
         {{/isUser}}
         <form action="/logout" method="post" style="display:inline;">
             <!-- Si CSRF está habilitado, añade el token -->
-            <input type="hidden" name="_csrf" value="{{token}}">
             <button type="submit" class="logout">Log Out</button>
         </form>
     </div>

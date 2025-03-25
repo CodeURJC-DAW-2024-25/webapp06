@@ -5,7 +5,10 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,11 +33,14 @@ public class Product {
     private String description;
     private Integer views_count;
 
+    @JsonIgnore
     @Lob
     private Blob image;
 
     private Integer stock;
     private Boolean isAccepted;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String imageBase64;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -46,13 +52,15 @@ public class Product {
     public Product() {
     }
 
-    public Product(String type, String name, String company, Double price, String description, Integer stock,
+    public Product(String type, String name, String company, Double price, String description, Blob image,
+            Integer stock,
             Boolean isAccepted) {
         this.type = type;
         this.name = name;
         this.company = company;
         this.price = price;
         this.description = description;
+        this.image = image;
         this.stock = stock;
         this.reviews = new ArrayList<>();
         this.isAccepted = isAccepted;

@@ -78,47 +78,47 @@ public class DataLoader {
                                 BlobProxy.generateProxy(image16), 10, true, List.of(review1, review2));
 
                 productService.createProduct("Books", "Producto1", "Amazon", 20.0, "Muy chulo",
-                                BlobProxy.generateProxy(image1), 10, true);
+                                BlobProxy.generateProxy(image1), 10, true, null);
                 productService.createProduct("Technology", "Producto2", "eBay", 30.0, "Muy útil",
-                                BlobProxy.generateProxy(image2), 10, true);
+                                BlobProxy.generateProxy(image2), 10, true, null);
                 productService.createProduct("Technology", "Producto3", "comp", 40.0, "Muy práctico", BlobProxy
                                 .generateProxy(image3), 10,
-                                true);
+                                true, null);
                 productService.createProduct("Sports", "Producto4", "Decathlon", 50.0, "Muy resistente",
                                 BlobProxy.generateProxy(image4), 10,
-                                true);
+                                true, null);
                 productService.createProduct("Music", "Producto5", "Zara", 60.0, "Muy elegante",
-                                BlobProxy.generateProxy(image5), 10, true);
+                                BlobProxy.generateProxy(image5), 10, true, null);
                 productService.createProduct("Appliances", "Lavadora Samsung", "ElectroMax", 399.99,
                                 "Lavadora de carga frontal con tecnología EcoBubble",
-                                BlobProxy.generateProxy(image6), 5, true);
+                                BlobProxy.generateProxy(image6), 5, true, null);
                 productService.createProduct("Technology", "Televisor LED 55\"", "MediaMarkt", 549.99,
                                 "Televisor UHD 4K con Smart TV integrado",
-                                BlobProxy.generateProxy(image7), 8, true);
+                                BlobProxy.generateProxy(image7), 8, true, null);
                 productService.createProduct("Appliances", "Conjunto mesa y sillas", "IKEA", 199.99,
                                 "Set de comedor moderno con 4 sillas",
-                                BlobProxy.generateProxy(image8), 3, true);
+                                BlobProxy.generateProxy(image8), 3, true, null);
                 productService.createProduct("Appliances", "Cortacésped eléctrico", "Jardiland", 149.95,
                                 "Potente cortacésped con batería recargable",
-                                BlobProxy.generateProxy(image9), 7, true);
+                                BlobProxy.generateProxy(image9), 7, true, null);
                 productService.createProduct("Sports", "Zapatillas deportivas", "Nike", 89.99,
                                 "Zapatillas ligeras para running",
-                                BlobProxy.generateProxy(image10), 15, true);
+                                BlobProxy.generateProxy(image10), 15, true, null);
                 productService.createProduct("Books", "El Código Da Vinci", "Casa del Libro", 15.50,
                                 "Bestseller mundial de Dan Brown",
-                                BlobProxy.generateProxy(image11), 20, true);
+                                BlobProxy.generateProxy(image11), 20, true, null);
                 productService.createProduct("Technology", "Tablet Galaxy", "Samsung", 299.99,
                                 "Tablet con pantalla AMOLED de 10.5\"",
-                                BlobProxy.generateProxy(image12), 6, true);
+                                BlobProxy.generateProxy(image12), 6, true, null);
                 productService.createProduct("Technology", "Smartwatch Fitness", "GadgetWorld", 129.99,
                                 "Reloj inteligente con monitorización de actividad física y notificaciones",
-                                BlobProxy.generateProxy(image13), 12, true);
+                                BlobProxy.generateProxy(image13), 12, true, null);
                 productService.createProduct("Appliances", "Cafetera Automática", "HomeAppliances", 89.95,
                                 "Cafetera programable con molinillo de granos integrado",
-                                BlobProxy.generateProxy(image14), 8, true);
+                                BlobProxy.generateProxy(image14), 8, true, null);
                 productService.createProduct("Sports", "Mancuernas Ajustables", "FitnessDepot", 199.95,
                                 "Juego de mancuernas con pesos intercambiables de 2 a 20 kg",
-                                BlobProxy.generateProxy(image15), 4, true);
+                                BlobProxy.generateProxy(image15), 4, true, null);
 
                 userService.createUser(null, "User 1", "user1", "user1@gmail.com", passwordEncoder.encode("user1"),
                                 Arrays.asList("ADMIN"));

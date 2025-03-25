@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "34059189-1ca0-42c8-a768-67e10f3f4d85",
+		"name": "webapp06",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43377067",
+		"_collection_link": "https://luis-3386335.postman.co/workspace/Luis's-Workspace~7dfa68de-3613-4377-8dcb-0ea041d89b0e/collection/43377067-34059189-1ca0-42c8-a768-67e10f3f4d85?action=share&source=collection_link&creator=43377067"
+	},
+	"item": [
+		{
+			"name": "mostViewedProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/main/mostViewedProducts",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"main",
+						"mostViewedProducts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "lastProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/main/lastProducts",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"main",
+						"lastProducts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acceptedProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/main/acceptedProducts",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"main",
+						"acceptedProducts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acceptedProductsByType",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/main/acceptedProductsByType/Appliances",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"main",
+						"acceptedProductsByType",
+						"Appliances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "loginWithComp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var template = `",
+							"<style type=\"text/css\">",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+							"    .tftable tr {background-color:#ffffff;}",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+							"    .tftable tr:hover {background-color:#e0ffff;}",
+							"</style>",
+							"",
+							"<table class=\"tftable\" border=\"1\">",
+							"    <tr>",
+							"        <th>Timestamp</th>",
+							"        <th>Status</th>",
+							"        <th>Error</th>",
+							"        <th>Message</th>",
+							"        <th>Path</th>",
+							"    </tr>",
+							"    <tr>",
+							"        <td>{{response.timestamp}}</td>",
+							"        <td>{{response.status}}</td>",
+							"        <td>{{response.error}}</td>",
+							"        <td>{{response.message}}</td>",
+							"        <td>{{response.path}}</td>",
+							"    </tr>",
+							"</table>",
+							"`;",
+							"",
+							"function constructVisualizerPayload() {",
+							"    return { response: pm.response.json() }",
+							"}",
+							"",
+							"pm.visualizer.set(template, constructVisualizerPayload());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "redirect_uri",
+							"value": "https://oauth.pstmn.io/v1/callback",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "Comp",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"username\": \"user\", \"password\": \"pass\" }"
+				},
+				"url": {
+					"raw": "https://localhost:8443/api/auth/test",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"auth",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "acceptedCompanyProducts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/main/acceptedCompanyProducts",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"main",
+						"acceptedCompanyProducts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/main/profile",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"main",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

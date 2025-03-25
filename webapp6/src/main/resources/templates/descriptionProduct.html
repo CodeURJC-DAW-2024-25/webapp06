@@ -28,17 +28,18 @@
     <!-- ----------------- Product Details ----------------- -->
     <div class="container mt-5">
         <div class="row">
+            {{#product}}
             <div class="col-md-6">
-                <img src="{{productImage}}" class="img-fluid" alt="Product Image">
+                <img src="{{imageBase64}}" class="img-fluid" alt="Product Image">
             </div>
             <div class="col-md-6">
-                <h2 class="product-title">{{productName}}</h2>
-                <p class="product-company">Company: {{productCompany}}</p>
-                <p class="product-type">Type: {{productType}}</p>
-                <p class="product-price">{{productPrice}}€</p>
-                <p class="product-description">{{productDescription}}</p>
+                <h2 class="product-title">{{name}}</h2>
+                <p class="product-company">Company: {{company}}</p>
+                <p class="product-type">Type: {{type}}</p>
+                <p class="product-price">{{price}}€</p>
+                <p class="product-description">{{description}}</p>
 
-                <p class="product-stock">Stock: {{productStock}}</p>
+                <p class="product-stock">Stock: {{stock}}</p>
 
                 <div class="buttons_div">
                     {{^isAdmin}}
@@ -47,7 +48,6 @@
                         {{#logged}}
                         <button class="add2cart_button" type="submit">Añadir al carrito</button>
                         {{/logged}}
-                        <input type="hidden" name="_csrf" value="{{token}}">
                     </form>
                     {{/isCompany}}
                     {{/isAdmin}}
@@ -63,9 +63,6 @@
 
                     {{/isCompany}}
 
-
-
-
                     {{#isCompany}}
                     <!-- Solo mostrar el botón al propietario del producto -->
                     {{#isOwner}}
@@ -78,6 +75,8 @@
                     <a href="/products/allProducts" class="back2products_button">Back to Products</a>
                 </div>
             </div>
+            {{/product}}
+
 
             {{>/components/reviews}}
         </div>

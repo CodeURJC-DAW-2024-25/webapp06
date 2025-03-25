@@ -1,10 +1,16 @@
 package es.codeurjc.global_mart.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.hibernate.engine.jdbc.BlobProxy;
@@ -12,9 +18,18 @@ import org.springframework.data.domain.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import es.codeurjc.global_mart.dto.Product.CompanyStadsDTO;
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
+import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.Product.SearchProductDTO;
+import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
+import es.codeurjc.global_mart.dto.Reviewss.ReviewMapper;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.repository.ProductRepository;
@@ -27,127 +42,146 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Product createProduct(String type, String name, String business, Double price, String description,
-            Blob image, Integer stock, Boolean isAccepted) throws IOException {
+    @Autowired
+    ProductMapper productMapper;
 
-        Product product = new Product(type, name, business, price, description, stock, isAccepted);
+    @Autowired
+    ReviewMapper reviewMapper;
 
-        if (image != null) {
-            product.setImage(image); // set image from blob
-        } else {
-            product.setImage(BlobProxy.generateProxy(
-                    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
-                            .getBytes()));
-        }
-
-        return productRepository.save(product);
-    }
-
-    public Product createProduct(String type, String name, String business, Double price, String description,
+    public ProductDTO createProduct(String type, String name, String business, Double price, String description,
             Blob image, Integer stock, Boolean isAccepted, List<Review> reviews) throws IOException {
-        Product product = new Product(type, name, business, price, description, stock, isAccepted);
+        Product product = new Product(type, name, business, price, description, image, stock, isAccepted);
         product.setReviews(reviews);
 
-        logger.info("Number of reviews: " + reviews.size());
+        productRepository.save(product);
+        return productMapper.toProductDTO(product);
+    }
 
-        if (image != null) {
-            product.setImage(image); // set image from blob
-        } else {
-            product.setImage(BlobProxy.generateProxy(
-                    "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
-                            .getBytes()));
+    public ProductDTO addProduct(ProductDTO product) {
+        Product product2 = productMapper.toProduct(product);
+        productRepository.save(product2);
+        return productMapper.toProductDTO(product2);
         }
 
-        return productRepository.save(product);
+    public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO) {
+        Optional<Product> optionalProduct = productRepository.findById(productDTO.id());
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            Review review = reviewMapper.toReview(reviewDTO);
+            product.addReview(review);
+            productRepository.save(product);
+        } else {
+            throw new RuntimeException("Product not found with id " + productDTO.id());
+        }
     }
 
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+        public ProductDTO updateProduct(Long id, Product product) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product updatedProduct = optionalProduct.get();
+            updatedProduct.setName(product.getName());
+            updatedProduct.setPrice(product.getPrice());
+            updatedProduct.setStock(product.getStock());
+            updatedProduct.setDescription(product.getDescription());
+            updatedProduct.setType(product.getType());
+            updatedProduct.setCompany(product.getCompany());
+            updatedProduct.setIsAccepted(product.getIsAccepted());
+            updatedProduct.setReviews(product.getReviews());
+            updatedProduct.setImage(product.getImage());
+            productRepository.save(updatedProduct);
+            return productMapper.toProductDTO(updatedProduct);
+        } else {
+            throw new RuntimeException("Product not found with id " + id);
+        }
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        return productMapper.toProductsDTO(productRepository.findAll());
     }
 
-    public List<Product> getProductsByType(String type) {
-        return productRepository.findByType(type);
+    public List<SearchProductDTO> getAllProductsToSearch() {
+        return productMapper.toSearchProductsDTO(productRepository.findAll());
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public List<ProductDTO> getProductsByType(String type) {
+        return productMapper.toProductsDTO(productRepository.findByType(type));
     }
 
-    public Product updateProduct(Long id, String name, Double price) {
+    public List<SearchProductDTO> getProductsByTypeToSearch(String type) {
+        return productMapper.toSearchProductsDTO(productRepository.findByType(type));
+    }
+
+    public Optional<ProductDTO> getProductById(Long id) {
+        return productRepository.findById(id).map(productMapper::toProductDTO);
+    }
+
+    public ProductDTO updateProduct(Long id, String name, Double price) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
             product.setName(name);
             product.setPrice(price);
             product.setIsAccepted(true);
-            return productRepository.save(product);
+            productRepository.save(product);
+            return productMapper.toProductDTO(product);
         } else {
             throw new RuntimeException("Product not found with id " + id);
         }
     }
 
-    public void deleteProduct(Long id) {
+    public ProductDTO deleteProduct(Long id) {
+        Product product = productRepository.findById(id).orElseThrow();
+
+        // As books are related to shops, it is needed to load the book shops
+        // before deleting it to avoid LazyInitializationException
+        ProductDTO productDTO = productMapper.toProductDTO(product);
         productRepository.deleteById(id);
+
+        return productDTO;
     }
 
-    public void setViews_product_count(Product product) {
+    public void setViews_product_count(ProductDTO productDTO) {
+        Product product = productMapper.toProduct(productDTO);
         product.setViews_count(product.getViews_count() + 1);
         productRepository.save(product);
     }
 
-    public List<Product> getAcceptedProductsByType(String type) {
-        return productRepository.findByIsAcceptedTrueAndType(type);
+    public List<ProductDTO> getAcceptedProductsByType(String type) {
+        return productMapper.toProductsDTO(productRepository.findByIsAcceptedTrueAndType(type));
     }
 
-    public Page<Product> getAcceptedProductsByType(String type, Pageable pageable) {
-        return productRepository.findByIsAcceptedTrueAndType(type, pageable);
+    public Page<ProductDTO> getAcceptedProductsByType(String type, Pageable pageable) {
+        Page<Product> productsPage = productRepository.findByIsAcceptedTrueAndType(type, pageable);
+        return productsPage.map(productMapper::toProductDTO);
     }
 
-    public List<Product> getAcceptedProducts() {
-        return productRepository.findByIsAcceptedTrue();
+    public List<ProductDTO> getAcceptedProducts() {
+        return productMapper.toProductsDTO(productRepository.findByIsAcceptedTrue());
     }
 
-    public Page<Product> getAcceptedProducts(Pageable pageable) {
-        return productRepository.findByIsAcceptedTrue(pageable);
+    public Page<ProductDTO> getAcceptedProducts(Pageable pageable) {
+        Page<Product> productsPage = productRepository.findByIsAcceptedTrue(pageable);
+        return productsPage.map(productMapper::toProductDTO);
     }
 
-    public List<Product> getNotAcceptedProducts() {
-        return productRepository.findByIsAcceptedFalse();
+    public List<ProductDTO> getNotAcceptedProducts() {
+        return productMapper.toProductsDTO(productRepository.findByIsAcceptedFalse());
 
     }
 
-    /*
-     * public List<Product> searchProductsByName(String query) {
-     * System.out.println("Buscando productos con nombre que contenga: '" + query +
-     * "'");
-     * List<Product> allProducts = productRepository.findAll();
-     * List<Product> matchedProducts = new ArrayList<>();
-     * 
-     * for (Product product : allProducts) {
-     * if (product.getName() != null &&
-     * product.getName().toLowerCase().contains(query.toLowerCase())) {
-     * System.out.println("Coincidencia encontrada: " + product.getName());
-     * matchedProducts.add(product);
-     * }
-     * }
-     * 
-     * System.out.println("Total de coincidencias: " + matchedProducts.size());
-     * return matchedProducts;
-     * }
-     */
-    public List<Product> searchProductsByName(String query) {
-        return productRepository.findByNameContainingIgnoreCaseAndIsAcceptedTrue(query);
+    public List<SearchProductDTO> searchProductsByName(String query) {
+        return productMapper
+                .toSearchProductsDTO(productRepository.findByNameContainingIgnoreCaseAndIsAcceptedTrue(query));
     }
 
-    public List<Product> searchProductsByNameAndType(String query, String type) {
-        return productRepository.findByNameContainingIgnoreCaseAndTypeAndIsAcceptedTrue(query, type);
+    public List<SearchProductDTO> searchProductsByNameAndType(String query, String type) {
+        return productMapper
+                .toSearchProductsDTO(
+                        productRepository.findByNameContainingIgnoreCaseAndTypeAndIsAcceptedTrue(query, type));
     }
 
-    public List<Product> getAcceptedCompanyProducts(String company) {
+    public List<ProductDTO> getAcceptedCompanyProducts(String company) {
         List<Product> allProducts = productRepository.findAll();
         List<Product> acceptedCompanyProducts = new ArrayList<>();
         for (Product product : allProducts) {
@@ -155,27 +189,60 @@ public class ProductService {
                 acceptedCompanyProducts.add(product);
             }
         }
-        return acceptedCompanyProducts;
+        return productMapper.toProductsDTO(acceptedCompanyProducts);
 
     }
 
-    public Page<Product> getAcceptedCompanyProducts(String company, Pageable pageable) {
-        return productRepository.findByIsAcceptedTrueAndCompany(company, pageable);
+    public Page<ProductDTO> getAcceptedCompanyProducts(String company, Pageable pageable) {
+        Page<Product> productsPage = productRepository.findByIsAcceptedTrueAndCompany(company, pageable);
+        return productsPage.map(productMapper::toProductDTO);
     }
 
-    public List<Product> getMostViewedProducts(int limit) {
-        List<Product> acceptedProducts = getAcceptedProducts();
+    public List<CompanyStadsDTO> getCompanyStadistics(String company) {
+
+        Map<String, Integer> dataMap = new HashMap<>();
+
+        // Initialize the dataMap with predefined keys and zero values
+        dataMap.put("Technology", 0);
+        dataMap.put("Books", 0);
+        dataMap.put("Education", 0);
+        dataMap.put("Sports", 0);
+        dataMap.put("Home", 0);
+        dataMap.put("Music", 0);
+        dataMap.put("Cinema", 0);
+        dataMap.put("Appliances", 0);
+        dataMap.put("Others", 0);
+
+        List<Product> companyProducts = productMapper.toProducts(getAcceptedCompanyProducts(company));
+
+        for (Product product : companyProducts) {
+            String type = product.getType();
+            dataMap.put(type, dataMap.getOrDefault(type, 0) + 1);
+        }
+
+        List<CompanyStadsDTO> dataList = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : dataMap.entrySet()) {
+            dataList.add(new CompanyStadsDTO(entry.getKey(), entry.getValue()));
+        }
+
+        return dataList;
+
+    }
+
+    public List<ProductDTO> getMostViewedProducts(int limit) {
+        List<Product> acceptedProducts = productRepository.findByIsAcceptedTrue();
 
         // order products by visit number (high to low)
         Collections.sort(acceptedProducts, (p1, p2) -> p2.getViews_count().compareTo(p1.getViews_count()));
 
         // take only the limit number products
         int size = Math.min(limit, acceptedProducts.size());
-        return acceptedProducts.subList(0, size);
+        return productMapper.toProductsDTO(acceptedProducts.subList(0, size));
     }
 
-    public List<Product> getLastProducts(int limit) {
-        List<Product> acceptedProducts = getAcceptedProducts();
+    public List<ProductDTO> getLastProducts() {
+        int limit = 4;
+        List<Product> acceptedProducts = productRepository.findByIsAcceptedTrue();
 
         // sort accepted products by creation date
         Collections.sort(acceptedProducts, (p1, p2) -> p2.getDate().compareTo(p1.getDate()));
@@ -188,10 +255,255 @@ public class ProductService {
         for (Product product : acceptedProducts.subList(0, size)) {
             System.out.println("Fecha: " + product.getDate() + ", Nombre: " + product.getName());
         }
-        return acceptedProducts.subList(0, size);
+        return productMapper.toProductsDTO(acceptedProducts.subList(0, size));
     }
 
-    public Page<Product> getProductsPage(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductDTO> getProductsPage(Pageable pageable) {
+        Page<Product> productsPage = productRepository.findAll(pageable);
+        return productsPage.map(productMapper::toProductDTO);
     }
+
+    public void convertBlobToBase64(List<ProductDTO> products) {
+        List<Product> productsList = productMapper.toProducts(products);
+        for (Product product : productsList) {
+            try {
+                Blob imageBlob = product.getImage();
+                if (imageBlob != null) {
+                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    product.setImageBase64(imageBase64);
+                } else {
+                    // Default image
+                    product.setImageBase64("/images/default-product.jpg");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                product.setImageBase64("/images/default-product.jpg");
+            }
+        }
+    }
+
+    public void convertBlobToBase64ToSearch(List<SearchProductDTO> products) {
+        List<Product> productsList = productMapper.fromSearchToProducts(products);
+        for (Product product : productsList) {
+            try {
+                Blob imageBlob = product.getImage();
+                if (imageBlob != null) {
+                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                    String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    product.setImageBase64(imageBase64);
+                } else {
+                    // Default image
+                    product.setImageBase64("/images/default-product.jpg");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                product.setImageBase64("/images/default-product.jpg");
+            }
+        }
+    }
+
+    public Blob getImageById(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            System.out.println("Product name: " + product.getName());
+            System.out.println("Product image: " + product.getImage());
+            return product.getImage();
+        }
+        return null;
+    }
+
+    public List<ProductDTO> addImageDataToProducts(List<ProductDTO> products) {
+        List<ProductDTO> productsList = new ArrayList<>();
+
+        for (ProductDTO productDTO : products) {
+            if (productDTO.imageBase64() != null) {
+                productsList.add(productDTO);
+            } else {
+                String imageBase64 = null;
+
+                try {
+                    Product product = productMapper.toProduct(productDTO);
+                    Long id = product.getId();
+                    Blob imageBlob = getImageById(id);
+
+                    if (imageBlob != null) {
+                        byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                        imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                    } else {
+                        logger.info("No image found for product id: " + id);
+                    }
+                } catch (Exception e) {
+                    logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
+                }
+
+                // Always return a ProductDTO with either the converted image or default
+                productsList.add(new ProductDTO(
+                        productDTO.id(),
+                        productDTO.type(),
+                        productDTO.name(),
+                        productDTO.company(),
+                        productDTO.price(),
+                        productDTO.description(),
+                        productDTO.stock(),
+                        productDTO.isAccepted(),
+                        productDTO.date(),
+                        productDTO.views_count(),
+                        productDTO.reviews(),
+                        imageBase64));
+            }
+        }
+        return productsList;
+    }
+
+    public ProductDTO addImageToASingleProduct(ProductDTO productDTO) {
+        if (productDTO.imageBase64() != null) {
+            return productDTO;
+        } else {
+            String imageBase64 = null;
+
+            try {
+                Product product = productMapper.toProduct(productDTO);
+                Long id = product.getId();
+                Blob imageBlob = getImageById(id);
+
+                if (imageBlob != null) {
+                    byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                    imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                } else {
+                    logger.info("No image found for product id: " + id);
+                }
+            } catch (Exception e) {
+                logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
+            }
+
+            // Always return a ProductDTO with either the converted image or default
+            return new ProductDTO(
+                    productDTO.id(),
+                    productDTO.type(),
+                    productDTO.name(),
+                    productDTO.company(),
+                    productDTO.price(),
+                    productDTO.description(),
+                    productDTO.stock(),
+                    productDTO.isAccepted(),
+                    productDTO.date(),
+                    productDTO.views_count(),
+                    productDTO.reviews(),
+                    imageBase64);
+        }
+    }
+
+    public List<SearchProductDTO> addImageDataToSearchProducts(List<SearchProductDTO> products) {
+        List<SearchProductDTO> productsList = new ArrayList<>();
+
+        for (SearchProductDTO productDTO : products) {
+            if (productDTO.imageBase64() != null) {
+                productsList.add(productDTO);
+            } else {
+                String imageBase64 = null;
+
+                try {
+                    // Get the product from repository by id
+                    Optional<Product> optionalProduct = productRepository.findById(productDTO.id());
+
+                    if (optionalProduct.isPresent()) {
+                        Product product = optionalProduct.get();
+                        Blob imageBlob = product.getImage();
+
+                        if (imageBlob != null) {
+                            byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                            imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                        } else {
+                            logger.info("No image found for product id: " + productDTO.id());
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
+                }
+
+                // Always return a SearchProductDTO with either the converted image or default
+                productsList.add(new SearchProductDTO(
+                        productDTO.id(),
+                        productDTO.name(),
+                        productDTO.price(),
+                        productDTO.type(),
+                        imageBase64));
+            }
+        }
+        return productsList;
+    }
+
+    public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock,
+            Double price, MultipartFile image) {
+
+        Product product = productMapper.toProduct(productDTO);
+        product.setName(name);
+        product.setDescription(description);
+        product.setType(type);
+        product.setStock(stock);
+        product.setPrice(price);
+
+        // update the image if it is not null
+        if (image != null && !image.isEmpty()) {
+            try {
+                product.setImage(BlobProxy.generateProxy(
+                        image.getInputStream(),
+                        image.getSize()));
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the exception as needed
+            }
+        }
+
+        addProduct(productMapper.toProductDTO(product));
+    }
+
+    public Resource getProductImage(long id) throws SQLException {
+
+        Product product = productRepository.findById(id).orElseThrow();
+
+        if (product.getImage() != null) {
+            return new InputStreamResource(product.getImage().getBinaryStream());
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    public void createProductImage(long id, InputStream inputStream, long size) {
+
+        Product product = productRepository.findById(id).orElseThrow();
+
+        product.setImage(BlobProxy.generateProxy(inputStream, size));
+
+        productRepository.save(product);
+    }
+
+    public void replaceProductImage(long id, InputStream inputStream, long size) {
+
+        Product product = productRepository.findById(id).orElseThrow();
+
+        if (product.getImage() == null) {
+            throw new NoSuchElementException();
+        }
+
+        product.setImage(BlobProxy.generateProxy(inputStream, size));
+
+        productRepository.save(product);
+    }
+
+    public void deleteProductImage(long id) {
+
+        Product product = productRepository.findById(id).orElseThrow();
+
+        if (product.getImage() == null) {
+            throw new NoSuchElementException();
+        }
+
+        product.setImage(null);
+
+        productRepository.save(product);
+    }
+
 }

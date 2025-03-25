@@ -267,6 +267,18 @@ Acceder en el navegador a la url: https://localhost:8443
 
 ---
 
+## Usuarios de la aplicación
+- **Administrador**: 
+    - **username**: user1
+    - **password**: user1
+- **Compañía**: 
+    - **username**: comp   
+    - **password**: comp
+- **Usuario registrado**: 
+    - **username**: a
+    - **password**: a
+---
+
 **Diagrama de relaciones de base de datos**
 ![Diagrama de base de datos](./images_readme/Practica1/databaseDiagram.png)
 ![Diagrama de base de datos 2](./images_readme/Practica1/diagramaClases.png)
@@ -357,3 +369,193 @@ Acceder en el navegador a la url: https://localhost:8443
 | ProductsController.java       | [Link 3](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ProductsController.java)     |
 | DataLoader.java       | [Link 4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/config/DataLoader.java)     |
 | Review.java       | [Link 5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/model/Review.java)     |
+
+---
+
+## Práctica 2
+
+### Documentación de la API Rest
+
+### Actualización de diagrama de clases
+![Diagrama de clases](./images_readme/Practica2/diagramaDeClases.jpg)
+
+### Instrucciones de ejecución de la aplicación dockerizada
+
+- #### Requisitos previos:
+  Para poder descargar y ejecutar la aplicación dockerizada tan sólo es necesario:
+  - [Docker](https://www.docker.com/products/docker-desktop)
+
+- #### Pasos para la instalación:
+1. Descarga la imagen de la aplicación desde el repositorio de Docker Hub:
+    ```
+    docker pull alvaro3517/webapp6
+    ```
+2. Ubica tu terminal en la carpeta donde tengas el archivo [docker-compose.yml].
+    ```
+3. Ejecuta el archivo docker-compose.yml:
+    ```
+    docker-compose up
+    ```
+4. Una vez haya terminado de ejecutarse, abre en tu navegador de preferencia dicha [dirección](https://localhost:443).
+
+## 📦 Creación de imagen de la aplicación
+Para poder crear a imagen de la aplicación es necesario tener docker instalado en tu máquina. Una vez tengas docker instalado, sigue los siguientes pasos:
+1. Clona el repositorio a tu ruta deseada:    
+    ```
+     git clone https://github.com/CodeURJC-DAW-2023-24/webapp03
+    ```
+2. Inicia sesión en tu cuenta de Docker Hub. Si no tienes una, puedes crearla [aquí](https://hub.docker.com/signup). Se te pedirá introducir tu usuario y contraseña:
+    ```
+    docker login
+    ```    
+3. Ejecuta el ejecutable bash script que creará la imagen de la aplicación:
+    ```
+    ./create_image.sh
+    ```
+
+   Ten en cuenta que este script crea la imagen con el nombre "alvaro3517/webapp6" y la subirá a tu cuenta de Docker Hub. Si deseas cambiar el nombre de la imagen o el nombre de usuario, puedes hacerlo modificando el script.
+
+
+## 🛫 Despliegue de la aplicación en una máquina virtual
+### Pasos previos
+1. Descargar la clave proporcionada a través de correo electrónico por parte de los docentes.
+2. Conectarse a la red de la Universidad a través del Escritorio de Desarrollo.
+
+### Pasos para el despliegue
+1. Conectarse a la máquina virtual:
+    ```
+    ssh -i appWeb06.key vmuser@appWeb06.dawgis.etsii.urjc.es
+    ```
+
+
+2. Instalar Docker con Docker Compose en la máquina virtual:
+    ```
+
+
+3. Clonar el repositorio en la máquina virtual:
+    ```
+    git clone https://github.com/CodeURJC-DAW-2024-25/webapp06.git
+    ```
+   
+4. En la carpeta raíz del repositorio, donde se encuentra el fichero docker-compose.yml, ejecutar el siguiente comando para iniciar la aplicación:
+    ```
+    sudo docker compose up -d
+    ```
+   "-d" permite que se ejecute en segundo plano, para poder ver la consola de la aplicación, se puede omitir.
+
+
+6. Una vez haya terminado de arrancar, conectarse a:
+    ```
+    https://appWeb06.dawgis.etsii.urjc.es:443
+    ```
+
+### Detener la aplicación
+Una vez inicializada la aplicación, para detenerla se puede hacer con:
+    ```
+    sudo docker compose stop
+    ```
+
+
+
+### Volver a arrancar la aplicación
+Una vez ya ha sido detenida, se puede volver a arrancar con:
+    ```
+    sudo docker compose up -d
+    ```
+
+### Participación de miembros
+
+#### Cristian
+
+##### Descripción textual
+Mi labor en esta práctica ha constado de la revisión y el análisis de errores al transformar la aplicación, ya que al transformar las clases en diferentes DTOs, nos ha llevado a cabo varios errores que hemos tenido que solucionar. Además de revisar y analizar errores, he llevado a cabo la adaptación del código a los DTOs. También me he encargado de gestionar la documentación tanto el README como la documentación de la API. He realizado además la actualización del diagrama de clases.
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|Convertir todas las clases en diferentes DTOs según la funcionalidad                |              |
+|Añadir SearchProductDTO y actualizar ProductMapper                  |              |
+|Arreglar AJAX                 |              |
+|Arreglar Imágenes                |              |
+|Arreglar Reviews                 |              |
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+|ReviewsController.java                 |              |
+|ProductsController.java                 |              |
+|MainController.java                 |              |
+|SearchController.java                 |              |
+|ProductService.java                 |              |
+
+---
+
+#### Juan Manuel
+
+##### Descripción textual
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|  DTO structure             |              |https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/ed0d1e4626311530cd2be13c3f2add41cc4d64c2
+|  Adapt controllers to dto               |              |https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/6788820862726d7524c33ae1da125ba51a601db3
+|  Modifies DTOs services, mappers etc         |              |https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/e9d43254e53c451d6671206729f1275fa2283517
+|  Api Graphs Controller         |              |https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/1984f87a04c2b0dbd005815c08a734de9e0411b1
+|  Shopping cart DTO, review mapper, controllers etc              |              |https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/6788820862726d7524c33ae1da125ba51a601db3
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+| ApiGraphController.java                |              |
+| ShoppingCartController               |              |
+| DTOs               |              |
+| Services              |              |
+| Controllers             |              |
+
+---
+
+#### Álvaro
+
+##### Descripción textual
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+---
+
+#### Luis
+
+##### Descripción textual
+
+##### Listados 5 commits más significativos
+| **Descripción commit**      | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+
+##### Listado 5 ficheros con mayor participación
+| **Fichero** | **Link**     |
+|-----------------|--------------|
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |
+|                 |              |

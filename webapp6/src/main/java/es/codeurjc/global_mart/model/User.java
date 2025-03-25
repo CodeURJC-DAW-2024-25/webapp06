@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.sql.Blob;
 @Entity(name = "Users")
 public class User {
 
-    // ----------------- Atributes -----------------
+    // ----------------- Attributes -----------------
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +28,10 @@ public class User {
     private Blob image;
 
     private String name;
+
+    @Column(unique = true)
     private String username;
+
     private String email;
     private String encodedPassword;
 
@@ -44,6 +48,7 @@ public class User {
     private List<Product> cart;
 
     private double cartPrice;
+    private String imageBase64;
 
     @ElementCollection(fetch = FetchType.EAGER) // EAGER: fetch the data when the object is created
     private List<Double> historicalOrderPrices;
@@ -136,6 +141,10 @@ public class User {
         return cartPrice;
     }
 
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
     // !Setters
     public void setId(Long id) {
         this.id = id;
@@ -181,6 +190,10 @@ public class User {
         this.cartPrice = cartPrice;
     }
 
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
+
     // Reviews
     public void addReview(Review review) {
         this.reviews.add(review);
@@ -200,11 +213,27 @@ public class User {
     public void removeProductFromCart(Product product) {
         this.cart.remove(product);
         this.cartPrice -= product.getPrice();
-
     }
 
     public void emptyCart() {
         this.cart.clear();
         this.cartPrice = 0;
     }
+
+    public String getEncodedPassword() {
+        return encodedPassword;
+    }
+
+    public void setEncodedPassword(String encodedPassword) {
+        this.encodedPassword = encodedPassword;
+    }
+
+    public void setCart(List<Product> cart) {
+        this.cart = cart;
+    }
+
+    public void setCartPrice(double cartPrice) {
+        this.cartPrice = cartPrice;
+    }
+
 }
