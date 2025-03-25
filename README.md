@@ -473,20 +473,20 @@ Mi labor en esta práctica ha constado de la revisión y el análisis de errores
 ##### Listados 5 commits más significativos
 | **Descripción commit**      | **Link**     |
 |-----------------|--------------|
-|Convertir todas las clases en diferentes DTOs según la funcionalidad                |              |
-|Añadir SearchProductDTO y actualizar ProductMapper                  |              |
-|Arreglar AJAX                 |              |
-|Arreglar Imágenes                |              |
-|Arreglar Reviews                 |              |
+|Convertir todas las clases en diferentes DTOs según la funcionalidad                |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/e1c0329c6bdc0a08bf68d48f2c2dda2185a20fcf)              |
+|Añadir SearchProductDTO y actualizar ProductMapper                  |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/9dd794480171cf4ea9d616bec6276270b5e756d0)            |
+|Arreglar AJAX                 |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/5358de8d570dfcdca63331ac51066718820975e2)              |
+|Arreglar Imágenes                |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/cdefad72f77d024038bc4f0745f66539c10a7926)              |
+|Arreglar Reviews                 |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/33e65c4383c2e70d8093305beaa81e87fbeee561)              |
 
 ##### Listado 5 ficheros con mayor participación
 | **Fichero** | **Link**     |
 |-----------------|--------------|
-|ReviewsController.java                 |              |
-|ProductsController.java                 |              |
-|MainController.java                 |              |
-|SearchController.java                 |              |
-|ProductService.java                 |              |
+|ReviewsController.java                 |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ReviewsController.java)              |
+|ProductsController.java                 |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/ProductsController.java)              |
+|MainController.java                 |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/MainController.java)              |
+|SearchController.java                 |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/SearchController.java)              |
+|ProductService.java                 |[Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/service/ProductService.java)             |
 
 ---
 
