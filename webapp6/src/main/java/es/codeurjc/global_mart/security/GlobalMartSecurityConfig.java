@@ -106,7 +106,7 @@ public class GlobalMartSecurityConfig {
                 //ShoppingCartAPI
                 .requestMatchers(HttpMethod.GET, "/api/shoppingCart").hasRole("USER")
                 .requestMatchers(HttpMethod.DELETE, "/api/shoppingCart/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCart/{id}}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/shoppingCart/{id}").hasRole("USER")
                 .requestMatchers(HttpMethod.POST, "/api/shoppingCart/payment").hasRole("USER")
 
                 //UserAPI
