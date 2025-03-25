@@ -56,7 +56,7 @@ public class APIReviewsController {
         if (product.isEmpty()) {
             return ResponseEntity.status(404).body("Product not found");
         }
-    
+
         Object principal = authentication.getPrincipal();
         ReviewDTO review = null;
         String username = null;
@@ -66,9 +66,9 @@ public class APIReviewsController {
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
             username = userDetails.getUsername();
         }
-    
+
         if (username != null) {
-            review = reviewService.createReview(username, reviewDTO.comment(), reviewDTO.calification());
+            review = reviewService.addReview(reviewDTO, username);
         }
     
         if (review != null) {

@@ -8,10 +8,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
@@ -58,14 +60,29 @@ public class APIProductController {
 
 	@PostMapping("/")
 	public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO, Authentication authentication) throws IOException {
+		
 		if (authentication == null) {
             return ResponseEntity.status(401).body("Unauthorized");
         }else if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))){
 			return ResponseEntity.status(403).body("Forbidden");
 		}
-		productDTO = productService.addProduct(productDTO, authentication.getName());
 
-		return ResponseEntity.ok(productDTO);
+
+        Object principal = authentication.getPrincipal();
+        ProductDTO productDTOfinal = null;
+        String username = null;
+    
+        if (principal instanceof OAuth2User oAuth2User) {
+            username = oAuth2User.getAttribute("name");
+        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+            username = userDetails.getUsername();
+        }
+
+        if (username != null) {
+            productDTOfinal = productService.addProduct(productDTO, username);
+        }
+
+		return ResponseEntity.ok(productDTOfinal);
 	}
 
 	@PutMapping("/{id}")

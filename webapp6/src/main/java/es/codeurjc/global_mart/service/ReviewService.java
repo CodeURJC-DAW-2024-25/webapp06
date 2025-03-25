@@ -27,7 +27,8 @@ public class ReviewService {
         return reviewMapper.toReviewDTO(review);
     }
 
-    public ReviewDTO addReview(Review review) {
+    public ReviewDTO addReview(ReviewDTO reviewDTO, String username) {
+        Review review = new Review(username, reviewDTO.comment(), reviewDTO.calification());
         reviewRepository.save(review);
         return reviewMapper.toReviewDTO(review);
     }
