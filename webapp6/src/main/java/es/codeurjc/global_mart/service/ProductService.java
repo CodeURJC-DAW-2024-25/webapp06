@@ -395,6 +395,46 @@ public class ProductService {
         }
     }
 
+    public List<SearchProductDTO> addImageDataToSearchProducts(List<SearchProductDTO> products) {
+        List<SearchProductDTO> productsList = new ArrayList<>();
+
+        for (SearchProductDTO productDTO : products) {
+            if (productDTO.imageBase64() != null) {
+                productsList.add(productDTO);
+            } else {
+                String imageBase64 = null;
+
+                try {
+                    // Get the product from repository by id
+                    Optional<Product> optionalProduct = productRepository.findById(productDTO.id());
+
+                    if (optionalProduct.isPresent()) {
+                        Product product = optionalProduct.get();
+                        Blob imageBlob = product.getImage();
+
+                        if (imageBlob != null) {
+                            byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+                            imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+                        } else {
+                            logger.info("No image found for product id: " + productDTO.id());
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Error converting image to base64 for product id: " + productDTO.id(), e);
+                }
+
+                // Always return a SearchProductDTO with either the converted image or default
+                productsList.add(new SearchProductDTO(
+                        productDTO.id(),
+                        productDTO.name(),
+                        productDTO.price(),
+                        productDTO.type(),
+                        imageBase64));
+            }
+        }
+        return productsList;
+    }
+
     public void updateProductDetails(ProductDTO productDTO, String name, String description, String type, Integer stock,
             Double price, MultipartFile image) {
 
