@@ -18,7 +18,7 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 
 @RestController
-@RequestMapping("/api/graphsController")
+@RequestMapping("/api/graphs")
 public class APIGraphsController {
 
     @Autowired

@@ -1,238 +1,993 @@
 {
 	"info": {
-		"_postman_id": "34059189-1ca0-42c8-a768-67e10f3f4d85",
+		"_postman_id": "76199e5c-570d-4b40-b923-797653c2948e",
 		"name": "webapp06",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "43377067",
-		"_collection_link": "https://luis-3386335.postman.co/workspace/Luis's-Workspace~7dfa68de-3613-4377-8dcb-0ea041d89b0e/collection/43377067-34059189-1ca0-42c8-a768-67e10f3f4d85?action=share&source=collection_link&creator=43377067"
+		"_exporter_id": "26474255",
+		"_collection_link": "https://galactic-crater-642553.postman.co/workspace/DAW~f3f4481e-bcb6-4834-ab30-4703dbcef34c/collection/26474255-76199e5c-570d-4b40-b923-797653c2948e?action=share&source=collection_link&creator=26474255"
 	},
 	"item": [
 		{
-			"name": "mostViewedProducts",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/main/mostViewedProducts",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"main",
-						"mostViewedProducts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "lastProducts",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/main/lastProducts",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"main",
-						"lastProducts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "acceptedProducts",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/main/acceptedProducts",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"main",
-						"acceptedProducts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "acceptedProductsByType",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/main/acceptedProductsByType/Appliances",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"main",
-						"acceptedProductsByType",
-						"Appliances"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "loginWithComp",
-			"event": [
+			"name": "Main",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var template = `",
-							"<style type=\"text/css\">",
-							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
-							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
-							"    .tftable tr {background-color:#ffffff;}",
-							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
-							"    .tftable tr:hover {background-color:#e0ffff;}",
-							"</style>",
-							"",
-							"<table class=\"tftable\" border=\"1\">",
-							"    <tr>",
-							"        <th>Timestamp</th>",
-							"        <th>Status</th>",
-							"        <th>Error</th>",
-							"        <th>Message</th>",
-							"        <th>Path</th>",
-							"    </tr>",
-							"    <tr>",
-							"        <td>{{response.timestamp}}</td>",
-							"        <td>{{response.status}}</td>",
-							"        <td>{{response.error}}</td>",
-							"        <td>{{response.message}}</td>",
-							"        <td>{{response.path}}</td>",
-							"    </tr>",
-							"</table>",
-							"`;",
-							"",
-							"function constructVisualizerPayload() {",
-							"    return { response: pm.response.json() }",
-							"}",
-							"",
-							"pm.visualizer.set(template, constructVisualizerPayload());"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
+					"name": "mostViewedProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/main/mostViewedProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"main",
+								"mostViewedProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lastProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/main/lastProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"main",
+								"lastProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "acceptedProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/main/acceptedProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"main",
+								"acceptedProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "acceptedProductsByType",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https:/{{URL}}/api/main/acceptedProductsByType/Appliances",
+							"host": [
+								"https"
+							],
+							"port": "",
+							"path": [
+								"{{URL}}",
+								"api",
+								"main",
+								"acceptedProductsByType",
+								"Appliances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "acceptedCompanyProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/main/acceptedCompanyProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"main",
+								"acceptedCompanyProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "currentUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/main/profile",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"main",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "moreProdsAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https:/{{URL}}/api/main/moreProdsAll",
+							"host": [
+								"https"
+							],
+							"port": "",
+							"path": [
+								"{{URL}}",
+								"api",
+								"main",
+								"moreProdsAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "moreProdsType",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/main/moreProdsType/Books",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"main",
+								"moreProdsType",
+								"Books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "moreProdsCompany",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/main/moreProdsCompany",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"main",
+								"moreProdsCompany"
+							]
+						}
+					},
+					"response": []
 				}
-			],
-			"request": {
-				"auth": {
-					"type": "oauth2",
-					"oauth2": [
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Company",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"comp\",\r\n    \"password\": \"comp\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"a\",\r\n    \"password\": \"a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"user1\",\r\n    \"password\": \"user1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/auth/logout",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "ProductImages",
+					"item": [
 						{
-							"key": "redirect_uri",
-							"value": "https://oauth.pstmn.io/v1/callback",
-							"type": "string"
+							"name": "imageOfOneProduct",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/products/2/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"2",
+										"image"
+									]
+								}
+							},
+							"response": []
 						},
 						{
-							"key": "grant_type",
-							"value": "authorization_code",
-							"type": "string"
+							"name": "newImageOfProduct",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/products/17/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"17",
+										"image"
+									]
+								}
+							},
+							"response": []
 						},
 						{
-							"key": "tokenName",
-							"value": "Comp",
-							"type": "string"
+							"name": "modifyImageOfProduct",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/products/1/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"1",
+										"image"
+									]
+								}
+							},
+							"response": []
 						},
 						{
-							"key": "addTokenTo",
-							"value": "header",
-							"type": "string"
+							"name": "deleteImageOfProduct",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/products/1/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"1",
+										"image"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "",
-						"value": "",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{ \"username\": \"user\", \"password\": \"pass\" }"
+				{
+					"name": "oneProduct",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/1",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "https://localhost:8443/api/auth/test",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"auth",
-						"test"
-					]
+				{
+					"name": "allProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "allByType",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/type/Appliances",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"type",
+								"Appliances"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "newProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"type\": \"Electronics\",\r\n  \"name\": \"Smartphone Z\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"isAccepted\": true,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/products/",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modifyOne",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"type\": \"Electronics\",\r\n  \"name\": \"Smartphone Y\",\r\n  \"company\": \"TechCorp\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"isAccepted\": true,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/products/1",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteOne",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/17",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"17"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "acceptedCompanyProducts",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/main/acceptedCompanyProducts",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"main",
-						"acceptedCompanyProducts"
-					]
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "newReview",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"a\",\r\n    \"calification\": 5,\r\n    \"comment\": \"Great product!\",\r\n    \"creationDate\": \"2024-03-23T12:00:00Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/reviews/2",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "allReviewsOfOneProduct",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/reviews/2",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ReviewOfAProduct",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/reviews/1/1",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "New Request",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:8443/api/main/profile",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "8443",
-					"path": [
-						"api",
-						"main",
-						"profile"
-					]
+			"name": "ShoppinCart",
+			"item": [
+				{
+					"name": "shoppingCart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/shoppingCarts/",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shoppingCarts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteProduct",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/shoppingCarts/3",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shoppingCarts",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/shoppingCarts/3",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shoppingCarts",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/shoppingCarts/payment",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"shoppingCarts",
+								"payment"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "UserImages",
+					"item": [
+						{
+							"name": "imageOfOneUser",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/users/1/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"1",
+										"image"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "newImageOfUser",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/users/1/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"1",
+										"image"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "modifyImageOfuser",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/users/1/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"1",
+										"image"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteImageOfUser",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/users/1/image",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"1",
+										"image"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "modifyProfile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/users/",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/users/4",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "newUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"MediaMart\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"password\": \"1234\",\r\n    \"role\": [\"COMPANY\"]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{URL}}/api/users/",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "oneUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/users/3",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/users/",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Graphs",
+			"item": [
+				{
+					"name": "companyProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://appWeb06.dawgis.etsii.urjc.es:443/api/graphs/companyGraph",
+							"protocol": "https",
+							"host": [
+								"appWeb06",
+								"dawgis",
+								"etsii",
+								"urjc",
+								"es"
+							],
+							"port": "443",
+							"path": [
+								"api",
+								"graphs",
+								"companyGraph"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userOrders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://appWeb06.dawgis.etsii.urjc.es:443/api/graphs/userGraph",
+							"protocol": "https",
+							"host": [
+								"appWeb06",
+								"dawgis",
+								"etsii",
+								"urjc",
+								"es"
+							],
+							"port": "443",
+							"path": [
+								"api",
+								"graphs",
+								"userGraph"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

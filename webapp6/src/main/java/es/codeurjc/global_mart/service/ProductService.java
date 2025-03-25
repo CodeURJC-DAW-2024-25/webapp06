@@ -57,11 +57,18 @@ public class ProductService {
         return productMapper.toProductDTO(product);
     }
 
-    public ProductDTO addProduct(ProductDTO product) {
-        Product product2 = productMapper.toProduct(product);
-        productRepository.save(product2);
-        return productMapper.toProductDTO(product2);
-        }
+    public ProductDTO addProduct(ProductDTO productDTO) {
+        Product product = productMapper.toProduct(productDTO);
+        productRepository.save(product);
+        return productMapper.toProductDTO(product);
+    }
+
+    public ProductDTO addProduct(ProductDTO productDTO, String company) {
+        Product product = productMapper.toProduct(productDTO);
+        product.setCompany(company);
+        productRepository.save(product);
+        return productMapper.toProductDTO(product);
+    }
 
     public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO) {
         Optional<Product> optionalProduct = productRepository.findById(productDTO.id());

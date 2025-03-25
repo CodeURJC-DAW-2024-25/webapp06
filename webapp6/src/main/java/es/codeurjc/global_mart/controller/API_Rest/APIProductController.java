@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +30,10 @@ public class APIProductController {
 
     @Autowired
     private ProductMapper productMapper;
-    
+
+
+//------------------------------------------BASIC CRUD------------------------------------------
+
     @GetMapping("/")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         List<ProductDTO> products = productService.getAcceptedProducts();
@@ -53,15 +57,15 @@ public class APIProductController {
     }
 
 	@PostMapping("/")
-	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) throws IOException {
+	public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO, Authentication authentication) throws IOException {
+		if (authentication == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }else if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))){
+			return ResponseEntity.status(403).body("Forbidden");
+		}
+		productDTO = productService.addProduct(productDTO, authentication.getName());
 
-		productDTO = productService.createProduct(productDTO.type(), productDTO.name(), productDTO.company(),
-				productDTO.price(), productDTO.description(), null, productDTO.stock(), productDTO.isAccepted(),
-				productDTO.reviews());
-
-		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(productDTO.id()).toUri();
-
-		return ResponseEntity.created(location).body(productDTO);
+		return ResponseEntity.ok(productDTO);
 	}
 
 	@PutMapping("/{id}")
@@ -116,4 +120,7 @@ public class APIProductController {
 
 		return ResponseEntity.noContent().build();
 	}
+
+
+//------------------------------------------ALGORITHM------------------------------------------
 }

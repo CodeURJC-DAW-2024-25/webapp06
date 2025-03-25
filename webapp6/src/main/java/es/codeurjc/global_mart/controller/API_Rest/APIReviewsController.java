@@ -47,10 +47,6 @@ public class APIReviewsController {
             @PathVariable Long id,
             @RequestBody ReviewDTO reviewDTO,
             Authentication authentication) {
-
-        
-        
-        System.out.println("ReviewDTO: " + reviewDTO);
         
         if (authentication == null) {
             return ResponseEntity.status(401).body("Unauthorized");
