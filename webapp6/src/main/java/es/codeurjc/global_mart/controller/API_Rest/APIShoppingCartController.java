@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/shoppingcart")
+@RequestMapping("/api/shoppingCart")
 public class APIShoppingCartController {
 
     @Autowired
