@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.HttpClientErrorException.Unauthorized;
-
+import es.codeurjc.global_mart.dto.Reviewss.ReviewMapperImpl;
 import es.codeurjc.global_mart.security.jwt.JwtRequestFilter;
 import es.codeurjc.global_mart.security.jwt.UnauthorizedHandlerJwt;
 
@@ -24,8 +24,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 @EnableWebSecurity
 public class GlobalMartSecurityConfig {
 
+  
     @Autowired
     public RepositoryUserDetailsService userDetailsService;
+
+    
 
     // encode user password
     @Bean
@@ -70,17 +73,56 @@ public class GlobalMartSecurityConfig {
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
             
             http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.GET,"/api/main/mostViewedProducts").permitAll()
-                .requestMatchers("/api/main/lastProducts").permitAll()
-                .requestMatchers("/api/main/acceptedProducts").permitAll()
-                .requestMatchers("/api/main/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers("/api/main/acceptedCompanyProducts").permitAll()
-                .requestMatchers("/api/main/product/{id}").permitAll()
-                .requestMatchers("/api/main/profile").authenticated()
-                .requestMatchers("/api/main/moreProdsAll").permitAll()
-                .requestMatchers("/api/main/moreProdsTypes/{type}").permitAll()
-                .requestMatchers("/api/main/moreProdsCompany").hasRole("COMPANY")
-       
+                //MainAPI
+                .requestMatchers(HttpMethod.GET, "/api/main/mostViewedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/main/lastProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/main/acceptedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/main/acceptedProductsByType/{type}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/main/acceptedProductsByCompany").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/main/moreProdsAll").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/main/moreProdsType/{type}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/main/moreProdsCompany").hasRole("COMPANY")
+                //ProductsAPI
+                    //Image
+                .requestMatchers(HttpMethod.GET, "api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
+                    //Product
+                .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/type/{type}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/products/").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                
+                //ReviewsAPI
+                .requestMatchers(HttpMethod.POST, "/api/reviews/{id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reviews/{id}").permitAll()
+                /*              FALTA POR TERMINAR
+                .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
+                */
+                //ShoppingCartAPI
+                .requestMatchers(HttpMethod.GET, "/api/shoppingCart").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/api/shoppingCart/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/shoppingCart/{id}}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/shoppingCart/payment").hasRole("USER")
+
+                //UserAPI
+                .requestMatchers(HttpMethod.GET, "/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
+
+
+
+
                 .anyRequest().permitAll()
             );
             http.formLogin(formLogin -> formLogin.disable());
