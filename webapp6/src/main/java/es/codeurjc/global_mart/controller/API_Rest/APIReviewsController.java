@@ -32,39 +32,96 @@ public class APIReviewsController {
         return ResponseEntity.ok(product.get().reviews());
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<?> postNewReview(
-            @RequestParam int calification,
-            @RequestParam String comment,
-            Authentication authentication,
-            @PathVariable Long id) {
-
-        if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-
-        Optional<ProductDTO> product = productService.getProductById(id);
+    @GetMapping("/{productId}/{reviewId}")
+    public ResponseEntity<?> getReviewsOfAProductById(@PathVariable Long productId, @PathVariable Long reviewId) {
+        Optional<ProductDTO> product = productService.getProductById(productId);
         if (product.isEmpty()) {
             return ResponseEntity.status(404).body("Product not found");
         }
 
+        return ResponseEntity.ok(product.get().reviews().stream().filter(review -> review.getReviewId().equals(reviewId)).findFirst().orElse(null));
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<?> postNewReview(
+            @PathVariable Long id,
+            @RequestBody ReviewDTO reviewDTO,
+            Authentication authentication) {
+
+        
+        
+        System.out.println("ReviewDTO: " + reviewDTO);
+        
+        if (authentication == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+    
+        Optional<ProductDTO> product = productService.getProductById(id);
+        if (product.isEmpty()) {
+            return ResponseEntity.status(404).body("Product not found");
+        }
+    
         Object principal = authentication.getPrincipal();
         ReviewDTO review = null;
-
+        String username = null;
+    
         if (principal instanceof OAuth2User oAuth2User) {
-            String username = oAuth2User.getAttribute("name");
-            review = reviewService.createReview(username, comment, calification);
+            username = oAuth2User.getAttribute("name");
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            String username = userDetails.getUsername();
-            review = reviewService.createReview(username, comment, calification);
+            username = userDetails.getUsername();
         }
-
+    
+        if (username != null) {
+            review = reviewService.createReview(username, reviewDTO.comment(), reviewDTO.calification());
+        }
+    
         if (review != null) {
             productService.addReviewToProduct(product.get(), review);
-            productService.addProduct(product.get());
+            System.out.println("Product: " + productService.getProductById(product.get().id()));
             return ResponseEntity.ok("Review added successfully");
         } else {
             return ResponseEntity.status(500).body("Failed to create review");
         }
     }
+/*                                          -------------------------------------FINISH IMPLEMENTATION
+    @DeleteMapping("/{productId}/{reviewId}")
+    public ResponseEntity<?> deleteReview(
+            @PathVariable Long productId,
+            @PathVariable Long reviewId,
+            Authentication authentication) {
+    
+        if (authentication == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+    
+        Optional<ProductDTO> product = productService.getProductById(productId);
+        if (product.isEmpty()) {
+            return ResponseEntity.status(404).body("Product not found");
+        }
+    
+        ReviewDTO review = product.get().reviews().stream().filter(r -> r.getReviewId().equals(reviewId)).findFirst().orElse(null);
+        if (review == null) {
+            return ResponseEntity.status(404).body("Review not found");
+        }
+    
+        Object principal = authentication.getPrincipal();
+        String username = null;
+    
+        if (principal instanceof OAuth2User oAuth2User) {
+            username = oAuth2User.getAttribute("name");
+        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+            username = userDetails.getUsername();
+        }
+    
+        if (username != null && review.username().equals(username)) {
+            productService.removeReviewFromProduct(product.get(), review);
+            productService.addProduct(product.get());
+            return ResponseEntity.ok("Review deleted successfully");
+        } else {
+            return ResponseEntity.status(403).body("Forbidden");
+        }
+    }
+
+     */
+    
 }

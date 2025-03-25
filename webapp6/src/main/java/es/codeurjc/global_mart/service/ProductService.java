@@ -61,7 +61,7 @@ public class ProductService {
         Product product2 = productMapper.toProduct(product);
         productRepository.save(product2);
         return productMapper.toProductDTO(product2);
-    }
+        }
 
     public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO) {
         Optional<Product> optionalProduct = productRepository.findById(productDTO.id());
@@ -76,7 +76,7 @@ public class ProductService {
         }
     }
 
-    public ProductDTO updateProduct(Long id, Product product) {
+        public ProductDTO updateProduct(Long id, Product product) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product updatedProduct = optionalProduct.get();
