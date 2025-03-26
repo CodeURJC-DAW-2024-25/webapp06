@@ -90,9 +90,9 @@ public class APIProductController {
 			Authentication authentication)throws SQLException {
 
 		if (authentication == null) return ResponseEntity.status(401).body("Unauthorized");
+		
 		Object principal = authentication.getPrincipal();
 		String username = null;
-
 
 		if (principal instanceof OAuth2User oAuth2User) {
 			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
@@ -123,9 +123,29 @@ public class APIProductController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ProductDTO deleteProduct(@PathVariable long id) {
+	public ResponseEntity<?> deleteProduct(@PathVariable long id, Authentication authentication) {
 
-		return productService.deleteProduct(id);
+		if (authentication == null) return ResponseEntity.status(401).body("Unauthorized");
+		
+		Object principal = authentication.getPrincipal();
+
+		if (principal instanceof OAuth2User oAuth2User) {
+			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
+				!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+
+				return ResponseEntity.status(403).body("Forbidden");
+			}
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
+			!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+
+				return ResponseEntity.status(403).body("Forbidden");
+			}
+
+		}
+
+		return ResponseEntity.ok(productService.deleteProduct(id));
 	}
 
 	@GetMapping("/{id}/image")
