@@ -11,108 +11,6 @@
 			"name": "Main",
 			"item": [
 				{
-					"name": "mostViewedProducts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/main/mostViewedProducts",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"main",
-								"mostViewedProducts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "lastProducts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/main/lastProducts",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"main",
-								"lastProducts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "acceptedProducts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/main/acceptedProducts",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"main",
-								"acceptedProducts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "acceptedProductsByType",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https:/{{URL}}/api/main/acceptedProductsByType/Appliances",
-							"host": [
-								"https"
-							],
-							"port": "",
-							"path": [
-								"{{URL}}",
-								"api",
-								"main",
-								"acceptedProductsByType",
-								"Appliances"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "acceptedCompanyProducts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/main/acceptedCompanyProducts",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"main",
-								"acceptedCompanyProducts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "currentUser",
 					"request": {
 						"method": "GET",
@@ -534,6 +432,118 @@
 								"api",
 								"products",
 								"17"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mostViewedProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/mostViewedProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"mostViewedProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lastProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/lastProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"lastProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "acceptedProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/acceptedProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"acceptedProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "acceptedProductsByType",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/acceptedProductsByType?type=appliances",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"acceptedProductsByType"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "appliances"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "acceptedCompanyProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/acceptedCompanyProducts?company=Samsung",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"acceptedCompanyProducts"
+							],
+							"query": [
+								{
+									"key": "company",
+									"value": "Samsung"
+								}
 							]
 						}
 					},

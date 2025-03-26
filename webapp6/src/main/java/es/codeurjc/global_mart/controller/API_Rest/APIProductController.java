@@ -19,7 +19,9 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 import java.io.IOException;
 import java.net.URI;
+import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,25 +89,26 @@ public class APIProductController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO,
-			Authentication authentication)throws SQLException {
+			Authentication authentication) throws SQLException {
 
-		if (authentication == null) return ResponseEntity.status(401).body("Unauthorized");
-		
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
+
 		Object principal = authentication.getPrincipal();
 		String username = null;
 
 		if (principal instanceof OAuth2User oAuth2User) {
-			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
-				!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
+					!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
 
 				return ResponseEntity.status(403).body("Forbidden");
 			}
-			
+
 			username = oAuth2User.getAttribute("name");
 
 		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
-			!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
+					!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
 
 				return ResponseEntity.status(403).body("Forbidden");
 			}
@@ -117,7 +120,7 @@ public class APIProductController {
 		if (username != null) {
 			ProductDTO updatedBookDTO = productService.updateProduct(id, productDTO, username);
 			return ResponseEntity.ok(updatedBookDTO);
-		}else {
+		} else {
 			return ResponseEntity.status(401).body("Unauthorized");
 		}
 	}
@@ -125,20 +128,21 @@ public class APIProductController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteProduct(@PathVariable long id, Authentication authentication) {
 
-		if (authentication == null) return ResponseEntity.status(401).body("Unauthorized");
-		
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
+
 		Object principal = authentication.getPrincipal();
 
 		if (principal instanceof OAuth2User oAuth2User) {
-			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
-				!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
+					!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
 
 				return ResponseEntity.status(403).body("Forbidden");
 			}
 
 		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
-			!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
+					!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
 
 				return ResponseEntity.status(403).body("Forbidden");
 			}
@@ -189,4 +193,63 @@ public class APIProductController {
 	}
 
 	// ------------------------------------------ALGORITHM------------------------------------------
+
+	@GetMapping("/mostViewedProducts")
+	public ResponseEntity<List<ProductDTO>> getMostViewedProducts() {
+		List<ProductDTO> mostViewedProducts = productService.getMostViewedProducts(4);
+		return ResponseEntity.ok(mostViewedProducts);
+	}
+
+	@GetMapping("/lastProducts")
+	public ResponseEntity<List<Product>> getLastProducts() {
+		List<ProductDTO> lastProducts = productService.getLastProducts();
+		addImageDataToProducts(lastProducts);
+		List<Product> products = productMapper.toProducts(lastProducts);
+		return ResponseEntity.ok(products);
+	}
+
+	@GetMapping("/acceptedProducts")
+	public ResponseEntity<List<ProductDTO>> getAcceptedProducts() {
+		List<ProductDTO> acceptedProducts = productService.getAcceptedProducts();
+		return ResponseEntity.ok(acceptedProducts);
+	}
+
+	@GetMapping("/acceptedProductsByType")
+	public ResponseEntity<List<ProductDTO>> getAcceptedProductsByType(@RequestParam(name = "type", required = true)
+	String type) {
+		List<ProductDTO> acceptedProductsByType = productService.getAcceptedProductsByType(type);
+		return ResponseEntity.ok(acceptedProductsByType);
+	}
+
+	@GetMapping("/acceptedCompanyProducts")
+	public ResponseEntity<List<ProductDTO>> getAcceptedCompanyProducts(@RequestParam(name = "company", required = true)
+	String company) { 
+
+		List<ProductDTO> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company);
+		if(acceptedCompanyProducts.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(acceptedCompanyProducts);
+	}
+
+	private void addImageDataToProducts(List<ProductDTO> products) {
+		for (ProductDTO product : products) {
+			addImageDataToProduct(product);
+		}
+	}
+
+	private void addImageDataToProduct(ProductDTO productDTO) {
+		try {
+			Product product = productMapper.toProduct(productDTO);
+			Blob imageBlob = product.getImage();
+			if (imageBlob != null) {
+				byte[] bytes = imageBlob.getBytes(1, (int) imageBlob.length());
+				String imageBase64 = "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
+				product.setImageBase64(imageBase64);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }
