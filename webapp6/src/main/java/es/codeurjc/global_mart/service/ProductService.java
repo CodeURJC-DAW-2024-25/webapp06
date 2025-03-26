@@ -83,19 +83,18 @@ public class ProductService {
         }
     }
 
-        public ProductDTO updateProduct(Long id, Product product) {
+        public ProductDTO updateProduct(Long id, ProductDTO productDTO, String company) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product updatedProduct = optionalProduct.get();
-            updatedProduct.setName(product.getName());
-            updatedProduct.setPrice(product.getPrice());
-            updatedProduct.setStock(product.getStock());
-            updatedProduct.setDescription(product.getDescription());
-            updatedProduct.setType(product.getType());
-            updatedProduct.setCompany(product.getCompany());
-            updatedProduct.setIsAccepted(product.getIsAccepted());
-            updatedProduct.setReviews(product.getReviews());
-            updatedProduct.setImage(product.getImage());
+            updatedProduct.setName(productDTO.name());
+            updatedProduct.setPrice(productDTO.price());
+            updatedProduct.setStock(productDTO.stock());
+            updatedProduct.setDescription(productDTO.description());
+            updatedProduct.setType(productDTO.type());
+            updatedProduct.setCompany(company);
+            updatedProduct.setIsAccepted(productDTO.isAccepted());
+            updatedProduct.setReviews(productDTO.reviews());
             productRepository.save(updatedProduct);
             return productMapper.toProductDTO(updatedProduct);
         } else {

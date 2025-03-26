@@ -30,17 +30,17 @@ public class APIProductController {
 	@Autowired
 	private ProductService productService;
 
-    @Autowired
-    private ProductMapper productMapper;
+	@Autowired
+	private ProductMapper productMapper;
 
+	// ------------------------------------------BASIC
+	// CRUD------------------------------------------
 
-//------------------------------------------BASIC CRUD------------------------------------------
-
-    @GetMapping("/")
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        List<ProductDTO> products = productService.getAcceptedProducts();
-        return ResponseEntity.ok(products);
-    }
+	@GetMapping("/")
+	public ResponseEntity<List<ProductDTO>> getAllProducts() {
+		List<ProductDTO> products = productService.getAcceptedProducts();
+		return ResponseEntity.ok(products);
+	}
 
 	@GetMapping("/type/{type}")
 	public ResponseEntity<List<ProductDTO>> getProductsByType(@PathVariable String type) {
@@ -49,47 +49,77 @@ public class APIProductController {
 	}
 
 	@GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        Optional<ProductDTO> product = productService.getProductById(id);
-        if (product.isPresent()) {
-            return ResponseEntity.ok(product.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+	public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+		Optional<ProductDTO> product = productService.getProductById(id);
+		if (product.isPresent()) {
+			return ResponseEntity.ok(product.get());
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
 	@PostMapping("/")
-	public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO, Authentication authentication) throws IOException {
-		
+	public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO, Authentication authentication)
+			throws IOException {
+
 		if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }else if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))){
+			return ResponseEntity.status(401).body("Unauthorized");
+		} else if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
 			return ResponseEntity.status(403).body("Forbidden");
 		}
 
+		Object principal = authentication.getPrincipal();
+		ProductDTO productDTOfinal = null;
+		String username = null;
 
-        Object principal = authentication.getPrincipal();
-        ProductDTO productDTOfinal = null;
-        String username = null;
-    
-        if (principal instanceof OAuth2User oAuth2User) {
-            username = oAuth2User.getAttribute("name");
-        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            username = userDetails.getUsername();
-        }
+		if (principal instanceof OAuth2User oAuth2User) {
+			username = oAuth2User.getAttribute("name");
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			username = userDetails.getUsername();
+		}
 
-        if (username != null) {
-            productDTOfinal = productService.addProduct(productDTO, username);
-        }
+		if (username != null) {
+			productDTOfinal = productService.addProduct(productDTO, username);
+		}
 
 		return ResponseEntity.ok(productDTOfinal);
 	}
 
 	@PutMapping("/{id}")
-	public ProductDTO updateProduct(@PathVariable long id, @RequestBody ProductDTO updatedProductDTO)
-			throws SQLException {
-		Product updatedBookDTO = productMapper.toProduct(updatedProductDTO);
-		return productService.updateProduct(id, updatedBookDTO);
+	public ResponseEntity<?> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO,
+			Authentication authentication)throws SQLException {
+
+		if (authentication == null) return ResponseEntity.status(401).body("Unauthorized");
+		Object principal = authentication.getPrincipal();
+		String username = null;
+
+
+		if (principal instanceof OAuth2User oAuth2User) {
+			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
+				!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+
+				return ResponseEntity.status(403).body("Forbidden");
+			}
+			
+			username = oAuth2User.getAttribute("name");
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) || 
+			!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+
+				return ResponseEntity.status(403).body("Forbidden");
+			}
+
+			username = userDetails.getUsername();
+
+		}
+
+		if (username != null) {
+			ProductDTO updatedBookDTO = productService.updateProduct(id, productDTO, username);
+			return ResponseEntity.ok(updatedBookDTO);
+		}else {
+			return ResponseEntity.status(401).body("Unauthorized");
+		}
 	}
 
 	@DeleteMapping("/{id}")
@@ -138,6 +168,5 @@ public class APIProductController {
 		return ResponseEntity.noContent().build();
 	}
 
-
-//------------------------------------------ALGORITHM------------------------------------------
+	// ------------------------------------------ALGORITHM------------------------------------------
 }
