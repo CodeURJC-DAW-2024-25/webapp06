@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,123 +25,210 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class APIUserController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private UserMapper userMapper;
+	@Autowired
+	private UserMapper userMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
+	@GetMapping("/")
+	public ResponseEntity<List<UserDTO>> getAllUsers() {
+		List<UserDTO> users = userService.getAllUsers();
+		return ResponseEntity.ok(users);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        Optional<UserDTO> user = userService.getUserById(id);
-        if (user.isEmpty()) {
-            return ResponseEntity.status(404).body("User not found");
-        }
-        return ResponseEntity.ok(user.get());
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getUserById(@PathVariable Long id) {
+		Optional<UserDTO> user = userService.getUserById(id);
+		if (user.isEmpty()) {
+			return ResponseEntity.status(404).body("User not found");
+		}
+		return ResponseEntity.ok(user.get());
+	}
 
-    @PostMapping("/")
-    public ResponseEntity<?> createUser(@RequestBody UserCreationDTO userDto) {
-        Optional<UserDTO> user = userService.findByUsername(userDto.username());
-        if (user.isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists");
-        } else {
-            try {
-                userService.createUser(null, userDto.name(), userDto.username(), userDto.email(), passwordEncoder.encode(userDto.password()), userDto.role());
-            } catch (IOException e) {
-                return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
-            }
-        }
-        return ResponseEntity.ok("User registered successfully");
-    }
+	@PostMapping("/")
+	public ResponseEntity<?> createUser(@RequestBody UserCreationDTO userDto) {
+		Optional<UserDTO> user = userService.findByUsername(userDto.username());
+		if (user.isPresent()) {
+			return ResponseEntity.badRequest().body("Username already exists");
+		} else {
+			try {
+				userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
+						passwordEncoder.encode(userDto.password()), userDto.role());
+			} catch (IOException e) {
+				return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
+			}
+		}
+		return ResponseEntity.ok("User registered successfully");
+	}
 
-    @PutMapping("/")
-    public ResponseEntity<?> updateProfile(
-            @RequestBody UserCreationDTO userUpdateDTO,
-            Authentication authentication) {
+	@PutMapping("/")
+	public ResponseEntity<?> updateProfile(
+			@RequestBody UserCreationDTO userUpdateDTO,
+			Authentication authentication) {
 
-        if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
+		if (authentication == null) {
+			return ResponseEntity.status(401).body("Unauthorized");
+		}
 
-        Object principal = authentication.getPrincipal();
+		Object principal = authentication.getPrincipal();
 
-        if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            Optional<UserDTO> optionalUser = userService.findByUsername(userDetails.getUsername());
+		if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			Optional<UserDTO> optionalUser = userService.findByUsername(userDetails.getUsername());
 
-            if (optionalUser.isPresent()) {
-                UserDTO userDTO = optionalUser.get();
-                User user = userMapper.toUser(userDTO);
+			if (optionalUser.isPresent()) {
+				UserDTO userDTO = optionalUser.get();
+				User user = userMapper.toUser(userDTO);
 
-                user.setUsername(userUpdateDTO.username());
-                user.setEmail(userUpdateDTO.email());
-                user.setName(userUpdateDTO.name());
+				user.setUsername(userUpdateDTO.username());
+				user.setEmail(userUpdateDTO.email());
+				user.setName(userUpdateDTO.name());
 
-                if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
-                    user.setPassword(passwordEncoder.encode(userUpdateDTO.password()));
-                }
+				if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
+					user.setPassword(passwordEncoder.encode(userUpdateDTO.password()));
+				}
 
-                userService.save(user);
-                return ResponseEntity.ok("Profile updated successfully");
-            }
-        }
+				userService.save(user);
+				return ResponseEntity.ok("Profile updated successfully");
+			}
+		}
 
-        return ResponseEntity.status(404).body("User not found");
-    }
+		return ResponseEntity.status(404).body("User not found");
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        Optional<UserDTO> user = userService.getUserById(id);
-        if (user.isEmpty()) {
-            return ResponseEntity.status(404).body("User not found");
-        }
-        userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted successfully");
-    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+		Optional<UserDTO> user = userService.getUserById(id);
+		if (user.isEmpty()) {
+			return ResponseEntity.status(404).body("User not found");
+		}
+		userService.deleteUser(id);
+		return ResponseEntity.ok("User deleted successfully");
+	}
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<Object> getUserImage(@PathVariable long id) throws SQLException, IOException {
+	// ------------------------------------------Images------------------------------------------
 
-        Resource userImage = userService.getUserImage(id);
+	@GetMapping("/{id}/image")
+	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
 
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-                .body(userImage);
-    }
+		Resource postImage = userService.getUserImage(id);
 
-    @PostMapping("/{id}/image")
-    public ResponseEntity<Object> createUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-            throws IOException {
+		return ResponseEntity
+				.ok()
+				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+				.body(postImage);
 
-        userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+	}
 
-        return ResponseEntity.ok("User image created successfully");
-    }
+	@PostMapping("/{id}/image")
+	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+			Authentication authentication)
+			throws SQLException, IOException {
 
-    @PutMapping("/{id}/image")
-    public ResponseEntity<Object> replaceUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-            throws IOException {
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
 
-        userService.replaceUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+		if (userService.getUserImage(id) != null) {
+			return ResponseEntity.badRequest().body("Image already exists");
+		}
 
-        return ResponseEntity.ok("User image replaced successfully");
-    }
+		Object principal = authentication.getPrincipal();
 
-    @DeleteMapping("/{id}/image")
-    public ResponseEntity<Object> deleteUserImage(@PathVariable long id) throws IOException {
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| userService.getUserById(id).get().username().equals(oAuth2User.getAttribute("name"))) {
+				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
+			}
 
-        userService.deleteUserImage(id);
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| userService.getUserById(id).get().username().equals(userDetails.getUsername())) {
+				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
+			}
+		}
 
-        return ResponseEntity.ok("User image deleted successfully");
-    }
+		return ResponseEntity.status(403).body("Forbidden");
+
+	}
+
+	@PutMapping("/{id}/image")
+	public ResponseEntity<?> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+			Authentication authentication)
+			throws SQLException, IOException {
+
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
+
+		if (userService.getUserImage(id) == null) {
+			return ResponseEntity.badRequest().body("Image doesn't exists");
+		}
+
+		Object principal = authentication.getPrincipal();
+
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| userService.getUserById(id).get().username().equals(oAuth2User.getAttribute("name"))) {
+				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
+			}
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| userService.getUserById(id).get().username().equals(userDetails.getUsername())) {
+				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
+			}
+		}
+
+		return ResponseEntity.status(403).body("Forbidden");
+
+	}
+
+	@DeleteMapping("/{id}/image")
+	public ResponseEntity<?> deleteProductImage(@PathVariable long id, Authentication authentication)
+			throws SQLException, IOException {
+
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
+
+		if (userService.getUserImage(id) == null) {
+			return ResponseEntity.badRequest().body("Image doesn't exists");
+		}
+
+		Object principal = authentication.getPrincipal();
+
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| userService.getUserById(id).get().username().equals(oAuth2User.getAttribute("name"))) {
+						userService.deleteUserImage(id);
+						return ResponseEntity.ok().build();
+			}
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| userService.getUserById(id).get().username().equals(userDetails.getUsername())) {
+						userService.deleteUserImage(id);
+						return ResponseEntity.ok().build();
+			}
+		}
+
+		return ResponseEntity.status(403).body("Forbidden");
+	}
 }

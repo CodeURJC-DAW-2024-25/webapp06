@@ -16,6 +16,5 @@ public record UserDTO(
         List<ReviewDTO> reviews,
         List<ProductDTO> cart,
         Double cartPrice,
-        List<Double> historicalOrderPrices,
-        String imageBase64) {
+        List<Double> historicalOrderPrices) {
 }
