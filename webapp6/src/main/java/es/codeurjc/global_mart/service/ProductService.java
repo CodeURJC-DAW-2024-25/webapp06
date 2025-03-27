@@ -312,8 +312,6 @@ public class ProductService {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
-            System.out.println("Product name: " + product.getName());
-            System.out.println("Product image: " + product.getImage());
             return product.getImage();
         }
         return null;

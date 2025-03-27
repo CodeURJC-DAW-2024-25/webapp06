@@ -99,10 +99,8 @@ public class APIProductController {
 
 		Object principal = authentication.getPrincipal();
 
-		// Check if the principal is an OAuth2User (authenticated via OAuth2)
 		if (principal instanceof OAuth2User) {
 			OAuth2User oAuth2User = (OAuth2User) principal;
-			// If the user is not the owner of the product, deny the operation
 			if (oAuth2User.getAuthorities().stream()
 					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
 					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
@@ -151,6 +149,8 @@ public class APIProductController {
 		return ResponseEntity.status(403).body("Forbidden");
 	}
 
+	// ------------------------------------------Images------------------------------------------
+
 	@GetMapping("/{id}/image")
 	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
 
@@ -164,31 +164,112 @@ public class APIProductController {
 	}
 
 	@PostMapping("/{id}/image")
-	public ResponseEntity<Object> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+			Authentication authentication)
 			throws IOException {
 
-		productService.createProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
 
-		URI location = fromCurrentRequest().build().toUri();
+		if (productService.getImageById(id) != null) {
+			return ResponseEntity.badRequest().body("Image already exists");
+		}
 
-		return ResponseEntity.created(location).build();
+		Object principal = authentication.getPrincipal();
+
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+				productService.createProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
+			}
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+				productService.createProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
+			}
+		}
+
+		return ResponseEntity.status(403).body("Forbidden");
+
 	}
 
 	@PutMapping("/{id}/image")
-	public ResponseEntity<Object> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
+	public ResponseEntity<?> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile, Authentication authentication)	
 			throws IOException {
 
-		productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
 
-		return ResponseEntity.noContent().build();
+		if (productService.getImageById(id) == null) {
+			return ResponseEntity.badRequest().body("Image doesn't exist");
+		}
+
+		Object principal = authentication.getPrincipal();
+
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+					productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+					return ResponseEntity.ok().build();
+			}
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+					productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+					return ResponseEntity.ok().build();
+			}
+		}
+
+		return ResponseEntity.status(403).body("Forbidden");
+
 	}
 
 	@DeleteMapping("/{id}/image")
-	public ResponseEntity<Object> deleteProductImage(@PathVariable long id) throws IOException {
+	public ResponseEntity<?> deleteProductImage(@PathVariable long id, Authentication authentication) throws IOException {
 
-		productService.deleteProductImage(id);
+		
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
 
-		return ResponseEntity.noContent().build();
+		if (productService.getImageById(id) == null) {
+			return ResponseEntity.badRequest().body("Image doesn't exist");
+		}
+
+		Object principal = authentication.getPrincipal();
+
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+					productService.deleteProductImage(id);
+					return ResponseEntity.ok().build();
+			}
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+					productService.deleteProductImage(id);
+					return ResponseEntity.ok().build();
+			}
+		}
+
+		return ResponseEntity.status(403).body("Forbidden");
+
 	}
 
 	// ------------------------------------------ALGORITHM------------------------------------------
