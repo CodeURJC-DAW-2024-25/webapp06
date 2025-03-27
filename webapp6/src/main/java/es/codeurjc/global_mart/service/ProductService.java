@@ -66,6 +66,7 @@ public class ProductService {
     public ProductDTO addProduct(ProductDTO productDTO, String company) {
         Product product = productMapper.toProduct(productDTO);
         product.setCompany(company);
+        product.setIsAccepted(false);
         productRepository.save(product);
         return productMapper.toProductDTO(product);
     }
@@ -93,7 +94,6 @@ public class ProductService {
             updatedProduct.setDescription(productDTO.description());
             updatedProduct.setType(productDTO.type());
             updatedProduct.setCompany(company);
-            updatedProduct.setIsAccepted(productDTO.isAccepted());
             updatedProduct.setReviews(productDTO.reviews());
             productRepository.save(updatedProduct);
             return productMapper.toProductDTO(updatedProduct);

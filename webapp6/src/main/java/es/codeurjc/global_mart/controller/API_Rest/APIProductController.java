@@ -3,6 +3,8 @@ package es.codeurjc.global_mart.controller.API_Rest;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.model.Product;
 import es.codeurjc.global_mart.service.ProductService;
+
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +26,11 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -232,6 +239,13 @@ public class APIProductController {
 		return ResponseEntity.ok(acceptedCompanyProducts);
 	}
 
+	@PutMapping("")
+	public ResponseEntity<?> acceptProduct(@PathVariable String id, Authentication authentication) {
+		//TODO: process PUT request
+		
+		return null;
+	}
+
 	private void addImageDataToProducts(List<ProductDTO> products) {
 		for (ProductDTO product : products) {
 			addImageDataToProduct(product);
@@ -251,5 +265,33 @@ public class APIProductController {
 			e.printStackTrace();
 		}
 	}
+
+	//Not working the ajax, it doesnt find the url
+
+    @GetMapping("/moreProdsAll")
+    public ResponseEntity<List<ProductDTO>> loadMoreProducts(@RequestParam int page) {
+        Pageable pageable = Pageable.ofSize(5).withPage(page);
+        Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
+        List<ProductDTO> products = productsPage.getContent();
+        
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/moreProdsTypes/{type}")
+    public ResponseEntity<List<ProductDTO>> loadMoreProductsByType(@RequestParam int page, @PathVariable String type) {
+        Pageable pageable = Pageable.ofSize(5).withPage(page);
+        Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
+        List<ProductDTO> products = productsPage.getContent();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/moreProdsCompany")
+    public ResponseEntity<List<ProductDTO>> loadMoreProductsByCompany(@RequestParam int page,
+            @RequestParam String company) {
+        Pageable pageable = Pageable.ofSize(5).withPage(page);
+        Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
+        List<ProductDTO> products = productsPage.getContent();
+        return ResponseEntity.ok(products);
+    }
 
 }

@@ -1,6 +1,7 @@
 package es.codeurjc.global_mart.controller.API_Rest.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,23 +24,43 @@ public class LoginController {
     private UserLoginService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
+    public ResponseEntity<Void> login(
             @RequestBody LoginRequest loginRequest,
             HttpServletResponse response) {
 
-        return userService.login(response, loginRequest);
+        boolean loginSuccess = userService.login(response, loginRequest);
+
+        if (loginSuccess) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(
-            @CookieValue(name = "RefreshToken", required = false) String refreshToken, HttpServletResponse response) {
-
-        return userService.refresh(response, refreshToken);
+    public ResponseEntity<Void> refreshToken(
+            @CookieValue(name = "RefreshToken", required = false) String refreshToken, 
+            HttpServletResponse response) {
+        
+        boolean isRefreshed = userService.refresh(response, refreshToken);
+        
+        if (isRefreshed) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); 
+        }
     }
+    
 
     @PostMapping("/logout")
-    public ResponseEntity<AuthResponse> logOut(HttpServletResponse response) {
-        return ResponseEntity.ok(new AuthResponse(Status.SUCCESS, userService.logout(response)));
+    public ResponseEntity<Void> logOut(HttpServletResponse response) {
+        boolean logoutSuccessful = userService.logout(response);
+
+        if (logoutSuccessful) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 401 Unauthorized
+        }
     }
 
     @GetMapping("/test")
