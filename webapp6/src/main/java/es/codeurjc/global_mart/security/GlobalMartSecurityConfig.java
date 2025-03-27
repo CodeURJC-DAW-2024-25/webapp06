@@ -74,15 +74,9 @@ public class GlobalMartSecurityConfig {
             
             http.authorizeHttpRequests(authorize -> authorize
                 //MainAPI
-                .requestMatchers(HttpMethod.GET, "/api/main/mostViewedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/main/lastProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/main/acceptedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/main/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/main/acceptedCompanyProducts").hasRole("COMPANY")
+
                 .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/main/moreProdsAll").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/main/moreProdsType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/main/moreProdsCompany").hasRole("COMPANY")
+
                 //ProductsAPI
                     //Image
                 .requestMatchers(HttpMethod.GET, "api/products/{id}/image").permitAll()
@@ -96,6 +90,17 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/products/").hasRole("COMPANY")
                 .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                    //Algorithm
+                .requestMatchers(HttpMethod.GET, "/api/products/mostViewedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/lastProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProductsByType/{type}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/acceptedCompanyProducts").hasRole("COMPANY")
+                    //Page
+                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsAll").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsType/{type}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/product/moreProdsCompany").hasRole("COMPANY")
                 
                 //ReviewsAPI
                 .requestMatchers(HttpMethod.POST, "/api/reviews/{id}").authenticated()

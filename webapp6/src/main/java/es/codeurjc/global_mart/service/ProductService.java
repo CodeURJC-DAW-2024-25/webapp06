@@ -84,7 +84,7 @@ public class ProductService {
         }
     }
 
-        public ProductDTO updateProduct(Long id, ProductDTO productDTO, String company) {
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isPresent()) {
             Product updatedProduct = optionalProduct.get();
@@ -93,7 +93,6 @@ public class ProductService {
             updatedProduct.setStock(productDTO.stock());
             updatedProduct.setDescription(productDTO.description());
             updatedProduct.setType(productDTO.type());
-            updatedProduct.setCompany(company);
             updatedProduct.setReviews(productDTO.reviews());
             productRepository.save(updatedProduct);
             return productMapper.toProductDTO(updatedProduct);

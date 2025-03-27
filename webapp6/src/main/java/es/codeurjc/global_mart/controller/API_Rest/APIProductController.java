@@ -27,9 +27,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/products")
@@ -101,34 +98,27 @@ public class APIProductController {
 			return ResponseEntity.status(401).body("Unauthorized");
 
 		Object principal = authentication.getPrincipal();
-		String username = null;
 
-		if (principal instanceof OAuth2User oAuth2User) {
-			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
-					!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
-
-				return ResponseEntity.status(403).body("Forbidden");
+		// Check if the principal is an OAuth2User (authenticated via OAuth2)
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			// If the user is not the owner of the product, deny the operation
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+				return ResponseEntity.ok(productService.updateProduct(id, productDTO));
 			}
 
-			username = oAuth2User.getAttribute("name");
-
-		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
-					!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
-
-				return ResponseEntity.status(403).body("Forbidden");
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+				return ResponseEntity.ok(productService.updateProduct(id, productDTO));
 			}
-
-			username = userDetails.getUsername();
-
 		}
 
-		if (username != null) {
-			ProductDTO updatedBookDTO = productService.updateProduct(id, productDTO, username);
-			return ResponseEntity.ok(updatedBookDTO);
-		} else {
-			return ResponseEntity.status(401).body("Unauthorized");
-		}
+		return ResponseEntity.status(403).body("Forbidden");
 	}
 
 	@DeleteMapping("/{id}")
@@ -139,25 +129,26 @@ public class APIProductController {
 
 		Object principal = authentication.getPrincipal();
 
-		if (principal instanceof OAuth2User oAuth2User) {
-			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
-					!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name")) ||
-					oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-
-				return ResponseEntity.status(403).body("Forbidden");
+		// Check if the principal is an OAuth2User (authenticated via OAuth2)
+		if (principal instanceof OAuth2User) {
+			OAuth2User oAuth2User = (OAuth2User) principal;
+			// If the user is not the owner of the product, deny the operation
+			if (oAuth2User.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+				return ResponseEntity.ok(productService.deleteProduct(id));
 			}
 
-		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
-					!productService.getProductById(id).get().company().equals(userDetails.getUsername()) ||
-					userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-
-				return ResponseEntity.status(403).body("Forbidden");
+		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
+			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
+			if (userDetails.getAuthorities().stream()
+					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
+					|| productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+				return ResponseEntity.ok(productService.deleteProduct(id));
 			}
-
 		}
 
-		return ResponseEntity.ok(productService.deleteProduct(id));
+		return ResponseEntity.status(403).body("Forbidden");
 	}
 
 	@GetMapping("/{id}/image")
@@ -223,27 +214,7 @@ public class APIProductController {
 	}
 
 	@GetMapping("/notAcceptedProducts")
-	public ResponseEntity<?> getNotAcceptedProducts(Authentication authentication) {
-
-		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
-
-		Object principal = authentication.getPrincipal();
-
-		if (principal instanceof OAuth2User oAuth2User) {
-			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-
-				return ResponseEntity.status(403).body("Forbidden");
-			}
-
-		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-
-				return ResponseEntity.status(403).body("Forbidden");
-			}
-
-		}
-
+	public ResponseEntity<?> getNotAcceptedProducts() {
 		List<ProductDTO> acceptedProducts = productService.getNotAcceptedProducts();
 		return ResponseEntity.ok(acceptedProducts);
 	}
