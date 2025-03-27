@@ -94,7 +94,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/products/mostViewedProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/lastProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasAnyRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedProductsByType/{type}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedCompanyProducts").hasRole("COMPANY")
                     //Page
@@ -105,25 +105,25 @@ public class GlobalMartSecurityConfig {
                 //ReviewsAPI
                 .requestMatchers(HttpMethod.POST, "/api/reviews/{id}").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reviews/{id}").permitAll()
-                /*              FALTA POR TERMINAR
                 .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
-                */
+                
                 //ShoppingCartAPI
-                .requestMatchers(HttpMethod.GET, "/api/shoppingCart").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/shoppingCart/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCart/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCart/payment").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/shoppingCarts/").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/api/shoppingCarts/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/payment").hasRole("USER")
 
                 //UserAPI
+                .requestMatchers(HttpMethod.PUT, "/api/users/").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/").permitAll()
+                    //Image
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/users").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
 
 
 
