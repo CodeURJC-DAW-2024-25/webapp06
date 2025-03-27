@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
 @RestController
 @RequestMapping("/api/products")
 public class APIProductController {
@@ -142,14 +141,16 @@ public class APIProductController {
 
 		if (principal instanceof OAuth2User oAuth2User) {
 			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
-					!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
+					!productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name")) ||
+					oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
 
 				return ResponseEntity.status(403).body("Forbidden");
 			}
 
 		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
 			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY")) ||
-					!productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
+					!productService.getProductById(id).get().company().equals(userDetails.getUsername()) ||
+					userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
 
 				return ResponseEntity.status(403).body("Forbidden");
 			}
@@ -216,24 +217,50 @@ public class APIProductController {
 	}
 
 	@GetMapping("/acceptedProducts")
-	public ResponseEntity<List<ProductDTO>> getAcceptedProducts() {
+	public ResponseEntity<?> getAcceptedProducts() {
 		List<ProductDTO> acceptedProducts = productService.getAcceptedProducts();
 		return ResponseEntity.ok(acceptedProducts);
 	}
 
+	@GetMapping("/notAcceptedProducts")
+	public ResponseEntity<?> getNotAcceptedProducts(Authentication authentication) {
+
+		if (authentication == null)
+			return ResponseEntity.status(401).body("Unauthorized");
+
+		Object principal = authentication.getPrincipal();
+
+		if (principal instanceof OAuth2User oAuth2User) {
+			if (oAuth2User.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+
+				return ResponseEntity.status(403).body("Forbidden");
+			}
+
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			if (userDetails.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+
+				return ResponseEntity.status(403).body("Forbidden");
+			}
+
+		}
+
+		List<ProductDTO> acceptedProducts = productService.getNotAcceptedProducts();
+		return ResponseEntity.ok(acceptedProducts);
+	}
+
 	@GetMapping("/acceptedProductsByType")
-	public ResponseEntity<List<ProductDTO>> getAcceptedProductsByType(@RequestParam(name = "type", required = true)
-	String type) {
+	public ResponseEntity<List<ProductDTO>> getAcceptedProductsByType(
+			@RequestParam(name = "type", required = true) String type) {
 		List<ProductDTO> acceptedProductsByType = productService.getAcceptedProductsByType(type);
 		return ResponseEntity.ok(acceptedProductsByType);
 	}
 
 	@GetMapping("/acceptedCompanyProducts")
-	public ResponseEntity<List<ProductDTO>> getAcceptedCompanyProducts(@RequestParam(name = "company", required = true)
-	String company) { 
+	public ResponseEntity<List<ProductDTO>> getAcceptedCompanyProducts(
+			@RequestParam(name = "company", required = true) String company) {
 
 		List<ProductDTO> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company);
-		if(acceptedCompanyProducts.isEmpty()) {
+		if (acceptedCompanyProducts.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(acceptedCompanyProducts);
@@ -241,8 +268,8 @@ public class APIProductController {
 
 	@PutMapping("")
 	public ResponseEntity<?> acceptProduct(@PathVariable String id, Authentication authentication) {
-		//TODO: process PUT request
-		
+		// TODO: process PUT request
+
 		return null;
 	}
 
@@ -266,32 +293,32 @@ public class APIProductController {
 		}
 	}
 
-	//Not working the ajax, it doesnt find the url
+	// Not working the ajax, it doesnt find the url
 
-    @GetMapping("/moreProdsAll")
-    public ResponseEntity<List<ProductDTO>> loadMoreProducts(@RequestParam int page) {
-        Pageable pageable = Pageable.ofSize(5).withPage(page);
-        Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
-        List<ProductDTO> products = productsPage.getContent();
-        
-        return ResponseEntity.ok(products);
-    }
+	@GetMapping("/moreProdsAll")
+	public ResponseEntity<List<ProductDTO>> loadMoreProducts(@RequestParam int page) {
+		Pageable pageable = Pageable.ofSize(5).withPage(page);
+		Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
+		List<ProductDTO> products = productsPage.getContent();
 
-    @GetMapping("/moreProdsTypes/{type}")
-    public ResponseEntity<List<ProductDTO>> loadMoreProductsByType(@RequestParam int page, @PathVariable String type) {
-        Pageable pageable = Pageable.ofSize(5).withPage(page);
-        Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
-        List<ProductDTO> products = productsPage.getContent();
-        return ResponseEntity.ok(products);
-    }
+		return ResponseEntity.ok(products);
+	}
 
-    @GetMapping("/moreProdsCompany")
-    public ResponseEntity<List<ProductDTO>> loadMoreProductsByCompany(@RequestParam int page,
-            @RequestParam String company) {
-        Pageable pageable = Pageable.ofSize(5).withPage(page);
-        Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
-        List<ProductDTO> products = productsPage.getContent();
-        return ResponseEntity.ok(products);
-    }
+	@GetMapping("/moreProdsTypes/{type}")
+	public ResponseEntity<List<ProductDTO>> loadMoreProductsByType(@RequestParam int page, @PathVariable String type) {
+		Pageable pageable = Pageable.ofSize(5).withPage(page);
+		Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
+		List<ProductDTO> products = productsPage.getContent();
+		return ResponseEntity.ok(products);
+	}
+
+	@GetMapping("/moreProdsCompany")
+	public ResponseEntity<List<ProductDTO>> loadMoreProductsByCompany(@RequestParam int page,
+			@RequestParam String company) {
+		Pageable pageable = Pageable.ofSize(5).withPage(page);
+		Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
+		List<ProductDTO> products = productsPage.getContent();
+		return ResponseEntity.ok(products);
+	}
 
 }
