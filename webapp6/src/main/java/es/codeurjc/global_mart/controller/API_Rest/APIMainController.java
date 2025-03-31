@@ -1,22 +1,12 @@
 package es.codeurjc.global_mart.controller.API_Rest;
 
-import es.codeurjc.global_mart.model.Product;
-import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import es.codeurjc.global_mart.dto.User.UserDTO;
-import es.codeurjc.global_mart.dto.Product.ProductDTO;
-import es.codeurjc.global_mart.dto.Product.ProductMapper;
-
-import java.sql.Blob;
-import java.util.Base64;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,11 +32,10 @@ public class APIMainController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(Authentication authentication) {
+    public ResponseEntity<UserProfile> getProfile(Authentication authentication) {
         if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(401).body(null);
         }
 
         Object principal = authentication.getPrincipal();
@@ -66,12 +55,12 @@ public class APIMainController {
                         u.name(),
                         u.username(),
                         u.email(),
-                        null, // reviw this
+                        null, // review this
                         false));
             }
         }
 
-        return ResponseEntity.status(404).body("User not found");
+        return ResponseEntity.status(404).body(null);
     }
 
 }

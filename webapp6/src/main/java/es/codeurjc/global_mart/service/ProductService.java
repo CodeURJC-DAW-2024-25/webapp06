@@ -469,9 +469,9 @@ public class ProductService {
 
         if (product.getImage() != null) {
             return new InputStreamResource(product.getImage().getBinaryStream());
-        } else {
-            throw new NoSuchElementException();
         }
+
+        return null;
     }
 
     public void createProductImage(long id, InputStream inputStream, long size) {

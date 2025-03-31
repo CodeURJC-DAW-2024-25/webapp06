@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
-import es.codeurjc.global_mart.dto.Reviewss.ReviewDTO;
-
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import java.io.IOException;
-import java.net.URI;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
@@ -64,13 +60,13 @@ public class APIProductController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO, Authentication authentication)
+	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO, Authentication authentication)
 			throws IOException {
 
 		if (authentication == null) {
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 		} else if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
-			return ResponseEntity.status(403).body("Forbidden");
+			return ResponseEntity.status(403).body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -91,11 +87,11 @@ public class APIProductController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO,
+	public ResponseEntity<ProductDTO> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO,
 			Authentication authentication) throws SQLException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		Object principal = authentication.getPrincipal();
 
@@ -116,14 +112,14 @@ public class APIProductController {
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteProduct(@PathVariable long id, Authentication authentication) {
+	public ResponseEntity<ProductDTO> deleteProduct(@PathVariable long id, Authentication authentication) {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		Object principal = authentication.getPrincipal();
 
@@ -146,7 +142,7 @@ public class APIProductController {
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 	}
 
 	// ------------------------------------------Images------------------------------------------
@@ -156,6 +152,12 @@ public class APIProductController {
 
 		Resource postImage = productService.getProductImage(id);
 
+		System.out.println("Image: " + postImage);
+
+		if (postImage == null) {
+			return ResponseEntity.notFound().build();
+		}
+
 		return ResponseEntity
 				.ok()
 				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
@@ -164,15 +166,15 @@ public class APIProductController {
 	}
 
 	@PostMapping("/{id}/image")
-	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
 			Authentication authentication)
 			throws IOException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		if (productService.getImageById(id) != null) {
-			return ResponseEntity.badRequest().body("Image already exists");
+			return ResponseEntity.badRequest().body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -196,19 +198,20 @@ public class APIProductController {
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 
 	}
 
 	@PutMapping("/{id}/image")
-	public ResponseEntity<?> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile, Authentication authentication)	
+	public ResponseEntity<ProductDTO> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+			Authentication authentication)
 			throws IOException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		if (productService.getImageById(id) == null) {
-			return ResponseEntity.badRequest().body("Image doesn't exist");
+			return ResponseEntity.badRequest().body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -218,8 +221,8 @@ public class APIProductController {
 			if (oAuth2User.getAuthorities().stream()
 					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
 					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
-					productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
-					return ResponseEntity.ok().build();
+				productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
 			}
 
 		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
@@ -227,24 +230,24 @@ public class APIProductController {
 			if (userDetails.getAuthorities().stream()
 					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
 					|| productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
-					productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
-					return ResponseEntity.ok().build();
+				productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
+				return ResponseEntity.ok().build();
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 
 	}
 
 	@DeleteMapping("/{id}/image")
-	public ResponseEntity<?> deleteProductImage(@PathVariable long id, Authentication authentication) throws IOException {
+	public ResponseEntity<ProductDTO> deleteProductImage(@PathVariable long id, Authentication authentication)
+			throws IOException {
 
-		
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		if (productService.getImageById(id) == null) {
-			return ResponseEntity.badRequest().body("Image doesn't exist");
+			return ResponseEntity.badRequest().body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -254,8 +257,8 @@ public class APIProductController {
 			if (oAuth2User.getAuthorities().stream()
 					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
 					|| productService.getProductById(id).get().company().equals(oAuth2User.getAttribute("name"))) {
-					productService.deleteProductImage(id);
-					return ResponseEntity.ok().build();
+				productService.deleteProductImage(id);
+				return ResponseEntity.ok().build();
 			}
 
 		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
@@ -263,12 +266,12 @@ public class APIProductController {
 			if (userDetails.getAuthorities().stream()
 					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
 					|| productService.getProductById(id).get().company().equals(userDetails.getUsername())) {
-					productService.deleteProductImage(id);
-					return ResponseEntity.ok().build();
+				productService.deleteProductImage(id);
+				return ResponseEntity.ok().build();
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 
 	}
 

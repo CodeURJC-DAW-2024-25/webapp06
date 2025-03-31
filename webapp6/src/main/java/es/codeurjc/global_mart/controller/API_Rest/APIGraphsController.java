@@ -28,33 +28,32 @@ public class APIGraphsController {
     private ProductService productService;
 
     @GetMapping("/companyGraph")
-    public ResponseEntity<?> displayGraph(Authentication authentication) {
+    public ResponseEntity<List<CompanyStadsDTO>> displayGraph(Authentication authentication) {
         String username = getUsername(authentication);
         if (username == null) {
-            return ResponseEntity.status(401).body("Unauthorized: Usuario no autenticado");
+            return ResponseEntity.status(401).body(null);
         }
 
         try {
             List<CompanyStadsDTO> dataList = productService.getCompanyStadistics(username);
             return ResponseEntity.ok(dataList);
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(404).body("Error: No se encontraron estadísticas para el usuario");
+            return ResponseEntity.status(404).body(null);
         }
     }
 
-   
     @GetMapping("/userGraph")
-    public ResponseEntity<?> displayUserGraph(Authentication authentication) {
+    public ResponseEntity<List<Double>> displayUserGraph(Authentication authentication) {
         String username = getUsername(authentication);
         if (username == null) {
-            return ResponseEntity.status(401).body("Unauthorized: Usuario no autenticado");
+            return ResponseEntity.status(401).body(null);
         }
 
         try {
             HistoricalOrdersDTO orderPrices = userService.getUserStads(username);
             return ResponseEntity.ok(orderPrices.historicalOrdersPrices());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al obtener los datos del usuario");
+            return ResponseEntity.status(500).body(null);
         }
     }
 
@@ -73,9 +72,8 @@ public class APIGraphsController {
         return null;
     }
 
-    
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException e) {
-        return ResponseEntity.status(404).body("Error: No se encontraron datos");
+        return ResponseEntity.status(404).body(null);
     }
 }
