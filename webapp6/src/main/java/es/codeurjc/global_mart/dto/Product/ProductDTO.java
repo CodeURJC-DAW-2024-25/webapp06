@@ -16,6 +16,5 @@ public record ProductDTO(
         Boolean isAccepted,
         Date date,
         Integer views_count,
-        List<Review> reviews,
-        String imageBase64) {
+        List<Review> reviews) {
 }
