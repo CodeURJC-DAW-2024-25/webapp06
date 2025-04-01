@@ -263,6 +263,11 @@ public class UserService {
         }
     }
 
+    public Long getUserId(UserDTO userDTO) {
+        User user = userMapper.toUser(userDTO);
+        return user.getId();
+    }
+
     public void createUserImage(long id, InputStream inputStream, long size) {
 
         User user = userRepository.findById(id).orElseThrow();

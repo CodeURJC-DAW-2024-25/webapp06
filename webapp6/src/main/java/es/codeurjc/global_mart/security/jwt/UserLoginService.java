@@ -2,8 +2,6 @@ package es.codeurjc.global_mart.security.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +22,8 @@ public class UserLoginService {
 	private final UserDetailsService userDetailsService;
 	private final JwtTokenProvider jwtTokenProvider;
 
-	public UserLoginService(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
+	public UserLoginService(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
+			JwtTokenProvider jwtTokenProvider) {
 		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 		this.jwtTokenProvider = jwtTokenProvider;
@@ -33,39 +32,38 @@ public class UserLoginService {
 	public boolean login(HttpServletResponse response, LoginRequest loginRequest) {
 		try {
 			Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-	
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-	
+
 			UserDetails user = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-	
+
 			var newAccessToken = jwtTokenProvider.generateAccessToken(user);
 			var newRefreshToken = jwtTokenProvider.generateRefreshToken(user);
-	
+
 			response.addCookie(buildTokenCookie(TokenType.ACCESS, newAccessToken));
 			response.addCookie(buildTokenCookie(TokenType.REFRESH, newRefreshToken));
-	
-			return true; 
+
+			return true;
 		} catch (Exception e) {
 			log.error("Login failed for user: {}", loginRequest.getUsername(), e);
-			return false; 
+			return false;
 		}
 	}
-	
 
 	public boolean refresh(HttpServletResponse response, String refreshToken) {
 		try {
 			var claims = jwtTokenProvider.validateToken(refreshToken);
 			UserDetails user = userDetailsService.loadUserByUsername(claims.getSubject());
-	
+
 			var newAccessToken = jwtTokenProvider.generateAccessToken(user);
 			response.addCookie(buildTokenCookie(TokenType.ACCESS, newAccessToken));
-	
-			return true; 
-	
+
+			return true;
+
 		} catch (Exception e) {
 			log.error("Error while processing refresh token", e);
-			return false; 
+			return false;
 		}
 	}
 
@@ -74,12 +72,11 @@ public class UserLoginService {
 			SecurityContextHolder.clearContext();
 			response.addCookie(removeTokenCookie(TokenType.ACCESS));
 			response.addCookie(removeTokenCookie(TokenType.REFRESH));
-			return true; 
+			return true;
 		} catch (Exception e) {
-			return false; 
+			return false;
 		}
 	}
-	
 
 	private Cookie buildTokenCookie(TokenType type, String token) {
 		Cookie cookie = new Cookie(type.cookieName, token);
@@ -89,7 +86,7 @@ public class UserLoginService {
 		return cookie;
 	}
 
-	private Cookie removeTokenCookie(TokenType type){
+	private Cookie removeTokenCookie(TokenType type) {
 		Cookie cookie = new Cookie(type.cookieName, "");
 		cookie.setMaxAge(0);
 		cookie.setHttpOnly(true);

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.codeurjc.global_mart.security.jwt.AuthResponse;
-import es.codeurjc.global_mart.security.jwt.AuthResponse.Status;
 import es.codeurjc.global_mart.security.jwt.LoginRequest;
 import es.codeurjc.global_mart.security.jwt.UserLoginService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,18 +37,17 @@ public class LoginController {
 
     @PostMapping("/refresh")
     public ResponseEntity<Void> refreshToken(
-            @CookieValue(name = "RefreshToken", required = false) String refreshToken, 
+            @CookieValue(name = "RefreshToken", required = false) String refreshToken,
             HttpServletResponse response) {
-        
+
         boolean isRefreshed = userService.refresh(response, refreshToken);
-        
+
         if (isRefreshed) {
             return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); 
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-    
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logOut(HttpServletResponse response) {
