@@ -11,8 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.client.HttpClientErrorException.Unauthorized;
-import es.codeurjc.global_mart.dto.Reviewss.ReviewMapperImpl;
 import es.codeurjc.global_mart.security.jwt.JwtRequestFilter;
 import es.codeurjc.global_mart.security.jwt.UnauthorizedHandlerJwt;
 
@@ -24,11 +22,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 @EnableWebSecurity
 public class GlobalMartSecurityConfig {
 
-  
     @Autowired
     public RepositoryUserDetailsService userDetailsService;
-
-    
 
     // encode user password
     @Bean
@@ -38,12 +33,9 @@ public class GlobalMartSecurityConfig {
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
-       
-    
 
     @Autowired
     private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
-    
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -63,85 +55,76 @@ public class GlobalMartSecurityConfig {
 
     }
 
-
     @Bean
-    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
 
-            http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider());
 
-            http.securityMatcher("/api/**")
+        http.securityMatcher("/api/**")
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
-            
-            http.authorizeHttpRequests(authorize -> authorize
-                //MainAPI
+
+        http.authorizeHttpRequests(authorize -> authorize
+                // MainAPI
 
                 .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
 
-                //ProductsAPI
-                    //Image
+                // ProductsAPI
+                // Image
                 .requestMatchers(HttpMethod.GET, "api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.POST, "api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
-                    //Product
+                // Product
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/type/{type}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/products/").hasRole("COMPANY")
                 .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
-                    //Algorithm
+                // Algorithm
                 .requestMatchers(HttpMethod.GET, "/api/products/mostViewedProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/lastProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedProductsByType/{type}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedCompanyProducts").hasRole("COMPANY")
-                    //Page
+                // Page
                 .requestMatchers(HttpMethod.GET, "/api/products/moreProdsAll").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/moreProdsType/{type}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/product/moreProdsCompany").hasRole("COMPANY")
-                
-                //ReviewsAPI
+
+                // ReviewsAPI
                 .requestMatchers(HttpMethod.POST, "/api/reviews/{id}").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reviews/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
-                
-                //ShoppingCartAPI
+
+                // ShoppingCartAPI
                 .requestMatchers(HttpMethod.GET, "/api/shoppingCarts/").hasRole("USER")
                 .requestMatchers(HttpMethod.DELETE, "/api/shoppingCarts/{id}").hasRole("USER")
                 .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/{id}").hasRole("USER")
                 .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/payment").hasRole("USER")
 
-                //UserAPI
+                // UserAPI
                 .requestMatchers(HttpMethod.PUT, "/api/users/").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/").permitAll()
-                    //Image
+                // Image
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
 
+                .anyRequest().permitAll());
+        http.formLogin(formLogin -> formLogin.disable());
+        http.csrf(csrf -> csrf.disable());
+        http.httpBasic(httpBasic -> httpBasic.disable());
 
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-
-                .anyRequest().permitAll()
-            );
-            http.formLogin(formLogin -> formLogin.disable());
-            http.csrf(csrf -> csrf.disable());
-            http.httpBasic(httpBasic -> httpBasic.disable());
-            
-            http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-            http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
-            return http.build();
-
-
-
-
+        return http.build();
 
     }
 

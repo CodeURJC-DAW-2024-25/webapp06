@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -215,8 +214,8 @@ public class APIUserController {
 			if (oAuth2User.getAuthorities().stream()
 					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
 					|| userService.getUserById(id).get().username().equals(oAuth2User.getAttribute("name"))) {
-						userService.deleteUserImage(id);
-						return ResponseEntity.ok().build();
+				userService.deleteUserImage(id);
+				return ResponseEntity.ok().build();
 			}
 
 		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
@@ -224,8 +223,8 @@ public class APIUserController {
 			if (userDetails.getAuthorities().stream()
 					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
 					|| userService.getUserById(id).get().username().equals(userDetails.getUsername())) {
-						userService.deleteUserImage(id);
-						return ResponseEntity.ok().build();
+				userService.deleteUserImage(id);
+				return ResponseEntity.ok().build();
 			}
 		}
 

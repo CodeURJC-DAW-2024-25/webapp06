@@ -1,7 +1,6 @@
 package es.codeurjc.global_mart.dto.User;
 
 import java.util.List;
-import java.sql.Blob;
 
 import es.codeurjc.global_mart.dto.Orders.OrderDTO;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;

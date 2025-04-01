@@ -1,7 +1,6 @@
 package es.codeurjc.global_mart.config;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import es.codeurjc.global_mart.model.Review;
 import es.codeurjc.global_mart.service.ProductService;
@@ -32,8 +30,8 @@ public class DataLoader {
         @PostConstruct
         public void loadData() throws IOException {
 
-                if (!userService.getAllUsers().isEmpty()) return;
-
+                if (!userService.getAllUsers().isEmpty())
+                        return;
 
                 byte[] image1 = new ClassPathResource("static/images/products/diariogreg.jpg")
                                 .getInputStream().readAllBytes();
@@ -64,9 +62,9 @@ public class DataLoader {
                 byte[] image14 = new ClassPathResource("static/images/products/cafetera.jpg")
                                 .getInputStream().readAllBytes();
                 byte[] image15 = new ClassPathResource("static/images/products/mancuernas.jpg")
-                                .getInputStream().readAllBytes();  
+                                .getInputStream().readAllBytes();
                 byte[] image16 = new ClassPathResource("static/images/products/don_quijote.jpg")
-                .getInputStream().readAllBytes();
+                                .getInputStream().readAllBytes();
 
                 // Create and associate reviews before persisting
                 Review review1 = new Review("user1", "Muy bueno", 5);
