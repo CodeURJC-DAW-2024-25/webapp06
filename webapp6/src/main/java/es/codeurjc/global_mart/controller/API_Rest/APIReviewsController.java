@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -27,15 +26,13 @@ public class APIReviewsController {
     ReviewMapper reviewMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<ReviewDTO>> getReviewsByProductId(@PathVariable Long id) {
+    public ResponseEntity<?> getReviewsByProductId(@PathVariable Long id) {
         Optional<ProductDTO> product = productService.getProductById(id);
         if (product.isEmpty()) {
             return ResponseEntity.status(404).body(null);
         }
 
-        List<ReviewDTO> reviews = reviewMapper.toReviewsDTO(product.get().reviews());
-
-        return ResponseEntity.ok(reviews);
+        return ResponseEntity.ok(product.get().reviews());
     }
 
     @GetMapping("/{productId}/{reviewId}")
@@ -56,12 +53,12 @@ public class APIReviewsController {
             Authentication authentication) {
 
         if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(401).body(null);
         }
 
         Optional<ProductDTO> product = productService.getProductById(id);
         if (product.isEmpty()) {
-            return ResponseEntity.status(404).body("Product not found");
+            return ResponseEntity.status(404).body(null);
         }
 
         Object principal = authentication.getPrincipal();
@@ -81,9 +78,9 @@ public class APIReviewsController {
         if (review != null) {
             productService.addReviewToProduct(product.get(), review);
             System.out.println("Product: " + productService.getProductById(product.get().id()));
-            return ResponseEntity.ok("Review added successfully");
+            return ResponseEntity.ok(review);
         } else {
-            return ResponseEntity.status(500).body("Failed to create review");
+            return ResponseEntity.status(500).body(null);
         }
     }
     /*

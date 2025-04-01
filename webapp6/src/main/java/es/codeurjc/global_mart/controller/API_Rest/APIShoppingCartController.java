@@ -3,6 +3,7 @@ package es.codeurjc.global_mart.controller.API_Rest;
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.User.ShoppingCartDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
+import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.OrderService;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
@@ -28,7 +29,7 @@ public class APIShoppingCartController {
     @GetMapping("/")
     public ResponseEntity<?> getShoppingCart(Authentication authentication) {
         if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(401).body(null);
         }
 
         Object principal = authentication.getPrincipal();
@@ -46,59 +47,58 @@ public class APIShoppingCartController {
             return ResponseEntity.ok(shoppingCart);
         }
 
-        return ResponseEntity.status(404).body("User not found");
+        return ResponseEntity.status(404).body(null);
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<?> addProductToCart(@PathVariable Long productId, Authentication authentication) {
+    public ResponseEntity<ProductDTO> addProductToCart(@PathVariable Long productId, Authentication authentication) {
         if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(401).body(null);
         }
 
         Object principal = authentication.getPrincipal();
+        UserDTO user = null;
         if (principal instanceof OAuth2User oAuth2User) {
-            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
+            user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            ProductDTO product = productService.getProductById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            userService.addProductToCart(user, product);
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            UserDTO user = userService.findByUsername(userDetails.getUsername())
+            user = userService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            ProductDTO product = productService.getProductById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            userService.addProductToCart(user, product);
         }
 
-        return ResponseEntity.ok("Product added to cart");
+        ProductDTO product = productService.getProductById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        userService.addProductToCart(user, product);
+
+        return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<?> removeProductFromCart(@PathVariable Long productId, Authentication authentication) {
+    public ResponseEntity<ProductDTO> removeProductFromCart(@PathVariable Long productId,
+            Authentication authentication) {
         if (authentication == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            return ResponseEntity.status(401).body(null);
         }
 
+        UserDTO user = null;
         Object principal = authentication.getPrincipal();
         if (principal instanceof OAuth2User oAuth2User) {
-            UserDTO user = userService.findByUsername(oAuth2User.getAttribute("name"))
+            user = userService.findByUsername(oAuth2User.getAttribute("name"))
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            ProductDTO product = productService.getProductById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (userService.productInCart(user, product)) {
-                userService.removeProductFromCart(user, product);
-            }
+
         } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            UserDTO user = userService.findByUsername(userDetails.getUsername())
+            user = userService.findByUsername(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            ProductDTO product = productService.getProductById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            if (userService.productInCart(user, product)) {
-                userService.removeProductFromCart(user, product);
-            }
         }
 
-        return ResponseEntity.ok("Product removed from cart");
+        ProductDTO product = productService.getProductById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        if (userService.productInCart(user, product)) {
+            userService.removeProductFromCart(user, product);
+        }
+
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping("/payment")
