@@ -29,68 +29,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "moreProdsAll",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https:/{{URL}}/api/main/moreProdsAll",
-							"host": [
-								"https"
-							],
-							"port": "",
-							"path": [
-								"{{URL}}",
-								"api",
-								"main",
-								"moreProdsAll"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "moreProdsType",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/main/moreProdsType/Books",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"main",
-								"moreProdsType",
-								"Books"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "moreProdsCompany",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/main/moreProdsCompany",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"main",
-								"moreProdsCompany"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -203,6 +141,26 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/auth/refresh",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -218,7 +176,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/2/image",
+									"raw": "https://{{URL}}/api/products/1/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -226,7 +184,7 @@
 									"path": [
 										"api",
 										"products",
-										"2",
+										"1",
 										"image"
 									]
 								}
@@ -238,8 +196,18 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "imageFile",
+											"type": "file",
+											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+										}
+									]
+								},
 								"url": {
-									"raw": "https://{{URL}}/api/products/17/image",
+									"raw": "https://{{URL}}/api/products/1/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -247,7 +215,7 @@
 									"path": [
 										"api",
 										"products",
-										"17",
+										"1",
 										"image"
 									]
 								}
@@ -259,6 +227,16 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "imageFile",
+											"type": "file",
+											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+										}
+									]
+								},
 								"url": {
 									"raw": "https://{{URL}}/api/products/1/image",
 									"protocol": "https",
@@ -291,6 +269,73 @@
 										"products",
 										"1",
 										"image"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Pages",
+					"item": [
+						{
+							"name": "moreProdsAll",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https:/{{URL}}/api/main/moreProdsAll",
+									"host": [
+										"https"
+									],
+									"port": "",
+									"path": [
+										"{{URL}}",
+										"api",
+										"main",
+										"moreProdsAll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "moreProdsType",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/main/moreProdsType/Books",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"main",
+										"moreProdsType",
+										"Books"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "moreProdsCompany",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{URL}}/api/main/moreProdsCompany",
+									"protocol": "https",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"api",
+										"main",
+										"moreProdsCompany"
 									]
 								}
 							},
@@ -366,7 +411,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"type\": \"Electronics\",\r\n  \"name\": \"Smartphone Z\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"isAccepted\": true,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}\r\n",
+							"raw": "{\r\n  \"type\": \"Electronics\",\r\n  \"name\": \"Smartphone Z\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -395,7 +440,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"type\": \"Electronics\",\r\n  \"name\": \"Smartphone Y\",\r\n  \"company\": \"TechCorp\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"isAccepted\": true,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}",
+							"raw": "{\r\n  \"type\": \"Appliances\",\r\n  \"name\": \"Smartphone Y\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"isAccepted\": true,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -403,7 +448,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/products/1",
+							"raw": "https://{{URL}}/api/products/17",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -411,7 +456,7 @@
 							"path": [
 								"api",
 								"products",
-								"1"
+								"17"
 							]
 						}
 					},
@@ -423,7 +468,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/17",
+							"raw": "https://{{URL}}/api/products/2",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -431,7 +476,7 @@
 							"path": [
 								"api",
 								"products",
-								"17"
+								"2"
 							]
 						}
 					},
@@ -492,6 +537,26 @@
 								"api",
 								"products",
 								"acceptedProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "notAcceptedProducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/notAcceptedProducts",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"notAcceptedProducts"
 							]
 						}
 					},
@@ -561,7 +626,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"a\",\r\n    \"calification\": 5,\r\n    \"comment\": \"Great product!\",\r\n    \"creationDate\": \"2024-03-23T12:00:00Z\"\r\n}",
+							"raw": "{\r\n    \"calification\": 5,\r\n    \"comment\": \"Great product!\",\r\n    \"creationDate\": \"2024-03-23T12:00:00Z\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -589,7 +654,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/reviews/2",
+							"raw": "https://{{URL}}/api/reviews/1",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -597,7 +662,7 @@
 							"path": [
 								"api",
 								"reviews",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -744,7 +809,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/users/1/image",
+									"raw": "https://{{URL}}/api/users/3/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -752,7 +817,7 @@
 									"path": [
 										"api",
 										"users",
-										"1",
+										"3",
 										"image"
 									]
 								}
@@ -764,8 +829,18 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "imageFile",
+											"type": "file",
+											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+										}
+									]
+								},
 								"url": {
-									"raw": "https://{{URL}}/api/users/1/image",
+									"raw": "https://{{URL}}/api/users/3/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -773,7 +848,7 @@
 									"path": [
 										"api",
 										"users",
-										"1",
+										"3",
 										"image"
 									]
 								}
@@ -785,8 +860,18 @@
 							"request": {
 								"method": "PUT",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "imageFile",
+											"type": "file",
+											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+										}
+									]
+								},
 								"url": {
-									"raw": "https://{{URL}}/api/users/1/image",
+									"raw": "https://{{URL}}/api/users/3/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -794,7 +879,7 @@
 									"path": [
 										"api",
 										"users",
-										"1",
+										"3",
 										"image"
 									]
 								}
@@ -807,7 +892,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/users/1/image",
+									"raw": "https://{{URL}}/api/users/3/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -815,7 +900,7 @@
 									"path": [
 										"api",
 										"users",
-										"1",
+										"3",
 										"image"
 									]
 								}
