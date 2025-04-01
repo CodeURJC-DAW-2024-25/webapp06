@@ -2,6 +2,7 @@ package es.codeurjc.global_mart.controller.API_Rest;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.model.Product;
+import es.codeurjc.global_mart.repository.ProductRepository;
 import es.codeurjc.global_mart.service.ProductService;
 
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 @RestController
 @RequestMapping("/api/products")
@@ -34,14 +36,18 @@ public class APIProductController {
 	@Autowired
 	private ProductMapper productMapper;
 
+	@Autowired
+	private ProductRepository productRepository;
 	// ------------------------------------------BASIC
 	// CRUD------------------------------------------
 
 	@GetMapping("/")
-	public ResponseEntity<List<ProductDTO>> getAllProducts() {
-		List<ProductDTO> products = productService.getAcceptedProducts();
+	public ResponseEntity<Page<ProductDTO>> getAllProducts(@PageableDefault(size = 5) Pageable pageable) {
+		Page<ProductDTO> products = productRepository.findByIsAcceptedTrue(pageable)
+				.map(productMapper::toProductDTO);
 		return ResponseEntity.ok(products);
 	}
+
 
 	@GetMapping("/type/{type}")
 	public ResponseEntity<List<ProductDTO>> getProductsByType(@PathVariable String type) {
