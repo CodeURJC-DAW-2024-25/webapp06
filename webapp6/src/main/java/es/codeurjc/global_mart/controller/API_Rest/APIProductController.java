@@ -50,8 +50,9 @@ public class APIProductController {
 
 
 	@GetMapping("/type/{type}")
-	public ResponseEntity<List<ProductDTO>> getProductsByType(@PathVariable String type) {
-		List<ProductDTO> products = productService.getProductsByType(type);
+	public ResponseEntity<Page<ProductDTO>> getProductsByType(@PathVariable String type, @PageableDefault(size = 5) Pageable pageable) {
+		Page<ProductDTO> products = productRepository.findByIsAcceptedTrueAndType(type, pageable)
+				.map(productMapper::toProductDTO);
 		return ResponseEntity.ok(products);
 	}
 
@@ -317,10 +318,11 @@ public class APIProductController {
 	}
 
 	@GetMapping("/acceptedCompanyProducts")
-	public ResponseEntity<List<ProductDTO>> getAcceptedCompanyProducts(
-			@RequestParam(name = "company", required = true) String company) {
+	public ResponseEntity<Page<ProductDTO>> getAcceptedCompanyProducts(
+			@RequestParam(name = "company", required = true) String company, 
+			@PageableDefault(size = 5) Pageable pageable) {
+		Page<ProductDTO> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company, pageable);
 
-		List<ProductDTO> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company);
 		if (acceptedCompanyProducts.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
@@ -356,14 +358,7 @@ public class APIProductController {
 
 	// Not working the ajax, it doesnt find the url
 
-	@GetMapping("/moreProdsAll")
-	public ResponseEntity<List<ProductDTO>> loadMoreProducts(@RequestParam int page) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<ProductDTO> productsPage = productService.getAcceptedProducts(pageable);
-		List<ProductDTO> products = productsPage.getContent();
 
-		return ResponseEntity.ok(products);
-	}
 
 	@GetMapping("/moreProdsTypes/{type}")
 	public ResponseEntity<List<ProductDTO>> loadMoreProductsByType(@RequestParam int page, @PathVariable String type) {
