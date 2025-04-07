@@ -15,7 +15,7 @@ import es.codeurjc.global_mart.security.jwt.UserLoginService;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/v1/api/auth")
 public class LoginController {
 
     @Autowired
