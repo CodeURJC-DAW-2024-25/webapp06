@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.codeurjc.global_mart.security.jwt.LoginRequest;
 import es.codeurjc.global_mart.security.jwt.UserLoginService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -21,6 +24,12 @@ public class LoginController {
     @Autowired
     private UserLoginService userService;
 
+
+    @Operation(summary = "Login a user", description = "Authenticate a user and provide a JWT token upon successful login.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Login successful, no content returned"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized, invalid credentials")
+    })
     @PostMapping("/login")
     public ResponseEntity<Void> login(
             @RequestBody LoginRequest loginRequest,
@@ -35,6 +44,12 @@ public class LoginController {
         }
     }
 
+
+    @Operation(summary = "Refresh authentication token", description = "Refresh the user's authentication token using the refresh token stored in the cookie.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Refresh successful, new token issued"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized, invalid or expired refresh token")
+    })
     @PostMapping("/refresh")
     public ResponseEntity<Void> refreshToken(
             @CookieValue(name = "RefreshToken", required = false) String refreshToken,
@@ -49,6 +64,12 @@ public class LoginController {
         }
     }
 
+
+    @Operation(summary = "Logout a user", description = "Logout the user by invalidating the session and refresh token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Logout successful, no content returned"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized, unable to logout")
+    })
     @PostMapping("/logout")
     public ResponseEntity<Void> logOut(HttpServletResponse response) {
         boolean logoutSuccessful = userService.logout(response);
@@ -60,6 +81,11 @@ public class LoginController {
         }
     }
 
+
+    @Operation(summary = "Test login endpoint", description = "Check if the login endpoint is accessible.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Test endpoint accessible")
+    })
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Login endpoint is accessible");

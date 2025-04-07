@@ -6,6 +6,12 @@ import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.service.OrderService;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +31,14 @@ public class APIShoppingCartController {
     @Autowired
     private OrderService orderService;
 
+    @Operation(summary = "Get shopping cart of a user", description = "Retrieve the shopping cart details of a specific user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Shopping cart retrieved successfully",
+                content = @Content(mediaType = "application/json", 
+                        schema = @Schema(implementation = ShoppingCartDTO.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @GetMapping("/{id}/shoppingcarts")
     public ResponseEntity<?> getShoppingCart(@PathVariable Long id, Authentication authentication) {
         if (authentication == null) {
@@ -43,6 +57,14 @@ public class APIShoppingCartController {
 
     }
 
+    @Operation(summary = "Add product to shopping cart", description = "Add a product to the shopping cart of a specific user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Product added to cart successfully",
+                content = @Content(mediaType = "application/json", 
+                        schema = @Schema(implementation = ProductDTO.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "User or product not found")
+    })
     @PostMapping("/{id}/shoppingcarts/{productId}")
     public ResponseEntity<ProductDTO> addProductToCart(@PathVariable Long id, @PathVariable Long productId,
             Authentication authentication) {
@@ -65,6 +87,14 @@ public class APIShoppingCartController {
         return ResponseEntity.status(404).body(null);
     }
 
+    @Operation(summary = "Remove product from shopping cart", description = "Remove a product from the shopping cart of a specific user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Product removed from cart successfully",
+                content = @Content(mediaType = "application/json", 
+                        schema = @Schema(implementation = ProductDTO.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "Product or user not found")
+    })
     @DeleteMapping("/{id}/shoppingcarts/{productId}")
     public ResponseEntity<ProductDTO> removeProductFromCart(@PathVariable Long productId,
             Authentication authentication) {
@@ -83,6 +113,11 @@ public class APIShoppingCartController {
         return ResponseEntity.ok(product);
     }
 
+    @Operation(summary = "Process payment for shopping cart", description = "Process payment for the items in the shopping cart.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Payment processed successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @PostMapping("/{id}/shoppingcarts/payment")
     public ResponseEntity<?> payment(Authentication authentication) {
 

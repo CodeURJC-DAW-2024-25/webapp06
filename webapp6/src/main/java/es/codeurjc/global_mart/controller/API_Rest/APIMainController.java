@@ -1,6 +1,12 @@
 package es.codeurjc.global_mart.controller.API_Rest;
 
 import es.codeurjc.global_mart.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,6 +23,14 @@ public class APIMainController {
     @Autowired
     private UserService userService;
 
+
+    @Operation(summary = "Get user profile", description = "Retrieve the profile details of the authenticated user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User profile retrieved successfully",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(Authentication authentication) {
         if (authentication == null) {

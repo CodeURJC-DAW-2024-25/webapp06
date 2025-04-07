@@ -16,6 +16,9 @@ import es.codeurjc.global_mart.dto.Product.CompanyStadsDTO;
 import es.codeurjc.global_mart.dto.User.HistoricalOrdersDTO;
 import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/graphs")
@@ -27,6 +30,13 @@ public class APIGraphsController {
     @Autowired
     private ProductService productService;
 
+
+    @Operation(summary = "Get company statistics graph", description = "Retrieve the company statistics data for graph display.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Company statistics retrieved successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "Company data not found")
+    })
     @GetMapping("/companyGraph")
     public ResponseEntity<List<CompanyStadsDTO>> displayGraph(Authentication authentication) {
         String username = getUsername(authentication);
@@ -42,6 +52,12 @@ public class APIGraphsController {
         }
     }
 
+    @Operation(summary = "Get user historical orders graph", description = "Retrieve the user's historical orders data for graph display.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User historical orders retrieved successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/userGraph")
     public ResponseEntity<List<Double>> displayUserGraph(Authentication authentication) {
         String username = getUsername(authentication);
