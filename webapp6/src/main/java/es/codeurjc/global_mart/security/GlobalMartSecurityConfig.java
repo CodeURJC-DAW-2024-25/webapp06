@@ -3,6 +3,7 @@ package es.codeurjc.global_mart.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -56,6 +57,7 @@ public class GlobalMartSecurityConfig {
     }
 
     @Bean
+    @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
 
         http.authenticationProvider(authenticationProvider());
@@ -75,6 +77,8 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
                 // Product
+                
+                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/type/{type}").permitAll()
@@ -85,7 +89,6 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/products/mostViewedProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/lastProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedProductsByType/{type}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/acceptedCompanyProducts").hasRole("COMPANY")
                 // Page
@@ -116,7 +119,8 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
 
-                .anyRequest().permitAll());
+                .anyRequest().denyAll());
+
         http.formLogin(formLogin -> formLogin.disable());
         http.csrf(csrf -> csrf.disable());
         http.httpBasic(httpBasic -> httpBasic.disable());
@@ -129,6 +133,7 @@ public class GlobalMartSecurityConfig {
     }
 
     @Bean
+    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
 
         http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la
