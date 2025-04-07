@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.controller.API_Rest;
+package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.dto.User.UserCreationDTO;
 import es.codeurjc.global_mart.dto.User.UserDTO;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/v1/api/users")
 public class APIUserController {
 
 	@Autowired

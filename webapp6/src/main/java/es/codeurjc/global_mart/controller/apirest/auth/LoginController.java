@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.controller.API_Rest.auth;
+package es.codeurjc.global_mart.controller.apirest.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

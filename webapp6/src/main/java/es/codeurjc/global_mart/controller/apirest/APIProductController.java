@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.controller.API_Rest;
+package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.model.Product;
@@ -27,7 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/v1/api/products")
 public class APIProductController {
 
 	@Autowired

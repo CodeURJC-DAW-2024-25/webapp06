@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.controller.API_Rest;
+package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import es.codeurjc.global_mart.dto.User.UserDTO;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/main")
+@RequestMapping("/v1/api/main")
 public class APIMainController {
 
     @Autowired

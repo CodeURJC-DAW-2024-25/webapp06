@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.controller.API_Rest;
+package es.codeurjc.global_mart.controller.apirest;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,7 +18,7 @@ import es.codeurjc.global_mart.service.ProductService;
 import es.codeurjc.global_mart.service.UserService;
 
 @RestController
-@RequestMapping("/api/graphs")
+@RequestMapping("/v1/api/graphs")
 public class APIGraphsController {
 
     @Autowired
