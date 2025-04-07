@@ -5,6 +5,12 @@ import es.codeurjc.global_mart.dto.User.UserDTO;
 import es.codeurjc.global_mart.dto.User.UserMapper;
 import es.codeurjc.global_mart.model.User;
 import es.codeurjc.global_mart.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -33,12 +39,28 @@ public class APIUserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+
+	@Operation(summary = "Get all users", description = "Retrieve a list of all users in the system.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List of users retrieved successfully",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = UserDTO.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
 	@GetMapping("/")
 	public ResponseEntity<List<UserDTO>> getAllUsers() {
 		List<UserDTO> users = userService.getAllUsers();
 		return ResponseEntity.ok(users);
 	}
 
+
+	@Operation(summary = "Get user by ID", description = "Retrieve a user by their unique ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User retrieved successfully",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = UserDTO.class))),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getUserById(@PathVariable Long id) {
 		Optional<UserDTO> user = userService.getUserById(id);
@@ -48,6 +70,12 @@ public class APIUserController {
 		return ResponseEntity.ok(user.get());
 	}
 
+	@Operation(summary = "Create a new user", description = "Register a new user in the system.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User created successfully"),
+        @ApiResponse(responseCode = "400", description = "Username already exists"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
 	@PostMapping("/")
 	public ResponseEntity<?> createUser(@RequestBody UserCreationDTO userDto) {
 		Optional<UserDTO> user = userService.findByUsername(userDto.username());
@@ -64,6 +92,12 @@ public class APIUserController {
 		return ResponseEntity.ok("User registered successfully");
 	}
 
+	@Operation(summary = "Update user profile", description = "Update the details of an existing user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Profile updated successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
 	@PutMapping("/")
 	public ResponseEntity<?> updateProfile(
 			@RequestBody UserCreationDTO userUpdateDTO,
@@ -98,6 +132,11 @@ public class APIUserController {
 		return ResponseEntity.status(404).body("User not found");
 	}
 
+	@Operation(summary = "Delete user", description = "Delete a user by their unique ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 		Optional<UserDTO> user = userService.getUserById(id);
@@ -110,6 +149,12 @@ public class APIUserController {
 
 	// ------------------------------------------Images------------------------------------------
 
+	@Operation(summary = "Get user image", description = "Retrieve the image of a user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User image retrieved successfully",
+                content = @Content(mediaType = "image/jpeg")),
+        @ApiResponse(responseCode = "404", description = "User image not found")
+    })
 	@GetMapping("/{id}/image")
 	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
 
@@ -122,6 +167,13 @@ public class APIUserController {
 
 	}
 
+	@Operation(summary = "Upload user image", description = "Upload a new image for a user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Image uploaded successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "400", description = "Image already exists")
+    })
 	@PostMapping("/{id}/image")
 	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
 			Authentication authentication)
@@ -159,6 +211,13 @@ public class APIUserController {
 
 	}
 
+	@Operation(summary = "Replace user image", description = "Replace the existing image for a user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Image replaced successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "400", description = "Image doesn't exist")
+    })
 	@PutMapping("/{id}/image")
 	public ResponseEntity<?> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
 			Authentication authentication)
@@ -196,6 +255,13 @@ public class APIUserController {
 
 	}
 
+	@Operation(summary = "Delete user image", description = "Delete a user's image.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User image deleted successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "Image doesn't exist"),
+        @ApiResponse(responseCode = "403", description = "Forbidden")
+    })
 	@DeleteMapping("/{id}/image")
 	public ResponseEntity<?> deleteProductImage(@PathVariable long id, Authentication authentication)
 			throws SQLException, IOException {
