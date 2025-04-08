@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.controller.API_Rest;
+package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.dto.User.ShoppingCartDTO;
@@ -19,7 +19,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/v1/api/users")
 public class APIShoppingCartController {
 
     @Autowired

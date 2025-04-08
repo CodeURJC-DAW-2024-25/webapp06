@@ -1,4 +1,4 @@
-package es.codeurjc.global_mart.controller.API_Rest;
+package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +17,7 @@ import es.codeurjc.global_mart.dto.User.UserDTO;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/main")
+@RequestMapping("/v1/api/main")
 public class APIMainController {
 
     @Autowired
