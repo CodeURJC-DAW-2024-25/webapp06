@@ -418,11 +418,20 @@ public class APIProductController {
 
 
 
-	@PutMapping("")
-	public ResponseEntity<?> acceptProduct(@PathVariable String id, Authentication authentication) {
-		// TODO: process PUT request
+	@PutMapping("/accept")
+	public ResponseEntity<ProductDTO> acceptProduct(@RequestParam Long id) {
+		Optional<Product> productOptional = productRepository.findById(id);
 
-		return null;
+		if (productOptional.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Product product = productOptional.get();
+		product.setIsAccepted(true);
+		productRepository.save(product);
+
+		ProductDTO productDTO = productMapper.toProductDTO(product);
+		return ResponseEntity.ok(productDTO);
 	}
 
 	private void addImageDataToProducts(List<ProductDTO> products) {
