@@ -1,5 +1,6 @@
 package es.codeurjc.global_mart.repository;
 
+import es.codeurjc.global_mart.dto.Product.ProductDTO;
 import es.codeurjc.global_mart.model.Product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,6 +32,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByIsAcceptedTrue(Pageable pageable);
     Page<Product> findByIsAcceptedTrueAndType(String type, Pageable pageable);
     Page<Product> findByIsAcceptedTrueAndCompany(String company, Pageable pageable);
+    Page<Product> findByIsAcceptedFalse(Pageable pageable);
+    Page<ProductDTO> findByNotIsAccepted(Pageable pageable);
     
     
     
