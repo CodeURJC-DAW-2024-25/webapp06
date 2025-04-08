@@ -119,7 +119,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
 
-                .anyRequest().denyAll());
+                .anyRequest().permitAll());
 
         http.formLogin(formLogin -> formLogin.disable());
         http.csrf(csrf -> csrf.disable());
