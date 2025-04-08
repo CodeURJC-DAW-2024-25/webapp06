@@ -74,9 +74,7 @@ public class APIProductController {
 					.map(productMapper::toProductDTO);
 		}
 
-		if (products.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+		
 
 		return ResponseEntity.ok(products);
 	}
