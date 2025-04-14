@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FooterComponent } from './footer/footer.component';
-import { NavComponent } from './nav/nav.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { NavComponent } from './components/nav/nav.component';
 import { CommonModule } from '@angular/common';
-import { SliderComponent } from './slider/slider.component';
+import { SliderComponent } from './components/slider/slider.component';
 
 @Component({
   selector: 'app-root',

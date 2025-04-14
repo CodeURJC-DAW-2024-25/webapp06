@@ -1,0 +1,32 @@
+<div class="user_container">
+    <div class="profile_section">
+        <ng-container *ngIf="userDTO; else noUserData">
+            <img [src]="userDTO.imageBase64" alt="User profile">
+            <div class="user_data">
+                <h2>{{userDTO.name}}</h2>
+                <p>Username: {{userDTO.username}}</p>
+                <p>Email: {{userDTO.email}}</p>
+                <a *ngIf="!userDTO.isGoogleUser" routerLink="/edit_profile" class="edit_profile_button">Edit Profile</a>
+            </div>
+        </ng-container>
+
+        <ng-template #noUserData>
+            <img [src]="profile_image" alt="User profile">
+            <div class="user_data">
+                <h2>{{name}}</h2>
+                <p>Username: {{username}}</p>
+                <p>Email: {{email}}</p>
+                <a *ngIf="!isGoogleUser" routerLink="/edit_profile" class="edit_profile_button">Edit Profile</a>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<div class="buttons_section">
+    <button *ngIf="isUser" routerLink="/showUserGraphic">
+        Show graph of my expenses
+    </button>
+    <button *ngIf="isCompany" routerLink="/displayGraphs">
+        Show graph of my type of products
+    </button>
+</div>
