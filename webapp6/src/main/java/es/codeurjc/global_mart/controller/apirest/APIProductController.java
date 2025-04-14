@@ -57,18 +57,30 @@ public class APIProductController {
 	public ResponseEntity<Page<ProductDTO>> getProducts(
 			@RequestParam(name = "accepted", required = false) Boolean accepted,
 			@RequestParam(name = "company", required = false) String company,
-			@PageableDefault(size = 5) Pageable pageable) {
+			@PageableDefault(size = 5) Pageable pageable,
+			Authentication authentication) {
 
 		Page<ProductDTO> products;
 
 		if (accepted && company != null) {
+			// Only users with ROLE_COMPANY can access this
+			if (authentication == null || authentication.getAuthorities().stream()
+					.noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
+				return ResponseEntity.status(403).build();
+			}
 			// Get accepted products by company
 			products = productService.getAcceptedCompanyProducts(company, pageable);
 		} else if (company == null && !accepted) {
+			// Only users with ROLE_ADMIN can access this
+			if (authentication == null || authentication.getAuthorities().stream()
+					.noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+				return ResponseEntity.status(403).build();
+			}
 			// Get not accepted products
 			products = productRepository.findByIsAcceptedFalse(pageable)
 					.map(productMapper::toProductDTO);
 		} else {
+			// All users can access this
 			// Get all products
 			products = productRepository.findByIsAcceptedTrue(pageable)
 					.map(productMapper::toProductDTO);

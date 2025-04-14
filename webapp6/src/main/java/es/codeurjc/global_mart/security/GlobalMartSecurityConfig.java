@@ -62,62 +62,55 @@ public class GlobalMartSecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
 
-        http.securityMatcher("/api/**")
+        http.securityMatcher("/v1/sapi/**")
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
 
         http.authorizeHttpRequests(authorize -> authorize
                 // MainAPI
 
-                .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
+                .requestMatchers(HttpMethod.GET, "/v1/api/main/profile").authenticated()
 
                 // ProductsAPI
                 // Image
-                .requestMatchers(HttpMethod.GET, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.POST, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/products/{id}/image").permitAll()
                 // Product
                 
-                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/type/{type}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/products/").hasRole("COMPANY")
-                .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/").permitAll()   //Este comando tiene mucha informacion como parametros que hace que pueda ser diferentes tipos de comando (observar info)
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/type").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/products/").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.PUT, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
                 // Algorithm
-                .requestMatchers(HttpMethod.GET, "/api/products/mostViewedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/lastProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedCompanyProducts").hasRole("COMPANY")
-                // Page
-                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsAll").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/product/moreProdsCompany").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/mostViewedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/lastProducts").permitAll()
+                // Page --> se hace introduciendo page= x a traves de la funciona de v1/api/products/
 
                 // ReviewsAPI
-                .requestMatchers(HttpMethod.POST, "/api/reviews/{id}").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/reviews/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/reviews/{id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/v1/api/reviews/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/reviews").permitAll()
 
                 // ShoppingCartAPI
-                .requestMatchers(HttpMethod.GET, "/api/shoppingCarts/").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/shoppingCarts/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/payment").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/v1/api/shoppingCarts/").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/shoppingCarts/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/v1/api/shoppingCarts/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/v1/api/shoppingCarts/payment").hasRole("USER")
 
                 // UserAPI
-                .requestMatchers(HttpMethod.PUT, "/api/users/").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/users/").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/users/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/users/").permitAll()
                 // Image
-                .requestMatchers(HttpMethod.GET, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/users/{id}/image").permitAll()
 
                 .anyRequest().permitAll());
 
