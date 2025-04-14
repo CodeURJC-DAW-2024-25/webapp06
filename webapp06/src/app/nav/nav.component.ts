@@ -1,11 +1,28 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-nav',
-  standalone: false,
   templateUrl: './nav.component.html',
-  styleUrl: './nav.component.css'
+  styleUrls: ['./nav.component.css'],
+  standalone: true,
+  imports: [RouterModule, CommonModule]
 })
 export class NavComponent {
+  isCompany: boolean = false;
+  isAdmin: boolean = false;
+  isUser: boolean = true;
+  logged: boolean = false;
+  username: string = '';
 
+  getHomeLink(): string {
+    if (this.isCompany) {
+      return '/products/allProducts';
+    } else if (this.isAdmin) {
+      return '/adminPage';
+    } else {
+      return '/redir';
+    }
+  }
 }
