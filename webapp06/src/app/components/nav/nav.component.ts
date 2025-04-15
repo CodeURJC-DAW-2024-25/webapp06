@@ -13,7 +13,7 @@ export class NavComponent {
   isCompany: boolean = false;
   isAdmin: boolean = false;
   isUser: boolean = true;
-  logged: boolean = true;
+  logged: boolean = false;
   username: string = 'Jack Joe';
 
   getHomeLink(): string {
