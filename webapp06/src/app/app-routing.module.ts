@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -9,6 +10,7 @@ export const routes: Routes = [
   { path: 'redir', redirectTo: '/home', pathMatch: 'full' },
   { path: 'user-profile', component: UserProfileComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
 ];
 
 // Mantén el NgModule si lo sigues usando en algún lugar

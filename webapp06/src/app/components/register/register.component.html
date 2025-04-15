@@ -1,0 +1,47 @@
+<div class="register-container">
+    <div class="form_div register_div">
+        <h2>Register</h2>
+
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label>Enter your Full name</label>
+                <input type="text" [(ngModel)]="registerData.name" name="name" placeholder="Full Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Enter your Username</label>
+                <input type="text" [(ngModel)]="registerData.username" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Enter your email</label>
+                <input type="email" [(ngModel)]="registerData.email" name="email" placeholder="Email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Enter your password</label>
+                <input type="password" [(ngModel)]="registerData.password" name="password" placeholder="Password"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label>Choose a profile image</label>
+                <input type="file" accept="image/*" (change)="onFileSelected($event)">
+            </div>
+
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="individual" name="role" value="USER" [(ngModel)]="registerData.role"
+                        checked>
+                    <label for="individual">Individual</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="empresa" name="role" value="COMPANY" [(ngModel)]="registerData.role">
+                    <label for="empresa">Empresa</label>
+                </div>
+            </div>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</div>
