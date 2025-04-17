@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { FooterComponent } from '../footer/footer.component';
-import { NavComponent } from '../nav/nav.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
+  standalone: false,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  imports: [CommonModule, FormsModule, NavComponent, FooterComponent],
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   username: string = '';

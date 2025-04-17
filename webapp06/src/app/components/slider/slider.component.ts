@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 interface Slide {
   imageUrl: string;
@@ -9,8 +8,7 @@ interface Slide {
 
 @Component({
   selector: 'app-slider',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   templateUrl: './slider.component.html',
   styleUrl: './slider.component.css'
 })
@@ -34,23 +32,23 @@ export class SliderComponent implements OnInit, OnDestroy {
 
   slideNext() {
     this.slides[this.currentSlide].animation = 'next1 0.5s ease-in forwards';
-    
+
     this.currentSlide++;
     if (this.currentSlide >= this.slides.length) {
       this.currentSlide = 0;
     }
-    
+
     this.slides[this.currentSlide].animation = 'next2 0.5s ease-in forwards';
   }
 
   slidePrev() {
     this.slides[this.currentSlide].animation = 'prev1 0.5s ease-in forwards';
-    
+
     this.currentSlide--;
     if (this.currentSlide < 0) {
       this.currentSlide = this.slides.length - 1;
     }
-    
+
     this.slides[this.currentSlide].animation = 'prev2 0.5s ease-in forwards';
   }
 

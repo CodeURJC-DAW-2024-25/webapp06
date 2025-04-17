@@ -1,21 +1,18 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
-export const routes: Routes = [
+const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'redir', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'user-profile', component: UserProfileComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'user-profile', component: UserProfileComponent },
+  // Add any other routes you need
 ];
-
-// Mantén el NgModule si lo sigues usando en algún lugar
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
