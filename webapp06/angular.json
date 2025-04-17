@@ -78,11 +78,7 @@
               "buildTarget": "webapp06:build:development"
             }
           },
-          "defaultConfiguration": "development",
-          "options": {
-            "port": 8443,
-            "servePath": "/new"
-          }
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
