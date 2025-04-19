@@ -80,7 +80,7 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 4200,
+            "port": 8443,
             "servePath": "/new/",
             "open": true
           }

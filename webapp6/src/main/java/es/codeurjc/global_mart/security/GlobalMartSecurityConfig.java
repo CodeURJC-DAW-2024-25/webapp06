@@ -66,6 +66,7 @@ public class GlobalMartSecurityConfig {
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
 
         http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/new/**").permitAll()
                 // MainAPI
 
                 .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
@@ -77,7 +78,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
                 // Product
-                
+
                 .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
