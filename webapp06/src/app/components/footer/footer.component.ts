@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-footer', // Este es el selector que debes usar en las plantillas
-  standalone: true,
+  selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrls: ['./footer.component.css'],
+  standalone: false,
 })
 export class FooterComponent {
 }

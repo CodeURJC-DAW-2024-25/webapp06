@@ -1,0 +1,81 @@
+<!-- src/app/components/shopping-cart/shopping-cart.component.html -->
+<div class="container mt-4">
+    <h1>Shopping Cart</h1>
+
+    <div *ngIf="loading" class="text-center mt-5">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && isEmpty" class="text-center mt-5">
+        <h3>Your cart is empty</h3>
+        <p>Add products to your cart to see them here.</p>
+        <a routerLink="/products/allProducts" class="btn btn-primary mt-3">Browse Products</a>
+    </div>
+
+    <div *ngIf="!loading && !isEmpty" class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Cart Items ({{ cart.cartProducts.length }})</h5>
+                </div>
+                <div class="card-body">
+                    <div class="cart-item" *ngFor="let product of cart.cartProducts; let i = index">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img *ngIf="product.imageBase64" [src]="product.imageBase64" class="img-fluid"
+                                    alt="{{ product.name }}">
+                                <img *ngIf="!product.imageBase64" src="assets/images/product-placeholder.jpg"
+                                    class="img-fluid" alt="Placeholder">
+                            </div>
+                            <div class="col-md-5">
+                                <h5>{{ product.name }}</h5>
+                                <p class="text-muted">{{ product.company }}</p>
+                                <p class="small">{{ product.description | slice:0:100 }}{{ product.description?.length >
+                                    100 ? '...' : '' }}</p>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <p class="fw-bold">{{ product.price | currency:'EUR' }}</p>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <button class="btn btn-sm btn-outline-danger" (click)="removeProduct(product.id)">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                        <hr *ngIf="i < cart.cartProducts.length - 1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>{{ cart.totalPrice | currency:'EUR' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping</span>
+                        <span>Free</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold">Total</span>
+                        <span class="fw-bold">{{ cart.totalPrice | currency:'EUR' }}</span>
+                    </div>
+                    <button class="btn btn-primary w-100" [disabled]="processingPayment" (click)="processPayment()">
+                        <span *ngIf="processingPayment" class="spinner-border spinner-border-sm me-2" role="status"
+                            aria-hidden="true"></span>
+                        Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
