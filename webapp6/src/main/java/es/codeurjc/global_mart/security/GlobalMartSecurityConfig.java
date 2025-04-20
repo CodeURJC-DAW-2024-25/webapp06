@@ -62,7 +62,7 @@ public class GlobalMartSecurityConfig {
 
         http.authenticationProvider(authenticationProvider());
 
-        http.securityMatcher("/v1/sapi/**")
+        http.securityMatcher("/v1/api/**")
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
 
         http.authorizeHttpRequests(authorize -> authorize
@@ -71,19 +71,22 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/v1/api/main/profile").authenticated()
 
                 // ProductsAPI
+                
+                // Product
+                
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/").permitAll()   //Este comando tiene mucha informacion como parametros que hace que pueda ser diferentes tipos de comando (observar info)
+                .requestMatchers(HttpMethod.PUT, "/v1/api/products/accept").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/type").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/products/").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/{id}").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
                 // Image
                 .requestMatchers(HttpMethod.GET, "/v1/api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.POST, "/v1/api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/v1/api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/v1/api/products/{id}/image").permitAll()
-                // Product
-                
-                .requestMatchers(HttpMethod.GET, "/v1/api/products/").permitAll()   //Este comando tiene mucha informacion como parametros que hace que pueda ser diferentes tipos de comando (observar info)
-                .requestMatchers(HttpMethod.GET, "/v1/api/products/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/v1/api/products/type").permitAll()
-                .requestMatchers(HttpMethod.POST, "/v1/api/products/").hasRole("COMPANY")
-                .requestMatchers(HttpMethod.PUT, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+
                 // Algorithm
                 .requestMatchers(HttpMethod.GET, "/v1/api/products/mostViewedProducts").permitAll()
                 .requestMatchers(HttpMethod.GET, "/v1/api/products/lastProducts").permitAll()
@@ -101,6 +104,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/v1/api/shoppingCarts/payment").hasRole("USER")
 
                 // UserAPI
+                .requestMatchers(HttpMethod.POST, "/v1/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/v1/api/users/").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/v1/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/v1/api/users/").permitAll()

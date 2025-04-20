@@ -65,7 +65,7 @@ public class APIUserController {
 	public ResponseEntity<?> getUserById(@PathVariable Long id) {
 		Optional<UserDTO> user = userService.getUserById(id);
 		if (user.isEmpty()) {
-			return ResponseEntity.status(404).body("User not found");
+			return ResponseEntity.status(404).body(null);
 		}
 		return ResponseEntity.ok(user.get());
 	}
@@ -80,7 +80,7 @@ public class APIUserController {
 	public ResponseEntity<?> createUser(@RequestBody UserCreationDTO userDto) {
 		Optional<UserDTO> user = userService.findByUsername(userDto.username());
 		if (user.isPresent()) {
-			return ResponseEntity.badRequest().body("Username already exists");
+			return ResponseEntity.badRequest().body(null);
 		} else {
 			try {
 				userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
@@ -89,7 +89,7 @@ public class APIUserController {
 				return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
 			}
 		}
-		return ResponseEntity.ok("User registered successfully");
+		return ResponseEntity.ok(null);
 	}
 
 	@Operation(summary = "Update user profile", description = "Update the details of an existing user.")
@@ -104,7 +104,7 @@ public class APIUserController {
 			Authentication authentication) {
 
 		if (authentication == null) {
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -125,11 +125,11 @@ public class APIUserController {
 				}
 
 				userService.save(user);
-				return ResponseEntity.ok("Profile updated successfully");
+				return ResponseEntity.ok(null);
 			}
 		}
 
-		return ResponseEntity.status(404).body("User not found");
+		return ResponseEntity.status(404).body(null);
 	}
 
 	@Operation(summary = "Delete user", description = "Delete a user by their unique ID.")
@@ -141,10 +141,10 @@ public class APIUserController {
 	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 		Optional<UserDTO> user = userService.getUserById(id);
 		if (user.isEmpty()) {
-			return ResponseEntity.status(404).body("User not found");
+			return ResponseEntity.status(404).body(null);
 		}
 		userService.deleteUser(id);
-		return ResponseEntity.ok("User deleted successfully");
+		return ResponseEntity.ok(null);
 	}
 
 	// ------------------------------------------Images------------------------------------------
@@ -180,10 +180,10 @@ public class APIUserController {
 			throws SQLException, IOException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		if (userService.getUserImage(id) != null) {
-			return ResponseEntity.badRequest().body("Image already exists");
+			return ResponseEntity.badRequest().body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -207,7 +207,7 @@ public class APIUserController {
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 
 	}
 
@@ -224,10 +224,10 @@ public class APIUserController {
 			throws SQLException, IOException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		if (userService.getUserImage(id) == null) {
-			return ResponseEntity.badRequest().body("Image doesn't exists");
+			return ResponseEntity.badRequest().body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -251,7 +251,7 @@ public class APIUserController {
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 
 	}
 
@@ -267,10 +267,10 @@ public class APIUserController {
 			throws SQLException, IOException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+			return ResponseEntity.status(401).body(null);
 
 		if (userService.getUserImage(id) == null) {
-			return ResponseEntity.badRequest().body("Image doesn't exists");
+			return ResponseEntity.badRequest().body(null);
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -294,6 +294,6 @@ public class APIUserController {
 			}
 		}
 
-		return ResponseEntity.status(403).body("Forbidden");
+		return ResponseEntity.status(403).body(null);
 	}
 }

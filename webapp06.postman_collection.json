@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "76199e5c-570d-4b40-b923-797653c2948e",
+		"_postman_id": "b03afdfe-ede2-4242-8ad6-54a99d49b0e7",
 		"name": "webapp06",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "26474255",
-		"_collection_link": "https://galactic-crater-642553.postman.co/workspace/DAW~f3f4481e-bcb6-4834-ab30-4703dbcef34c/collection/26474255-76199e5c-570d-4b40-b923-797653c2948e?action=share&source=collection_link&creator=26474255"
+		"_exporter_id": "43377067"
 	},
 	"item": [
 		{
@@ -176,7 +175,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/1/image",
+									"raw": "https://{{URL}}/api/products/17/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -184,7 +183,7 @@
 									"path": [
 										"api",
 										"products",
-										"1",
+										"17",
 										"image"
 									]
 								}
@@ -201,13 +200,14 @@
 									"formdata": [
 										{
 											"key": "imageFile",
+											"contentType": "",
 											"type": "file",
-											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+											"src": "/Users/mm/Downloads/ejemplo.webp"
 										}
 									]
 								},
 								"url": {
-									"raw": "https://{{URL}}/api/products/1/image",
+									"raw": "https://{{URL}}/api/products/17/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -215,7 +215,7 @@
 									"path": [
 										"api",
 										"products",
-										"1",
+										"17",
 										"image"
 									]
 								}
@@ -233,12 +233,12 @@
 										{
 											"key": "imageFile",
 											"type": "file",
-											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+											"src": "/Users/mm/Downloads/random2.jpeg"
 										}
 									]
 								},
 								"url": {
-									"raw": "https://{{URL}}/api/products/1/image",
+									"raw": "https://{{URL}}/api/products/17/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -246,7 +246,7 @@
 									"path": [
 										"api",
 										"products",
-										"1",
+										"17",
 										"image"
 									]
 								}
@@ -259,7 +259,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/1/image",
+									"raw": "https://{{URL}}/api/products/17/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
@@ -267,7 +267,7 @@
 									"path": [
 										"api",
 										"products",
-										"1",
+										"17",
 										"image"
 									]
 								}
@@ -285,16 +285,25 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https:/{{URL}}/api/main/moreProdsAll",
+									"raw": "https://{{URL}}/api/products/?accepted=true&page=1",
+									"protocol": "https",
 									"host": [
-										"https"
+										"{{URL}}"
 									],
-									"port": "",
 									"path": [
-										"{{URL}}",
 										"api",
-										"main",
-										"moreProdsAll"
+										"products",
+										""
+									],
+									"query": [
+										{
+											"key": "accepted",
+											"value": "true"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
 									]
 								}
 							},
@@ -306,16 +315,29 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/main/moreProdsType/Books",
+									"raw": "https://{{URL}}/api/products/type?type=books&accepted=true&page=1",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"api",
-										"main",
-										"moreProdsType",
-										"Books"
+										"products",
+										"type"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "books"
+										},
+										{
+											"key": "accepted",
+											"value": "true"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
 									]
 								}
 							},
@@ -327,15 +349,29 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/main/moreProdsCompany",
+									"raw": "https://{{URL}}/api/products/?accepted=true&company=comp&page=1",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
 										"api",
-										"main",
-										"moreProdsCompany"
+										"products",
+										""
+									],
+									"query": [
+										{
+											"key": "accepted",
+											"value": "true"
+										},
+										{
+											"key": "company",
+											"value": "comp"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
 									]
 								}
 							},
@@ -369,7 +405,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/",
+							"raw": "https://{{URL}}/api/products/?accepted=true",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -378,6 +414,12 @@
 								"api",
 								"products",
 								""
+							],
+							"query": [
+								{
+									"key": "accepted",
+									"value": "true"
+								}
 							]
 						}
 					},
@@ -389,7 +431,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/type/Appliances",
+							"raw": "https://{{URL}}/api/products/type?type=Appliances",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -397,8 +439,13 @@
 							"path": [
 								"api",
 								"products",
-								"type",
-								"Appliances"
+								"type"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "Appliances"
+								}
 							]
 						}
 					},
@@ -523,32 +570,12 @@
 					"response": []
 				},
 				{
-					"name": "acceptedProducts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/products/acceptedProducts",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"products",
-								"acceptedProducts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "notAcceptedProducts",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/notAcceptedProducts",
+							"raw": "https://{{URL}}/api/products/?accepted=false",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -556,32 +583,12 @@
 							"path": [
 								"api",
 								"products",
-								"notAcceptedProducts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "acceptedProductsByType",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/products/acceptedProductsByType?type=appliances",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"products",
-								"acceptedProductsByType"
+								""
 							],
 							"query": [
 								{
-									"key": "type",
-									"value": "appliances"
+									"key": "accepted",
+									"value": "false"
 								}
 							]
 						}
@@ -594,7 +601,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/acceptedCompanyProducts?company=Samsung",
+							"raw": "https://{{URL}}/api/products/?company=comp&accepted=true",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -602,12 +609,42 @@
 							"path": [
 								"api",
 								"products",
-								"acceptedCompanyProducts"
+								""
 							],
 							"query": [
 								{
 									"key": "company",
-									"value": "Samsung"
+									"value": "comp"
+								},
+								{
+									"key": "accepted",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "acceptProduct",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/api/products/accept?id=17",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"accept"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "17"
 								}
 							]
 						}
@@ -835,7 +872,7 @@
 										{
 											"key": "imageFile",
 											"type": "file",
-											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+											"src": "/Users/mm/Downloads/random3.jpeg"
 										}
 									]
 								},
@@ -866,7 +903,7 @@
 										{
 											"key": "imageFile",
 											"type": "file",
-											"src": "/C:/Users/alvar/Downloads/diagramaclasesDAW.png"
+											"src": "/Users/mm/Downloads/random3.jpeg"
 										}
 									]
 								},
@@ -911,12 +948,24 @@
 				},
 				{
 					"name": "modifyProfile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"username\": \"holiwis\",\n    \"email\": \"holiwis@example.com\",\n    \"name\": \"holi wis\",\n    \"password\": \"holi\",\n    \"role\": [\"USER\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -944,7 +993,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/users/4",
+							"raw": "https://{{URL}}/api/users/1",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
@@ -952,7 +1001,7 @@
 							"path": [
 								"api",
 								"users",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -1038,16 +1087,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://appWeb06.dawgis.etsii.urjc.es:443/api/graphs/companyGraph",
+							"raw": "https://{{URL}}/api/graphs/companyGraph",
 							"protocol": "https",
 							"host": [
-								"appWeb06",
-								"dawgis",
-								"etsii",
-								"urjc",
-								"es"
+								"{{URL}}"
 							],
-							"port": "443",
 							"path": [
 								"api",
 								"graphs",
@@ -1063,16 +1107,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://appWeb06.dawgis.etsii.urjc.es:443/api/graphs/userGraph",
+							"raw": "https://{{URL}}/api/graphs/userGraph",
 							"protocol": "https",
 							"host": [
-								"appWeb06",
-								"dawgis",
-								"etsii",
-								"urjc",
-								"es"
+								"{{URL}}"
 							],
-							"port": "443",
 							"path": [
 								"api",
 								"graphs",
