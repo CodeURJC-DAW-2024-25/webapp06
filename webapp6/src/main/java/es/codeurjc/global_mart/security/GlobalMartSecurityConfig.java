@@ -12,6 +12,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
 import es.codeurjc.global_mart.security.jwt.JwtRequestFilter;
 import es.codeurjc.global_mart.security.jwt.UnauthorizedHandlerJwt;
 
@@ -218,6 +222,22 @@ public class GlobalMartSecurityConfig {
 
         return http.build();
 
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+
+        // Permitir cualquier origen o específicamente tu frontend
+        config.addAllowedOrigin("http://localhost:4200");
+
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        config.setAllowCredentials(true);
+
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
 }

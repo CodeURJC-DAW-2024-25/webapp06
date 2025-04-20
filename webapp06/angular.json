@@ -80,9 +80,7 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 8443,
-            "servePath": "/new/",
-            "open": true
+            "port": 4200
           }
         },
         "extract-i18n": {

@@ -6,6 +6,7 @@ import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.
 import { AuthGuard } from './guard/auth.guard';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,6 +14,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'products', component: ProductListComponent },
   { path: 'about-us', component: AboutUsComponent },
+  { path: 'products/:id', component: ProductDetailComponent },
+  { path: 'products/:category', component: ProductListComponent },
 
   // Rutas protegidas
   { path: 'shoppingcart', component: ShoppingCartComponent, canActivate: [AuthGuard] },

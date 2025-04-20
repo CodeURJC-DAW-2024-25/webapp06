@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
         // Redirigir solicitudes bajo /new/ a index.html para manejar rutas de Angular
         registry.addViewController("/new/").setViewName("forward:/new/index.html");
         registry.addViewController("/new/{spring:[^\\.]*}").setViewName("forward:/new/index.html");
-        registry.addViewController("/new/**/{spring:[^\\.]*}").setViewName("forward:/new/index.html");
+        // registry.addViewController("/new/**/{spring:[^\\.]*}").setViewName("forward:/new/index.html");
     }
 
     @Override
