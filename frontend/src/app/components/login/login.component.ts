@@ -1,64 +1,83 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone: false,
+  standalone: false
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
+export class LoginComponent {
+  loginForm: FormGroup;
   loading = false;
-  submitted = false;
-  returnUrl: string = '/';
-  error: string = '';
-
-  // Add these properties to fix the errors
-  username: string = '';
-  password: string = '';
+  error = '';
+  returnUrl = '/';
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService
-  ) { }
-
-  ngOnInit(): void {
+  ) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
 
-    // Obtain the return URL from query parameters or use the home page
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    // Obtener URL de retorno si existe
+    this.route.queryParams.subscribe(params => {
+      this.returnUrl = params['returnUrl'] || '/';
+    });
   }
 
-  // Getter to easily access form fields
-  get f() { return this.loginForm.controls; }
-
   onSubmit(): void {
-    this.submitted = true;
-
-    // Stop here if the form is invalid
     if (this.loginForm.invalid) {
       return;
     }
 
     this.loading = true;
-    // Use the ngModel values instead of form values
-    this.authService.login(this.username, this.password)
-      .subscribe(
-        () => {
-          this.router.navigate([this.returnUrl]);
-        },
-        error => {
-          this.error = error.error?.message || 'Invalid username or password';
+    this.error = '';
+
+    const { username, password } = this.loginForm.value;
+
+    console.log('Enviando solicitud de login:', { username });
+
+    this.authService.login(username, password)
+      .pipe(
+        finalize(() => {
           this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Login exitoso:', response);
+
+          // Verificar explícitamente si se ha iniciado sesión
+          if (this.authService.getToken()) {
+            console.log('Token almacenado correctamente, redirigiendo...');
+            setTimeout(() => {
+              this.router.navigate([this.returnUrl]);
+            }, 100); // Pequeño retraso para asegurar que todos los observables se han actualizado
+          } else {
+            console.error('Error: No se pudo almacenar el token');
+            this.error = 'Error al iniciar sesión: no se pudo almacenar la sesión';
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Error de login completo:', err);
+
+          if (err.status === 401) {
+            this.error = 'Usuario o contraseña incorrectos';
+          } else if (err.status === 0) {
+            this.error = 'No se pudo conectar con el servidor';
+          } else {
+            this.error = err.error?.message || 'Error al iniciar sesión';
+          }
         }
-      );
+      });
   }
 }

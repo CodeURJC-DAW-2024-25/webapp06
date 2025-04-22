@@ -1,5 +1,8 @@
 package es.codeurjc.global_mart.security;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -30,17 +34,16 @@ public class GlobalMartSecurityConfig {
     @Autowired
     public RepositoryUserDetailsService userDetailsService;
 
-    // encode user password
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -51,28 +54,79 @@ public class GlobalMartSecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-
         return authenticationProvider;
+    }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Permitir peticiones desde cualquier origen durante desarrollo
+        configuration.addAllowedOrigin("http://localhost:4200");
+
+        // Permitir todos los métodos HTTP comunes
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("POST");
+        configuration.addAllowedMethod("PUT");
+        configuration.addAllowedMethod("DELETE");
+        configuration.addAllowedMethod("OPTIONS");
+        configuration.addAllowedMethod("PATCH");
+        configuration.addAllowedMethod("HEAD");
+
+        // Permitir todos los headers comunes
+        configuration.addAllowedHeader("*");
+
+        // Exponer headers específicos que el cliente podría necesitar leer
+        configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("Content-Disposition");
+
+        // Permitir credenciales (cookies, auth headers, etc)
+        configuration.setAllowCredentials(true);
+
+        // Cache de preflight por 1 hora
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/**");
 
+        // Configuración de CORS y CSRF
+        http.cors().configurationSource(corsConfigurationSource())
+                .and()
+                .csrf().disable();
+
+        // Manejo de excepciones
+        http.exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandlerJwt);
+
+        // Política de sesión
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        // Añadir filtro JWT
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // Configuración de autenticación
         http.authenticationProvider(authenticationProvider());
 
-        http.securityMatcher("/api/**")
-                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+        // Desactivar login de formulario y basic auth
+        http.formLogin().disable();
+        http.httpBasic().disable();
 
+        // Configuración de autorizaciones
         http.authorizeHttpRequests(authorize -> authorize
+                // Permitir explícitamente endpoints de autenticación
+                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/new/**").permitAll()
                 // MainAPI
-
                 .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
 
                 // ProductsAPI
@@ -82,7 +136,6 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
                 .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
                 // Product
-
                 .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
@@ -126,30 +179,21 @@ public class GlobalMartSecurityConfig {
 
                 .anyRequest().denyAll());
 
-        http.formLogin(formLogin -> formLogin.disable());
-        http.csrf(csrf -> csrf.disable());
-        http.httpBasic(httpBasic -> httpBasic.disable());
-
-        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
-
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Configuración CORS y CSRF
+        http.cors().configurationSource(corsConfigurationSource())
+                .and()
+                .csrf().disable();
 
-        http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la
-                                                               // función
-                                                               // anterior
-
-        // Disable CSRF protection
-        http.csrf(csrf -> csrf.disable());
+        // Configuración de autenticación
+        http.authenticationProvider(authenticationProvider());
 
         http.authorizeHttpRequests(authorize -> authorize
-
                 // -------------- STYLE PAGES ----------------
                 .requestMatchers("/css/**").permitAll()
                 .requestMatchers("/js/**").permitAll()
@@ -184,9 +228,8 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/profile").permitAll()
                 .requestMatchers("/showUserGraphic").permitAll()
 
-                .anyRequest().permitAll()
+                .anyRequest().permitAll())
 
-        )
                 // configure login and logout
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
@@ -221,23 +264,5 @@ public class GlobalMartSecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/")));
 
         return http.build();
-
     }
-
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-
-        // Permitir cualquier origen o específicamente tu frontend
-        config.addAllowedOrigin("http://localhost:4200");
-
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.setAllowCredentials(true);
-
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
 }

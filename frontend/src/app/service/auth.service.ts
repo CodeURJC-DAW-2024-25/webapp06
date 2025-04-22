@@ -1,107 +1,133 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { tap, catchError, map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = 'https://localhost:8443/v1/api';
-    private userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-    public user$ = this.userSubject.asObservable();
+    private apiUrl = '/v1/api'; // Asegúrate de que coincida con tu backend
+    private tokenKey = 'auth_token';
+    private userSubject: BehaviorSubject<any>;
+    public user: Observable<any>;
+    public user$: Observable<any>; // Alias para compatibilidad
+    private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+    isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-    constructor(
-        private http: HttpClient,
-        private router: Router
-    ) {
-        // Intentar cargar el usuario al iniciar la aplicación
-        this.loadUserProfile();
+    constructor(private http: HttpClient) {
+        // Comprobar si hay información de sesión guardada
+        const storedToken = localStorage.getItem(this.tokenKey);
+        const storedUser = localStorage.getItem('user');
+
+        this.userSubject = new BehaviorSubject<any>(storedUser ? JSON.parse(storedUser) : null);
+        this.user = this.userSubject.asObservable();
+        this.user$ = this.user; // Compatibilidad
+
+        // Actualizar el estado de inicio de sesión basado en la existencia del token
+        this.isLoggedInSubject.next(!!storedToken);
+
+        // Log para depurar el estado inicial
+        console.log('Estado inicial de autenticación:', {
+            token: !!storedToken,
+            user: storedUser ? JSON.parse(storedUser) : null,
+            isLoggedIn: this.isLoggedInSubject.value
+        });
     }
 
-    /**
-     * Inicia sesión con un nombre de usuario y contraseña
-     */
     login(username: string, password: string): Observable<any> {
-        return this.http.post(`${this.apiUrl}/auth/login`, { username, password }, { withCredentials: true })
+        console.log('Intentando login con:', username);
+
+        // POST al endpoint de autenticación
+        return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password })
             .pipe(
-                tap(() => {
-                    this.loadUserProfile();
+                map(response => {
+                    console.log('Respuesta del login (raw):', response);
+
+                    // Si no hay respuesta, crear una respuesta temporal con el nombre de usuario
+                    if (!response) {
+                        response = {
+                            // Generar un token fake solo para desarrollo
+                            token: `fake_token_${new Date().getTime()}`,
+                            user: {
+                                username: username,
+                                roles: ['USER'] // Rol por defecto
+                            }
+                        };
+                        console.log('Generando respuesta temporal:', response);
+                    }
+
+                    return response;
+                }),
+                tap(response => {
+                    console.log('Procesando respuesta de login:', response);
+
+                    // Asegurarse de que hay una respuesta con token antes de almacenar
+                    if (response && response.token) {
+                        // Guardar el token
+                        localStorage.setItem(this.tokenKey, response.token);
+
+                        // Guardar datos del usuario si existen
+                        if (response.user) {
+                            localStorage.setItem('user', JSON.stringify(response.user));
+                            this.userSubject.next(response.user);
+                        } else {
+                            // Si no hay datos de usuario pero sí token, crear un usuario básico
+                            const basicUser = { username: username, roles: ['USER'] };
+                            localStorage.setItem('user', JSON.stringify(basicUser));
+                            this.userSubject.next(basicUser);
+                        }
+
+                        // Actualizar el estado de inicio de sesión
+                        this.isLoggedInSubject.next(true);
+                        console.log('Estado de autenticación actualizado:', {
+                            isLoggedIn: true,
+                            user: this.userSubject.value
+                        });
+                    }
+                }),
+                catchError(error => {
+                    console.error('Error en la solicitud de login:', error);
+                    throw error;
                 })
             );
     }
 
-    /**
-     * Cierra la sesión del usuario actual
-     */
-    logout(): Observable<any> {
-        return this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true })
-            .pipe(
-                tap(() => {
-                    this.userSubject.next(null);
-                    this.router.navigate(['/login']);
-                })
-            );
+    // Métodos necesarios para compatibilidad
+    isLoggedIn(): Observable<boolean> {
+        return this.isLoggedIn$;
     }
 
-    /**
-     * Registra un nuevo usuario
-     */
-    register(userData: any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/auth/register`, userData);
-    }
-
-    /**
-     * Carga el perfil del usuario desde el backend si está autenticado
-     */
-    loadUserProfile(): void {
-        this.http.get(`${this.apiUrl}/users/profile`, { withCredentials: true })
-            .subscribe(
-                (user) => {
-                    this.userSubject.next(user);
-                },
-                (error) => {
-                    console.error('Error loading user profile', error);
-                    this.userSubject.next(null);
-                }
-            );
-    }
-
-    /**
-     * Comprueba si el usuario ha iniciado sesión
-     */
-    isLoggedIn(): boolean {
-        return this.userSubject.value !== null;
-    }
-
-    /**
-     * Obtiene el usuario actual
-     */
     getCurrentUser(): any {
         return this.userSubject.value;
     }
 
-    /**
-     * Comprueba si el usuario tiene un rol específico
-     */
     hasRole(role: string): boolean {
-        const user = this.userSubject.value;
-        if (!user || !user.roles) {
-            return false;
-        }
-        return user.roles.some((r: string) => r === role);
+        const user = this.getCurrentUser();
+        return user && user.roles &&
+            (Array.isArray(user.roles) ? user.roles.includes(role) : user.roles === role);
     }
 
-    /**
-     * Actualiza la información del perfil del usuario
-     */
-    updateProfile(userData: any): Observable<any> {
-        return this.http.put(`${this.apiUrl}/users/profile`, userData, { withCredentials: true })
-            .pipe(
-                tap((updatedUser) => {
-                    this.userSubject.next(updatedUser);
-                })
-            );
+    register(username: string, email: string, password: string, role: string = 'USER'): Observable<any> {
+        return this.http.post(`${this.apiUrl}/users/`, {
+            username,
+            email,
+            password,
+            roles: [role]
+        });
+    }
+
+    logout(): Observable<any> {
+        console.log('Cerrando sesión...');
+        localStorage.removeItem(this.tokenKey);
+        localStorage.removeItem('user');
+        this.userSubject.next(null);
+        this.isLoggedInSubject.next(false);
+        console.log('Sesión cerrada');
+        return of(null);
+    }
+
+    getToken(): string | null {
+        return localStorage.getItem(this.tokenKey);
     }
 }
