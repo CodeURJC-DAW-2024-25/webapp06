@@ -117,14 +117,17 @@ export class AuthService {
         });
     }
 
-    logout(): Observable<any> {
-        console.log('Cerrando sesión...');
-        localStorage.removeItem(this.tokenKey);
-        localStorage.removeItem('user');
-        this.userSubject.next(null);
-        this.isLoggedInSubject.next(false);
-        console.log('Sesión cerrada');
-        return of(null);
+    logout(): Observable<void> {
+        return new Observable<void>((observer) => {
+            console.log('Cerrando sesión...');
+            localStorage.removeItem(this.tokenKey);
+            localStorage.removeItem('user');
+            this.userSubject.next(null);
+            this.isLoggedInSubject.next(false);
+            console.log('Sesión cerrada');
+            observer.next();
+            observer.complete();
+        });
     }
 
     getToken(): string | null {

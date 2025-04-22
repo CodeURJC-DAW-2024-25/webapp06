@@ -41,9 +41,9 @@
             <h3 class="username">{{username}}</h3>
         </div>
         <a *ngIf="isUser" routerLink="/shoppingcart" class="cart"><i class="bi bi-cart"></i></a>
-        <form action="/auth/logout" method="post" style="display:inline;">
+        <form action="/logout" style="display:inline;">
             <!-- Si CSRF está habilitado, añade el token -->
-            <button type="submit" class="logout">Log Out</button>
+            <button (click)="logout()" type="submit" class="logout">Log Out</button>
         </form>
     </div>
 
