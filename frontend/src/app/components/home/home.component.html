@@ -6,9 +6,9 @@
         <h2 class="section_title">New Products</h2>
         <div class="products_container">
             <div class="product" *ngFor="let product of lastProducts">
-                <a> <!-- falta esto -> [routerLink]="['/product', product.id]" -->
-                    <img [src]="" [alt]="product.name" class="product_image"> <!-- falta la imageBase64 -->
-                    <h3 class="{{product.name}}">{{product.name}}</h3>
+                <a>
+                    <img [src]="product.imageBase64" [alt]="product.name" class="product_image">
+                    <h3 class="product_title">{{product.name}}</h3>
                     <p class="product_price">{{product.price}} €</p>
                 </a>
             </div>
@@ -20,8 +20,8 @@
         <h2 class="section_title">Most Viewed Products</h2>
         <div class="products_container">
             <div class="product" *ngFor="let product of mostViewedProducts">
-                <a> <!-- falta esto -> [routerLink]="['/product', product.id]" -->
-                    <img [src]="" [alt]="product.name" class="product_image">
+                <a>
+                    <img [src]="product.imageBase64" [alt]="product.name" class="product_image">
                     <h3 class="product_title">{{product.name}}</h3>
                     <p class="product_price">{{product.price}} €</p>
                 </a>

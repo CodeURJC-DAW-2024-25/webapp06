@@ -40,6 +40,23 @@ export class ProductService {
             );
     }
 
+    getMostViewedProducts(): Observable<any[]> {
+        return this.http.get(`${this.apiUrl}/mostViewedProducts`)
+        .pipe(
+            map((response: any) => this.processProductList(response))
+            ); 
+        
+    }
+
+    getLastProducts(): Observable<any[]> {
+        return this.http.get(`${this.apiUrl}/lastProducts`)
+        .pipe(
+            map((response: any) => this.processProductList(response))
+        );
+        
+    }
+
+
     /**
      * Procesa la respuesta de la API con múltiples productos
      * y carga las imágenes para cada uno de ellos
@@ -68,6 +85,14 @@ export class ProductService {
         return product;
     }
 
+    
+    /**
+     * Procesa una lista de productos y carga sus imágenes
+     */
+    processProductList(products: any[]): any[] {
+        return products.map(product => this.processProductResponse(product));
+    }
+
     /**
      * Carga la imagen de un producto por su ID
      */
@@ -89,4 +114,8 @@ export class ProductService {
             reader.readAsDataURL(blob);
         });
     }
+}
+
+function tap(arg0: (products: any[]) => void): import("rxjs").OperatorFunction<any, any[]> {
+    throw new Error('Function not implemented.');
 }
