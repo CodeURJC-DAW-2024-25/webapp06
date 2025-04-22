@@ -1,39 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+    constructor(private authService: AuthService) { }
 
-    constructor(
-        private router: Router,
-        private authService: AuthService
-    ) { }
+    intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+        // Skip authentication for login and register endpoints
+        if (request.url.includes('/api/auth/login') ||
+            request.url.includes('/api/users')) {  // Added this as a fallback
+            console.log('Skipping auth for:', request.url);
+            return next.handle(request);
+        }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // Asegurarse de que las credenciales (cookies) se envíen con cada solicitud
-        const authReq = req.clone({
-            withCredentials: true
-        });
-
-        return next.handle(authReq).pipe(
-            catchError((error: HttpErrorResponse) => {
-                if (error.status === 401) {
-                    // Si recibimos un 401 Unauthorized, significa que el usuario no está autenticado
-                    // o que la sesión ha expirado
-                    this.authService.logout();
-                    this.router.navigate(['/login'], {
-                        queryParams: { returnUrl: this.router.url }
-                    });
-                } else if (error.status === 403) {
-                    // Si recibimos un 403 Forbidden, el usuario no tiene permisos suficientes
-                    this.router.navigate(['/forbidden']);
+        // For other requests, add the auth token if available
+        const token = this.authService.getToken();
+        if (token) {
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${token}`
                 }
-                return throwError(error);
-            })
-        );
+            });
+        }
+
+        return next.handle(request);
     }
 }

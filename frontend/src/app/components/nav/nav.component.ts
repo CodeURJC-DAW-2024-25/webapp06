@@ -1,62 +1,68 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  roles: string[];
+}
 
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css'],
-  standalone: false,
+  standalone: false
 })
 export class NavComponent implements OnInit {
-  // Propiedades existentes
   isLoggedIn = false;
-  currentUser: any;
-
-  // Propiedades adicionales que necesita el template
-  logged = false;
+  logged = false; // Added to match template
+  username: string | null = null;
   isAdmin = false;
-  isCompany = false;
-  isUser = false;
-  username = '';
+  isCompany = false; // Added to match template
+  isUser = false; // Added to match template
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.isLoggedIn = !!user;
-      this.logged = this.isLoggedIn; // Sincroniza 'logged' con 'isLoggedIn'
-      this.currentUser = user;
+    this.authService.isLoggedIn().subscribe(loggedIn => {
+      this.isLoggedIn = loggedIn;
+      this.logged = loggedIn; // Update the 'logged' property as well
+    });
 
-      // Si hay un usuario, establece su nombre de usuario y rol
+    this.authService.user$.subscribe((user: User | null) => {
+      this.username = user ? user.username : null;
+      this.isAdmin = user ? user.roles.includes('ADMIN') : false;
+
+      // Set user role flags
       if (user) {
-        this.username = user.username || '';
-
-        // Determinar el rol del usuario (ajusta según tu lógica de autenticación)
-        this.isAdmin = user.role === 'ADMIN';
-        this.isCompany = user.role === 'COMPANY';
-        this.isUser = user.role === 'USER' || (!this.isAdmin && !this.isCompany);
+        this.isCompany = user.roles.includes('COMPANY');
+        this.isUser = user.roles.includes('USER') || !this.isCompany; // Default regular users if not company
       } else {
-        this.username = '';
-        this.isAdmin = false;
         this.isCompany = false;
         this.isUser = false;
       }
     });
   }
 
-  logout(): void {
-    this.authService.logout().subscribe(() => {
-      // Reiniciar propiedades después del logout
-      this.logged = false;
-      this.isAdmin = false;
-      this.isCompany = false;
-      this.isUser = false;
-      this.username = '';
-    });
+  getHomeLink(): string {
+    // Return different home links based on user role
+    if (this.isAdmin) {
+      return '/admin/dashboard';
+    } else if (this.isCompany) {
+      return '/company/dashboard';
+    } else {
+      return '/';
+    }
   }
 
-  // Método para determinar el enlace de inicio según el rol
-  getHomeLink(): string {
-    return this.isAdmin ? '/adminPage' : '/';
+  logout(): void {
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/login']);
+    });
   }
 }

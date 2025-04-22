@@ -6,27 +6,29 @@ import { AuthService } from '../service/auth.service';
     providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-
     constructor(
         private authService: AuthService,
         private router: Router
     ) { }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if (this.authService.isLoggedIn()) {
-            // Verificar roles si se necesita
-            const requiredRole = route.data['role'] as string;
-            if (!requiredRole || this.authService.hasRole(requiredRole)) {
-                return true;
-            }
-
-            // Si requiere un rol que el usuario no tiene
-            this.router.navigate(['/forbidden']);
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
+    ): boolean {
+        // Check if user is logged in
+        if (!this.authService.getToken()) {
+            this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
             return false;
         }
 
-        // Guardar la URL a la que se intentaba acceder para redireccionar después del login
-        this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+        // Check for required role if specified
+        const requiredRole = route.data['requiredRole'];
+        if (!requiredRole || this.authService.hasRole(requiredRole)) {
+            return true;
+        }
+
+        // User doesn't have required role
+        this.router.navigate(['/']);
         return false;
     }
 }

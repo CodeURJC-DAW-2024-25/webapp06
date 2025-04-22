@@ -1,64 +1,52 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone: false,
+  standalone: false
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
-  loading = false;
-  submitted = false;
-  returnUrl: string = '/';
+export class LoginComponent {
+  loginForm: FormGroup;
   error: string = '';
-
-  // Add these properties to fix the errors
-  username: string = '';
-  password: string = '';
+  loading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService
-  ) { }
-
-  ngOnInit(): void {
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(0)]]
     });
-
-    // Obtain the return URL from query parameters or use the home page
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  // Getter to easily access form fields
-  get f() { return this.loginForm.controls; }
-
   onSubmit(): void {
-    this.submitted = true;
-
-    // Stop here if the form is invalid
     if (this.loginForm.invalid) {
       return;
     }
 
     this.loading = true;
-    // Use the ngModel values instead of form values
-    this.authService.login(this.username, this.password)
-      .subscribe(
-        () => {
-          this.router.navigate([this.returnUrl]);
-        },
-        error => {
-          this.error = error.error?.message || 'Invalid username or password';
-          this.loading = false;
-        }
-      );
+    this.error = '';
+
+    const { username, password } = this.loginForm.value;
+
+    this.authService.login(username, password).subscribe({
+      next: () => {
+        this.router.navigate(['/']); // Navigate to home or dashboard
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'An error occurred during login';
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
   }
 }

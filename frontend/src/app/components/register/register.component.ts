@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
@@ -7,81 +7,81 @@ import { AuthService } from '../../service/auth.service';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  standalone: false,
+  standalone: false
 })
-export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
-  loading = false;
-  submitted = false;
+export class RegisterComponent {
+  registerForm: FormGroup;
   error: string = '';
-
-  // Add the registerData object with required properties
-  registerData: any = {
-    name: '',
-    username: '',
-    email: '',
-    password: '',
-    role: 'USER'
-  };
+  loading: boolean = false;
+  selectedFile: File | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
-    private authService: AuthService
-  ) { }
-
-  ngOnInit(): void {
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.registerForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
+      username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', [Validators.required]],
+      role: ['USER', [Validators.required]]
     }, {
-      validator: this.passwordMatchValidator
+      validators: this.passwordMatchValidator
     });
   }
 
-  // Custom validator for password matching
   passwordMatchValidator(formGroup: FormGroup) {
     const password = formGroup.get('password')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  // Getter for easy access to form fields
-  get f() { return this.registerForm.controls; }
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      // Handle the file upload if needed
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.registerData.imageBase64 = e.target.result;
-      };
-      reader.readAsDataURL(file);
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      this.selectedFile = input.files[0];
     }
   }
 
   onSubmit(): void {
-    this.submitted = true;
-
-    // Stop here if form is invalid
     if (this.registerForm.invalid) {
       return;
     }
 
     this.loading = true;
-    // Using registerData instead of form values
-    this.authService.register(this.registerData)
-      .subscribe(
-        () => {
-          this.router.navigate(['/login'], { queryParams: { registered: true } });
-        },
-        error => {
-          this.error = error.error?.message || 'Registration failed';
-          this.loading = false;
+    this.error = '';
+
+    const { username, email, password, role } = this.registerForm.value;
+
+    // Imprime los datos que se envían
+    console.log('Enviando datos:', { username, email, password, roles: [role] });
+
+    this.authService.register(username, email, password, role).subscribe({
+      next: (response) => {
+        console.log('Respuesta exitosa:', response);
+        // Si necesitas subir un archivo después del registro, lo puedes hacer aquí
+        if (this.selectedFile) {
+          // Implementa la lógica para subir la imagen al perfil del usuario
         }
-      );
+        this.router.navigate(['/login'], { queryParams: { registered: true } });
+      },
+      error: (err) => {
+        console.error('Error durante el registro:', err);
+
+        // Si es un error 200, probablemente sea un problema de formato de respuesta
+        if (err.status === 200) {
+          // Intentar registrar al usuario de todos modos, ya que el backend respondió con éxito
+          this.router.navigate(['/login'], { queryParams: { registered: true } });
+        } else {
+          this.error = err.error?.message || 'An error occurred during registration';
+        }
+
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
   }
 }

@@ -1,21 +1,46 @@
 <div class="login-container">
-    <div class="form_div login_div">
-        <h3 class="main_title">Log In</h3>
+    <h2>Login</h2>
 
-        <form (ngSubmit)="onSubmit()">
-            <div class="mail_div">
-                <strong>Enter your username</strong>
-                <input [(ngModel)]="username" name="username" type="text" placeholder="Username">
-            </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Mensaje de error -->
+        <div *ngIf="error" class="alert alert-danger">
+            {{ error }}
+        </div>
 
-            <div class="password_div">
-                <strong>Enter your password</strong>
-                <input [(ngModel)]="password" name="password" type="password" placeholder="Password">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" formControlName="username" class="form-control"
+                placeholder="Enter your username"
+                [ngClass]="{'is-invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}">
+            <div *ngIf="loginForm.get('username')?.errors?.['required'] && loginForm.get('username')?.touched"
+                class="invalid-feedback">
+                Username is required
             </div>
+        </div>
 
-            <div class="buttons_div">
-                <button type="submit">Sign in</button>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" formControlName="password" class="form-control"
+                placeholder="Enter your password"
+                [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+            <div *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched"
+                class="invalid-feedback">
+                Password is required
             </div>
-        </form>
-    </div>
+            <div *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched"
+                class="invalid-feedback">
+                Password must be at least 6 characters
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Login
+            </button>
+            <div class="register-link">
+                Don't have an account? <a routerLink="/register">Register</a>
+            </div>
+        </div>
+    </form>
 </div>
