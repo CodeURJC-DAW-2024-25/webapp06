@@ -57,26 +57,15 @@ export class RegisterComponent {
     // Imprime los datos que se envían
     console.log('Enviando datos:', { username, email, password, roles: [role] });
 
+    // En el método onSubmit() del RegisterComponent
     this.authService.register(username, email, password, role).subscribe({
-      next: (response) => {
-        console.log('Respuesta exitosa:', response);
-        // Si necesitas subir un archivo después del registro, lo puedes hacer aquí
-        if (this.selectedFile) {
-          // Implementa la lógica para subir la imagen al perfil del usuario
-        }
+      next: (response: any) => {
+        console.log('Registro exitoso:', response);
         this.router.navigate(['/login'], { queryParams: { registered: true } });
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error durante el registro:', err);
-
-        // Si es un error 200, probablemente sea un problema de formato de respuesta
-        if (err.status === 200) {
-          // Intentar registrar al usuario de todos modos, ya que el backend respondió con éxito
-          this.router.navigate(['/login'], { queryParams: { registered: true } });
-        } else {
-          this.error = err.error?.message || 'An error occurred during registration';
-        }
-
+        this.error = err.error?.message || 'Se produjo un error durante el registro.';
         this.loading = false;
       },
       complete: () => {

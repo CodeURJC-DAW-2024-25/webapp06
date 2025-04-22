@@ -1,8 +1,9 @@
-
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -12,17 +13,24 @@ import { AuthService } from '../../service/auth.service';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  error: string = '';
-  loading: boolean = false;
+  loading = false;
+  error = '';
+  returnUrl = '/';
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
   ) {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(0)]]
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+
+    // Obtener URL de retorno si existe
+    this.route.queryParams.subscribe(params => {
+      this.returnUrl = params['returnUrl'] || '/';
     });
   }
 
@@ -36,17 +44,40 @@ export class LoginComponent {
 
     const { username, password } = this.loginForm.value;
 
-    this.authService.login(username, password).subscribe({
-      next: () => {
-        this.router.navigate(['/']); // Navigate to home or dashboard
-      },
-      error: (err) => {
-        this.error = err.error?.message || 'An error occurred during login';
-        this.loading = false;
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    });
+    console.log('Enviando solicitud de login:', { username });
+
+    this.authService.login(username, password)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Login exitoso:', response);
+
+          // Verificar explícitamente si se ha iniciado sesión
+          if (this.authService.getToken()) {
+            console.log('Token almacenado correctamente, redirigiendo...');
+            setTimeout(() => {
+              this.router.navigate([this.returnUrl]);
+            }, 100); // Pequeño retraso para asegurar que todos los observables se han actualizado
+          } else {
+            console.error('Error: No se pudo almacenar el token');
+            this.error = 'Error al iniciar sesión: no se pudo almacenar la sesión';
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Error de login completo:', err);
+
+          if (err.status === 401) {
+            this.error = 'Usuario o contraseña incorrectos';
+          } else if (err.status === 0) {
+            this.error = 'No se pudo conectar con el servidor';
+          } else {
+            this.error = err.error?.message || 'Error al iniciar sesión';
+          }
+        }
+      });
   }
 }

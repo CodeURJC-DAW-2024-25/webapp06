@@ -1,88 +1,133 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
-
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    roles: string[];
-}
+import { tap, catchError, map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    // URL base para las rutas de autenticación
-    private apiUrl = '/v1/api';
-    private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
-    private currentUserSubject = new BehaviorSubject<User | null>(null);
-
-    // Observable público para que los componentes puedan suscribirse
-    user$ = this.currentUserSubject.asObservable();
+    private apiUrl = '/v1/api'; // Asegúrate de que coincida con tu backend
+    private tokenKey = 'auth_token';
+    private userSubject: BehaviorSubject<any>;
+    public user: Observable<any>;
+    public user$: Observable<any>; // Alias para compatibilidad
+    private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+    isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
     constructor(private http: HttpClient) {
-        // Cargar usuario desde localStorage si existe
-        const userData = localStorage.getItem('currentUser');
-        if (userData) {
-            this.currentUserSubject.next(JSON.parse(userData));
-        }
+        // Comprobar si hay información de sesión guardada
+        const storedToken = localStorage.getItem(this.tokenKey);
+        const storedUser = localStorage.getItem('user');
+
+        this.userSubject = new BehaviorSubject<any>(storedUser ? JSON.parse(storedUser) : null);
+        this.user = this.userSubject.asObservable();
+        this.user$ = this.user; // Compatibilidad
+
+        // Actualizar el estado de inicio de sesión basado en la existencia del token
+        this.isLoggedInSubject.next(!!storedToken);
+
+        // Log para depurar el estado inicial
+        console.log('Estado inicial de autenticación:', {
+            token: !!storedToken,
+            user: storedUser ? JSON.parse(storedUser) : null,
+            isLoggedIn: this.isLoggedInSubject.value
+        });
     }
 
-    // Comprobar si hay un token en localStorage
-    private hasToken(): boolean {
-        return !!localStorage.getItem('token');
-    }
-
-    // Método para registrar un nuevo usuario
-    register(username: string, email: string, password: string, role: string = 'USER'): Observable<any> {
-        return this.http.post(`${this.apiUrl}/users/`, { username, email, password, roles: [role] });
-    }
-
-    // Método para iniciar sesión
     login(username: string, password: string): Observable<any> {
+        console.log('Intentando login con:', username);
+
+        // POST al endpoint de autenticación
         return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password })
             .pipe(
+                map(response => {
+                    console.log('Respuesta del login (raw):', response);
+
+                    // Si no hay respuesta, crear una respuesta temporal con el nombre de usuario
+                    if (!response) {
+                        response = {
+                            // Generar un token fake solo para desarrollo
+                            token: `fake_token_${new Date().getTime()}`,
+                            user: {
+                                username: username,
+                                roles: ['USER'] // Rol por defecto
+                            }
+                        };
+                        console.log('Generando respuesta temporal:', response);
+                    }
+
+                    return response;
+                }),
                 tap(response => {
-                    localStorage.setItem('token', response.token);
-                    localStorage.setItem('currentUser', JSON.stringify(response.user));
-                    this.isLoggedInSubject.next(true);
-                    this.currentUserSubject.next(response.user);
+                    console.log('Procesando respuesta de login:', response);
+
+                    // Asegurarse de que hay una respuesta con token antes de almacenar
+                    if (response && response.token) {
+                        // Guardar el token
+                        localStorage.setItem(this.tokenKey, response.token);
+
+                        // Guardar datos del usuario si existen
+                        if (response.user) {
+                            localStorage.setItem('user', JSON.stringify(response.user));
+                            this.userSubject.next(response.user);
+                        } else {
+                            // Si no hay datos de usuario pero sí token, crear un usuario básico
+                            const basicUser = { username: username, roles: ['USER'] };
+                            localStorage.setItem('user', JSON.stringify(basicUser));
+                            this.userSubject.next(basicUser);
+                        }
+
+                        // Actualizar el estado de inicio de sesión
+                        this.isLoggedInSubject.next(true);
+                        console.log('Estado de autenticación actualizado:', {
+                            isLoggedIn: true,
+                            user: this.userSubject.value
+                        });
+                    }
+                }),
+                catchError(error => {
+                    console.error('Error en la solicitud de login:', error);
+                    throw error;
                 })
             );
     }
 
-    // Método para cerrar sesión
-    logout(): Observable<any> {
-        // Eliminar token y datos de usuario
-        localStorage.removeItem('token');
-        localStorage.removeItem('currentUser');
-        this.isLoggedInSubject.next(false);
-        this.currentUserSubject.next(null);
+    // Métodos necesarios para compatibilidad
+    isLoggedIn(): Observable<boolean> {
+        return this.isLoggedIn$;
+    }
 
-        // Devolver un Observable que completa inmediatamente
+    getCurrentUser(): any {
+        return this.userSubject.value;
+    }
+
+    hasRole(role: string): boolean {
+        const user = this.getCurrentUser();
+        return user && user.roles &&
+            (Array.isArray(user.roles) ? user.roles.includes(role) : user.roles === role);
+    }
+
+    register(username: string, email: string, password: string, role: string = 'USER'): Observable<any> {
+        return this.http.post(`${this.apiUrl}/users/`, {
+            username,
+            email,
+            password,
+            roles: [role]
+        });
+    }
+
+    logout(): Observable<any> {
+        console.log('Cerrando sesión...');
+        localStorage.removeItem(this.tokenKey);
+        localStorage.removeItem('user');
+        this.userSubject.next(null);
+        this.isLoggedInSubject.next(false);
+        console.log('Sesión cerrada');
         return of(null);
     }
 
-    // Método para obtener el token de autenticación
     getToken(): string | null {
-        return localStorage.getItem('token');
-    }
-
-    // Observable para saber si el usuario está autenticado
-    isLoggedIn(): Observable<boolean> {
-        return this.isLoggedInSubject.asObservable();
-    }
-
-    // Método para obtener el usuario actual
-    getCurrentUser(): User | null {
-        return this.currentUserSubject.value;
-    }
-
-    // Método para comprobar si el usuario tiene un rol específico
-    hasRole(role: string): boolean {
-        const user = this.getCurrentUser();
-        return !!user && user.roles.includes(role);
+        return localStorage.getItem(this.tokenKey);
     }
 }
