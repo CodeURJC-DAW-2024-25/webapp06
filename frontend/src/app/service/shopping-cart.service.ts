@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, from, Observable, of, throwError, firstValueFrom, forkJoin } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 export interface CartItem {
     id: number;
@@ -29,7 +30,8 @@ export class ShoppingCartService {
 
     constructor(
         private http: HttpClient,
-        private authService: AuthService
+        private authService: AuthService,
+        private router: Router
     ) {
         this.loadCart();
 
@@ -192,7 +194,7 @@ export class ShoppingCartService {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
 
-                return this.http.post<Cart>(`${this.apiUrl}/users/${userId}/shoppingcarts/add`,
+                return this.http.post<Cart>(`${this.apiUrl}/users/${userId}/shoppingcarts/${productId}`,
                     { productId, quantity })
                     .pipe(
                         tap(cart => this.cartSubject.next(cart)),
@@ -203,6 +205,19 @@ export class ShoppingCartService {
                     );
             })
         );
+    }
+
+    addToCartAndNavigate(productId: number, quantity: number = 1): void {
+        this.addProductToCart(productId, quantity).subscribe({
+            next: (cart) => {
+                console.log('Producto añadido al carrito, redirigiendo a la página del carrito');
+                this.router.navigate(['/shoppingcart']);
+            },
+            error: (error) => {
+                console.error('Error al añadir al carrito:', error);
+                // Opcionalmente, puedes manejar el error aquí
+            }
+        });
     }
 
     removeProductFromCart(productId: number): Observable<Cart> {
