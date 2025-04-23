@@ -12,8 +12,8 @@ import { AuthService } from '../../service/auth.service';
 
 
 export class UserProfileComponent {
-  user: any = null; 
-  profile_image: string = ''; 
+  user: any = null;
+  profile_image: string = '';
   name: string = '';
   username: string = '';
   email: string = "";
@@ -27,21 +27,22 @@ export class UserProfileComponent {
     private authService: AuthService,
   ) { }
 
-  ngOnInit(): void{
-      const userId = this.authService.getUserId();
-      console.log(userId);
-      if(userId){
-        this.loadProfileInfo(userId);
-      } else {
-        console.log("No se puede obtener el id del usuario");
-      }
+  ngOnInit(): void {
+    const currentUser = this.authService.getCurrentUser();
+    const userId = this.authService.getUserIdByUsername(currentUser.username).toString();
+    console.log(userId);
+    if (userId) {
+      this.loadProfileInfo(userId);
+    } else {
+      console.log("No se puede obtener el id del usuario");
+    }
 
   }
 
 
-  loadProfileInfo(userId: string): void{
+  loadProfileInfo(userId: string): void {
     this.userService.getUserInfo(userId).subscribe({
-      
+
       next: (data) => {
         this.user = data;  // Guarda la respuesta en 'userDTO'
         this.profile_image = data.profileImage || '';  // Asigna la imagen de perfil si está disponible
