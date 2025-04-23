@@ -19,7 +19,7 @@ import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { FormComponent } from './components/newProdFrom/form.component';
-
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,9 @@ import { FormComponent } from './components/newProdFrom/form.component';
     ProductDetailComponent,
     ShoppingCartComponent,
     AboutUsComponent,
-    FormComponent
+    FormComponent,
+    UserProfileComponent
+
   ],
   imports: [
     BrowserModule,

@@ -1,12 +1,12 @@
 <div class="user_container">
     <div class="profile_section">
-        <ng-container *ngIf="userDTO; else noUserData">
-            <img [src]="userDTO.imageBase64" alt="User profile">
+        <ng-container *ngIf="user; else noUserData">
+            <img [src]="user.imageBase64" alt="User profile">
             <div class="user_data">
-                <h2>{{userDTO.name}}</h2>
-                <p>Username: {{userDTO.username}}</p>
-                <p>Email: {{userDTO.email}}</p>
-                <a *ngIf="!userDTO.isGoogleUser" routerLink="/edit_profile" class="edit_profile_button">Edit Profile</a>
+                <h2>{{user.name}}</h2>
+                <p>Username: {{user.username}}</p>
+                <p>Email: {{user.email}}</p>
+                <a *ngIf="!user.isGoogleUser" routerLink="/edit_profile" class="edit_profile_button">Edit Profile</a>
             </div>
         </ng-container>
 

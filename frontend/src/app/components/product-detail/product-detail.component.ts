@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../service/product.service';
-import { ShoppingCartService } from '../../service/shopping-cart.service';
+import { Cart, ShoppingCartService } from '../../service/shopping-cart.service';
 import { AuthService } from '../../service/auth.service';
 @Component({
   selector: 'app-product-detail',
@@ -14,6 +14,8 @@ export class ProductDetailComponent implements OnInit {
   product: any = null;
   loading = true;
   addingToCart = false;
+  showSuccessMessage = false;  // Añadir esta propiedad
+  showErrorMessage = false;    // Añadir esta propiedad
 
   constructor(
     private route: ActivatedRoute,
@@ -46,20 +48,14 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(): void {
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
-      return;
-    }
-
-    this.addingToCart = true;
-    this.cartService.addProductToCart(this.product.id).subscribe(
-      () => {
-        this.addingToCart = false;
-        // Mostrar mensaje de éxito
+    this.cartService.addToCart(this.product.id).subscribe(
+      (cart: Cart) => {
+        console.log('Producto añadido al carrito');
+        this.showSuccessMessage = true;
       },
-      error => {
-        console.error('Error adding to cart', error);
-        this.addingToCart = false;
+      (error: any) => {
+        console.error('Error al añadir al carrito:', error);
+        this.showErrorMessage = true;
       }
     );
   }
