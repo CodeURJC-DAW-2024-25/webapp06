@@ -17,9 +17,8 @@ export class UserProfileService{
 
     getUserInfo(userId: string): Observable<any>{
 
-        
-        // const param = new HttpParams().set('id', userId);
         return this.http.get(`${this.apiUrl}/${userId}`)
+        
 
     }
 }
