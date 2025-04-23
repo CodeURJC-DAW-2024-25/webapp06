@@ -142,11 +142,19 @@ public class UserService {
     }
 
     public boolean productInCart(UserDTO userDTO, ProductDTO productDTO) {
-        User user = userMapper.toUser(userDTO);
-        Product product = productMapper.toProduct(productDTO);
+        User user = userRepository.findByUsername(userDTO.username())
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + userDTO.username()));
 
-        return user.getCart().contains(product);
+        // Search by product ID rather than using contains()
+        if (user.getCart() != null) {
+            for (Product p : user.getCart()) {
+                if (p.getId().equals(productDTO.id())) {
+                    return true;
+                }
+            }
+        }
 
+        return false;
     }
 
     public void removeProductFromCart(UserDTO userDTO, ProductDTO productDTO) {
