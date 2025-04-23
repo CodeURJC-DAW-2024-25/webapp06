@@ -18,6 +18,7 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
 import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ProductListComponent,
     ProductDetailComponent,
     ShoppingCartComponent,
-    AboutUsComponent
+    AboutUsComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
