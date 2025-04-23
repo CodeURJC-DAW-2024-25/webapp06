@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
+import { tap, catchError, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -41,23 +41,34 @@ export class AuthService {
         // POST al endpoint de autenticación
         return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password })
             .pipe(
-                map(response => {
-                    console.log('Respuesta del login (raw):', response);
+                switchMap(() => {
+                    // Realizar la segunda solicitud para obtener el perfil del usuario
+                    return this.http.get<any>(`${this.apiUrl}/main/profile`);}),
+                map(profile => {
+                    console.log('Usuario obtenido del perfil:', profile);
 
                     // Si no hay respuesta, crear una respuesta temporal con el nombre de usuario
-                    if (!response) {
-                        response = {
+                    if (profile) {
+                        profile = {
                             // Generar un token fake solo para desarrollo
                             token: `fake_token_${new Date().getTime()}`,
                             user: {
-                                username: username,
-                                roles: ['USER'] // Rol por defecto
+                                id: profile.id,
+                                name: profile.name,
+                                username: profile.username,
+                                email: profile.email,
+                                roles: profile.role, // Asumimos que "role" es un array
+                                orders: profile.orders,
+                                reviews: profile.reviews,
+                                cart: profile.cart,
+                                cartPrice: profile.cartPrice,
+                                historicalOrderPrices: profile.historicalOrderPrices
                             }
                         };
-                        console.log('Generando respuesta temporal:', response);
+                        console.log('Generando respuesta temporal:', profile);
                     }
 
-                    return response;
+                    return profile;
                 }),
                 tap(response => {
                     console.log('Procesando respuesta de login:', response);
@@ -73,7 +84,7 @@ export class AuthService {
                             this.userSubject.next(response.user);
                         } else {
                             // Si no hay datos de usuario pero sí token, crear un usuario básico
-                            const basicUser = { username: username, roles: ['USER'] };
+                            const basicUser = { username: username, roles: response.roles };
                             localStorage.setItem('user', JSON.stringify(basicUser));
                             this.userSubject.next(basicUser);
                         }
