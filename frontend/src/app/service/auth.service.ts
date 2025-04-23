@@ -102,6 +102,37 @@ export class AuthService {
         return this.userSubject.value;
     }
 
+    getUserIdByUsername(username: string): Observable<number> {
+        console.log('Solicitando ID para el usuario:', username);
+        return this.http.get<number>(`${this.apiUrl}/users/by-username/${username}`)
+            .pipe(
+                tap(id => console.log('ID obtenido del backend:', id)),
+                catchError(error => {
+                    console.error('Error al obtener el ID del usuario:', error);
+                    throw error;
+                })
+            );
+    }
+
+    getCurrentUserId(): Observable<number | null> {
+        const user = this.getCurrentUser(); // obtengo el usuario actual
+        if (!user) return of(null);
+
+        if (user.id) return of(user.id);
+
+        if (user.username) { // en caso de solo tener el username
+            return this.getUserIdByUsername(user.username).pipe( // obtengo el id
+                tap(id => {
+                    user.id = id;
+                    localStorage.setItem('user', JSON.stringify(user));
+                    this.userSubject.next({ ...user });
+                })
+            );
+        }
+
+        return of(null);
+    }
+
     hasRole(role: string): boolean {
         const user = this.getCurrentUser();
         return user && user.roles &&
@@ -120,10 +151,15 @@ export class AuthService {
     logout(): Observable<void> {
         return new Observable<void>((observer) => {
             console.log('Cerrando sesión...');
+
+            // Limpiar datos de autenticación
             localStorage.removeItem(this.tokenKey);
             localStorage.removeItem('user');
+
+            // Asegurarse de que el estado se actualiza correctamente
             this.userSubject.next(null);
             this.isLoggedInSubject.next(false);
+
             console.log('Sesión cerrada');
             observer.next();
             observer.complete();
