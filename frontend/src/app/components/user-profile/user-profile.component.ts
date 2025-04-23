@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserProfileService } from '../../service/user-profile.service';
 import { AuthService } from '../../service/auth.service';
+import { map, switchMap, switchScan } from 'rxjs';
 
 @Component({
   selector: 'app-user-profile',
@@ -28,37 +29,36 @@ export class UserProfileComponent {
   ) { }
 
   ngOnInit(): void {
+    let userId = null
     const currentUser = this.authService.getCurrentUser();
-    const userId = this.authService.getUserIdByUsername(currentUser.username).toString();
-    console.log(userId);
-    if (userId) {
-      this.loadProfileInfo(userId);
-    } else {
-      console.log("No se puede obtener el id del usuario");
-    }
-
+    console.log("Usuario" + currentUser.username)
+    this.authService.getUserIdByUsername(currentUser.username).subscribe({
+        next: (userIdObject ) => {
+          userId = userIdObject.toString()
+          this.loadProfileInfo(userId);
+        },
+        error: (err) => {
+          console.error('Error al cargar el perfil', err);
+        }
+      }
+      
+    ) 
   }
 
 
   loadProfileInfo(userId: string): void {
     this.userService.getUserInfo(userId).subscribe({
+      next: (data) => { 
+        this.user = data;
 
-      next: (data) => {
-        this.user = data;  // Guarda la respuesta en 'userDTO'
-        this.profile_image = data.profileImage || '';  // Asigna la imagen de perfil si está disponible
-        this.name = data.name;
-        this.username = data.username;
-        this.email = data.email;
-        this.isGoogleUser = data.isGoogleUser || false;
-        this.isUser = data.isUser || false;
-        this.isCompany = data.isCompany || false;
-        console.log('Información del perfil cargada', this.user);
       },
       error: (err) => {
         console.error('Error al cargar el perfil', err);
       }
     });
   }
+
+  
 
   showStadistics() {
     console.log('Show statistics clicked');
