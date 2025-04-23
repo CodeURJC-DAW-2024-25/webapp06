@@ -7,7 +7,9 @@ import { AuthGuard } from './guard/auth.guard';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { FormComponent } from './components/newProdFrom/form.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,9 +18,10 @@ export const routes: Routes = [
   { path: 'products', component: ProductListComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'products/:id', component: ProductDetailComponent },
-  { path: 'products/:category', component: ProductListComponent },
+  { path: 'products/category/:category', component: ProductListComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'newProduct', component: FormComponent},
   { path: 'user-profile', component: UserProfileComponent},
 
   // Rutas protegidas

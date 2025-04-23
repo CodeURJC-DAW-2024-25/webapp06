@@ -18,6 +18,7 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
 import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
 import { AboutUsComponent } from './components/about-us/about-us.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { FormComponent } from './components/newProdFrom/form.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
@@ -33,7 +34,9 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     ProductDetailComponent,
     ShoppingCartComponent,
     AboutUsComponent,
+    FormComponent,
     UserProfileComponent
+
   ],
   imports: [
     BrowserModule,

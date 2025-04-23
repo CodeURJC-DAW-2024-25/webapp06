@@ -41,9 +41,9 @@
             <h3 class="username">{{username}}</h3>
         </div>
         <a *ngIf="isUser" routerLink="/shoppingcart" class="cart"><i class="bi bi-cart"></i></a>
-        <form action="/logout" method="post" style="display:inline;">
+        <form action="/logout" style="display:inline;">
             <!-- Si CSRF está habilitado, añade el token -->
-            <button type="submit" class="logout">Log Out</button>
+            <button (click)="logout()" type="submit" class="logout">Log Out</button>
         </form>
     </div>
 
@@ -55,15 +55,15 @@
 
 <div *ngIf="!isAdmin && !isCompany" class="categories_div">
     <a routerLink="/products" class="category">All</a>
-    <a routerLink="/products/Technology" class="category">Technology</a>
-    <a routerLink="/products/Books" class="category">Books</a>
-    <a routerLink="/products/Education" class="category">Education</a>
-    <a routerLink="/products/Appliances" class="category">Appliances</a>
-    <a routerLink="/products/Sports" class="category">Sports</a>
-    <a routerLink="/products/Home" class="category">Home</a>
-    <a routerLink="/products/Music" class="category">Music</a>
-    <a routerLink="/products/Cinema" class="category">Cinema</a>
-    <a routerLink="/products/Others" class="category">Others</a>
+    <a routerLink="/products/category/Technology" class="category">Technology</a>
+    <a routerLink="/products/category/Books" class="category">Books</a>
+    <a routerLink="/products/category/Education" class="category">Education</a>
+    <a routerLink="/products/category/Appliances" class="category">Appliances</a>
+    <a routerLink="/products/category/Sports" class="category">Sports</a>
+    <a routerLink="/products/category/Home" class="category">Home</a>
+    <a routerLink="/products/category/Music" class="category">Music</a>
+    <a routerLink="/products/category/Cinema" class="category">Cinema</a>
+    <a routerLink="/products/category/Others" class="category">Others</a>
 </div>
 
 <!--  Para mostrar el pop-up -->

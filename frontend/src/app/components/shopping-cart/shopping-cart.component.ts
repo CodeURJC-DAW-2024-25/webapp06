@@ -1,7 +1,7 @@
-// src/app/components/shopping-cart/shopping-cart.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ShoppingCartService } from '../../service/shopping-cart.service';
 import { Router } from '@angular/router';
+import { Cart, ShoppingCartService } from '../../service/shopping-cart.service';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -10,56 +10,75 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class ShoppingCartComponent implements OnInit {
-  cart: any = { cartProducts: [], totalPrice: 0 };
+  cart: any = { cartProducts: [] };
   loading = true;
+  loadError = false;
   isEmpty = true;
   processingPayment = false;
 
   constructor(
     private shoppingCartService: ShoppingCartService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.loadCart();
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.loadCart();
+      } else {
+        this.isEmpty = true;
+        this.loading = false;
+      }
+    });
   }
 
   loadCart(): void {
-    this.loading = true;
-    this.shoppingCartService.getShoppingCart().subscribe(
-      data => {
-        this.cart = data;
-        this.isEmpty = this.cart.cartProducts.length === 0;
+    this.shoppingCartService.getCart().subscribe(
+      (data: any) => {
+        console.log('Datos recibidos del carrito:', data);
+
+        if (data.cartProducts) {
+          this.cart = data;
+        }
+
+        this.cart.cartProducts = this.cart.cartProducts.map((item: any) => {
+          if (!item.product) {
+            item.product = { id: item.productId };
+          }
+          return item;
+        });
+        console.log("Carrito después de la adaptación:", this.cart);
+
+        this.isEmpty = !this.cart.cartProducts || this.cart.cartProducts.length === 0;
         this.loading = false;
       },
-      error => {
-        console.error('Error loading cart', error);
+      (error: any) => {
+        console.error('Error al cargar el carrito:', error);
+        this.loadError = true;
         this.loading = false;
       }
     );
   }
 
   removeProduct(productId: number): void {
-    this.shoppingCartService.removeProductFromCart(productId).subscribe(
-      () => {
-        this.loadCart();
+    this.shoppingCartService.removeFromCart(productId).subscribe(
+      (updated: Cart) => {
+        this.cart = {
+          ...updated,
+          cartProducts: updated.items
+        };
       },
-      error => {
-        console.error('Error removing product', error);
-      }
+      (error: any) => console.error('Error al eliminar producto:', error)
     );
   }
 
   processPayment(): void {
     this.processingPayment = true;
     this.shoppingCartService.processPayment().subscribe(
-      () => {
-        this.processingPayment = false;
-        // Navegar a una página de confirmación o mostrar un mensaje de éxito
-        this.router.navigate(['/payment-success']);
-      },
-      error => {
-        console.error('Error processing payment', error);
+      () => this.router.navigate(['/order-confirmation']),
+      err => {
+        console.error('Error al procesar el pago:', err);
         this.processingPayment = false;
       }
     );
