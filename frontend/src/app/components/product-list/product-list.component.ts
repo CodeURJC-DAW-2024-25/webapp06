@@ -27,7 +27,7 @@ export class ProductListComponent implements OnInit {
   ngOnInit(): void {
     // Captura el parámetro de la URL para determinar el tipo de productos a mostrar
     this.route.params.subscribe(params => {
-      this.type = params['type'] || null;
+      this.type = params['category'] || null;
       this.page = 0; // Resetear la página cuando cambia el tipo
       this.loadProducts();
     });

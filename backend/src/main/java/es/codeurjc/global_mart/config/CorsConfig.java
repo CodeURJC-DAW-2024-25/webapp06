@@ -1,4 +1,4 @@
-package main.java.es.codeurjc.global_mart.config;
+package es.codeurjc.global_mart.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
