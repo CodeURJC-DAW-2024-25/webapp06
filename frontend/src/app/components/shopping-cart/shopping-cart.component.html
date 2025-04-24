@@ -69,7 +69,7 @@
                         <span class="order-total-label">Total</span>
                         <span class="order-total-value">{{ cart.totalPrice | currency:'EUR' }}</span>
                     </div>
-                    <button class="checkout-btn" [disabled]="processingPayment" (click)="processPayment()">
+                    <button class="checkout-btn" [disabled]="processingPayment" (click)="checkout()">
                         <span *ngIf="processingPayment" class="checkout-spinner">
                             <span class="screen-reader-text">Processing...</span>
                         </span>

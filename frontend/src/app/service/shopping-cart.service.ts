@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, from, Observable, of, throwError, firstValueFrom, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError, forkJoin } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
@@ -272,7 +272,7 @@ export class ShoppingCartService {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
 
-                return this.http.post<any>(`${this.apiUrl}/users/${userId}/shoppingcarts/checkout`, {})
+                return this.http.post<any>(`${this.apiUrl}/users/${userId}/shoppingcarts/payment`, {})
                     .pipe(
                         tap(() => {
                             // Limpiar el carrito después del pago exitoso

@@ -15,6 +15,7 @@ export class ShoppingCartComponent implements OnInit {
   loadError = false;
   isEmpty = true;
   processingPayment = false;
+  checkoutMessage = '';
 
   constructor(
     private shoppingCartService: ShoppingCartService,
@@ -73,14 +74,22 @@ export class ShoppingCartComponent implements OnInit {
     );
   }
 
-  processPayment(): void {
-    this.processingPayment = true;
-    this.shoppingCartService.processPayment().subscribe(
-      () => this.router.navigate(['/order-confirmation']),
-      err => {
-        console.error('Error al procesar el pago:', err);
-        this.processingPayment = false;
+  checkout(): void {
+    this.loading = true;
+    this.checkoutMessage = 'Procesando pago...';
+
+    this.shoppingCartService.processPayment().subscribe({
+      next: () => {
+        this.checkoutMessage = 'Pago procesado correctamente. Redirigiendo...';
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('Error al procesar el pago:', error);
+        this.checkoutMessage = 'Error al procesar el pago. Inténtalo de nuevo.';
+        this.loading = false;
       }
-    );
+    });
   }
 }
