@@ -9,6 +9,7 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { FormComponent } from './components/newProdFrom/form.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UserGraphComponent } from './components/user-graph/user-graph.component';
 
 
 export const routes: Routes = [
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'newProduct', component: FormComponent},
   { path: 'user-profile', component: UserProfileComponent},
+  { path: 'user-graph', component: UserGraphComponent},
 
   // Rutas protegidas
   { path: 'shoppingcart', component: ShoppingCartComponent, canActivate: [AuthGuard] },
