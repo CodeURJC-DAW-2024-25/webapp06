@@ -54,7 +54,7 @@ export class ProductService {
     }
 
     createProduct(product: any): Observable<any> {
-        return this.http.post<any>(this.apiUrl, product);
+        return this.http.post<any>(`${environment.apiUrl}/products/`, product);
     }
 
     updateProduct(id: number, product: any): Observable<any> {
