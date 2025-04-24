@@ -4,6 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../service/product.service';
 import { Cart, ShoppingCartService } from '../../service/shopping-cart.service';
 import { AuthService } from '../../service/auth.service';
+import { finalize } from 'rxjs';
+import { NavComponent } from '../nav/nav.component';
+
+
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
@@ -16,6 +20,7 @@ export class ProductDetailComponent implements OnInit {
   addingToCart = false;
   showSuccessMessage = false;  // Añadir esta propiedad
   showErrorMessage = false;    // Añadir esta propiedad
+  isAdmin = false; // Variable para almacenar si el usuario es administrador
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +35,17 @@ export class ProductDetailComponent implements OnInit {
     if (productId) {
       this.loadProduct(+productId);
     }
+
+    // Suscribirse al observable user$ para obtener la información del usuario
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+        this.isAdmin = Array.isArray(user.roles)
+          ? user.roles.includes('ADMIN')
+          : user.roles === 'ADMIN';
+      } else {
+        this.isAdmin = false;
+      }
+    });
   }
 
   loadProduct(id: number): void {
@@ -48,15 +64,31 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(): void {
-    this.cartService.addToCart(this.product.id).subscribe(
-      (cart: Cart) => {
-        console.log('Producto añadido al carrito');
-        this.showSuccessMessage = true;
-      },
-      (error: any) => {
-        console.error('Error al añadir al carrito:', error);
-        this.showErrorMessage = true;
-      }
-    );
+    if (!this.authService.getCurrentUser()) {
+      // Si el usuario no está autenticado, guardamos la URL actual para redireccionar después del login
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
+
+    this.addingToCart = true;
+
+    // Usar el nuevo método que combina añadir al carrito y redirigir
+    this.cartService.addToCartAndNavigate(this.product.id, 1);
+
+    // La gestión del estado addingToCart se puede hacer con un timeout simple
+    // ya que la redirección ocurrirá rápidamente
+    setTimeout(() => {
+      this.addingToCart = false;
+    }, 500);
   }
+
+  editProduct(): void {
+    if (this.product) {
+      this.productService.setProduct(this.product);
+      this.router.navigate(['/newProduct']);
+    } else {
+      console.error('No product loaded to edit.');
+    }
+  }
+
 }
