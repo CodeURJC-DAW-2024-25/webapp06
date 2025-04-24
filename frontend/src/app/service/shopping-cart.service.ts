@@ -231,8 +231,10 @@ export class ShoppingCartService {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
 
-                return this.http.delete<Cart>(`${this.apiUrl}/users/${userId}/shoppingcarts/remove/${itemId}`)
+                return this.http.delete(`${this.apiUrl}/users/${userId}/shoppingcarts/${itemId}`)
                     .pipe(
+                        // After deleting, fetch the updated cart
+                        switchMap(() => this.getCart()),
                         tap(cart => this.cartSubject.next(cart)),
                         catchError(error => {
                             console.error('Error al eliminar del carrito:', error);
