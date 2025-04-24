@@ -32,9 +32,26 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const productId = this.route.snapshot.params['id'];
-    if (productId) {
-      this.loadProduct(productId);
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as { product: any };
+  
+    if (state?.product) {
+      this.product = state.product;
+    } else {
+      this.product = this.productService.getProduct();
+    }
+  
+    if (this.product) {
+      this.form_title = 'Edit Product';
+      this.productForm.patchValue({
+        name: this.product.name,
+        price: this.product.price,
+        description: this.product.description,
+        type: this.product.type,
+        stock: this.product.stock,
+      });
+    } else {
+      this.form_title = 'Create New Product';
     }
   }
 

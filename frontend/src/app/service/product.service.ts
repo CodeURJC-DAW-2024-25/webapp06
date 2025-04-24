@@ -8,6 +8,7 @@ import { environment } from '../enviroments/enviroment';
 })
 export class ProductService {
     private apiUrl = `${environment.apiUrl}/products`;
+    private product: any; // Variable para almacenar el producto
 
     constructor(private http: HttpClient) { }
 
@@ -64,6 +65,14 @@ export class ProductService {
     deleteProduct(id: number): Observable<any> {
         return this.http.delete<any>(`${this.apiUrl}/${id}`);
     }
+    setProduct(product: any): void {
+        this.product = product;
+      }
+    
+      getProduct(): any {
+        return this.product;
+      }
+
 
     /**
      * Procesa la respuesta de la API con múltiples productos
