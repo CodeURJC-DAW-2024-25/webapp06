@@ -21,6 +21,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { FormComponent } from './components/newProdFrom/form.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ProductSearchComponent } from './components/search/search.component';
+import { UserGraphComponent } from './components/user-graph/user-graph.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,9 @@ import { ProductSearchComponent } from './components/search/search.component';
     AboutUsComponent,
     FormComponent,
     UserProfileComponent,
-    ProductSearchComponent
+    ProductSearchComponent,
+    UserGraphComponent
+
   ],
   imports: [
     BrowserModule,

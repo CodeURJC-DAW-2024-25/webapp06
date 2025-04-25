@@ -5,6 +5,9 @@ import { ProductService } from '../../service/product.service';
 import { Cart, ShoppingCartService } from '../../service/shopping-cart.service';
 import { AuthService } from '../../service/auth.service';
 import { finalize } from 'rxjs';
+import { NavComponent } from '../nav/nav.component';
+
+
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
@@ -17,6 +20,7 @@ export class ProductDetailComponent implements OnInit {
   addingToCart = false;
   showSuccessMessage = false;  // Añadir esta propiedad
   showErrorMessage = false;    // Añadir esta propiedad
+  isAdmin = false; // Variable para almacenar si el usuario es administrador
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +35,17 @@ export class ProductDetailComponent implements OnInit {
     if (productId) {
       this.loadProduct(+productId);
     }
+
+    // Suscribirse al observable user$ para obtener la información del usuario
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+        this.isAdmin = Array.isArray(user.roles)
+          ? user.roles.includes('ADMIN')
+          : user.roles === 'ADMIN';
+      } else {
+        this.isAdmin = false;
+      }
+    });
   }
 
   loadProduct(id: number): void {
@@ -66,4 +81,14 @@ export class ProductDetailComponent implements OnInit {
       this.addingToCart = false;
     }, 500);
   }
+
+  editProduct(): void {
+    if (this.product) {
+      this.productService.setProduct(this.product);
+      this.router.navigate(['/newProduct']);
+    } else {
+      console.error('No product loaded to edit.');
+    }
+  }
+
 }

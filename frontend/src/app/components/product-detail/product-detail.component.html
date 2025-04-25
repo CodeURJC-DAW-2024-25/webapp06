@@ -36,6 +36,9 @@
                         aria-hidden="true"></span>
                     Add to Cart
                 </button>
+                <button *ngIf="isAdmin" class="btn btn-warning" (click)="editProduct()">
+                    Edit Product
+                </button>
             </div>
 
             <div class="reviews mt-5" *ngIf="product.reviews && product.reviews.length > 0">
