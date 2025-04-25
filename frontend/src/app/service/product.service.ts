@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, from, switchMap, map } from 'rxjs'; // Añadir 'map' a las importaciones
+import { Observable, from, switchMap, map, catchError } from 'rxjs'; // Añadir 'map' a las importaciones
 import { environment } from '../enviroments/enviroment';
 
 @Injectable({
@@ -39,18 +39,18 @@ export class ProductService {
 
     getMostViewedProducts(): Observable<any[]> {
         return this.http.get(`${this.apiUrl}/mostViewedProducts`)
-        .pipe(
-            map((response: any) => this.processProductList(response))
-            ); 
-        
+            .pipe(
+                map((response: any) => this.processProductList(response))
+            );
+
     }
 
     getLastProducts(): Observable<any[]> {
         return this.http.get(`${this.apiUrl}/lastProducts`)
-        .pipe(
-            map((response: any) => this.processProductList(response))
-        );
-        
+            .pipe(
+                map((response: any) => this.processProductList(response))
+            );
+
     }
 
     createProduct(product: any): Observable<any> {
@@ -93,7 +93,7 @@ export class ProductService {
         return product;
     }
 
-    
+
     /**
      * Procesa una lista de productos y carga sus imágenes
      */
@@ -121,6 +121,38 @@ export class ProductService {
             reader.onerror = reject;
             reader.readAsDataURL(blob);
         });
+    }
+
+    searchProducts(
+        query: string,
+        category?: string,
+        minPrice?: number,
+        maxPrice?: number
+    ): Observable<any[]> {
+        let params = new HttpParams();
+
+        if (query) {
+            params = params.append('query', query);
+        }
+
+        if (category) {
+            params = params.append('category', category);
+        }
+
+        if (minPrice !== undefined) {
+            params = params.append('minPrice', minPrice.toString());
+        }
+
+        if (maxPrice !== undefined) {
+            params = params.append('maxPrice', maxPrice.toString());
+        }
+
+        return this.http.get<any[]>(`${this.apiUrl}/search`, { params }).pipe(
+            catchError(error => {
+                console.error('Error searching products:', error);
+                throw error;
+            })
+        );
     }
 }
 
