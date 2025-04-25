@@ -5,73 +5,73 @@ import * as Highcharts from 'highcharts';
 
 
 @Component({
-    selector:'app-user-graph',
+    selector: 'app-user-graph',
     templateUrl: './user-graph.component.html',
     styleUrls: ['./user-graph.component.css'],
     standalone: false
 })
-export class UserGraphComponent{
+export class UserGraphComponent {
 
     orderPrices: number[] = [];
     companyData: any[] = []
     pieChartData: any[] = []
-    constructor(private graphService: GraphsService){}
+    constructor(private graphService: GraphsService) { }
 
-    ngOnInit(): void{
+    ngOnInit(): void {
         // funcion que depende de la url desde la que se llame cargue un tipo de grafico u otro
         // this.loadGraphData()
         this.loadPieChartData()
     }
 
 
-    loadGraphData(): void{
-    // this.graphService.getUserGraphData().subscribe(data => {
-    //     this.orderPrices = [12, 12, 43, 54];
-    //     this.renderChart()
-    // });
+    loadGraphData(): void {
+        // this.graphService.getUserGraphData().subscribe(data => {
+        //     this.orderPrices = [12, 12, 43, 54];
+        //     this.renderChart()
+        // });
         this.orderPrices = [12, 1234, 9]
         this.renderUserChart()
 
     }
 
-    renderUserChart(): void{
+    renderUserChart(): void {
         const size = this.orderPrices.length;
         const index = [];
         console.log("Orderprices" + this.orderPrices)
         for (let i = 1; i <= size; i++) {
-          index.push("Order " + i);
+            index.push("Order " + i);
         }
-    
+
         Highcharts.chart({
-          chart: {
-            renderTo: 'container',
-            type: 'line'
-          },
-          title: {
-            text: 'Gasto últimos pedidos'
-          },
-          xAxis: {
-            categories: index
-          },
-          yAxis: {
+            chart: {
+                renderTo: 'container',
+                type: 'line'
+            },
             title: {
-              text: 'Gasto en euros'
-            }
-          },
-          plotOptions: {
-            line: {
-              dataLabels: {
-                enabled: true
-              },
-              enableMouseTracking: true
-            }
-          },
-          series: [{
-            type: 'line',
-            name: 'Línea de gastos en pedidos',
-            data: this.orderPrices
-          }]
-        }); 
+                text: 'Gasto últimos pedidos'
+            },
+            xAxis: {
+                categories: index
+            },
+            yAxis: {
+                title: {
+                    text: 'Gasto en euros'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: true
+                }
+            },
+            series: [{
+                type: 'line',
+                name: 'Línea de gastos en pedidos',
+                data: this.orderPrices
+            }]
+        });
     }
 
 
@@ -129,43 +129,43 @@ export class UserGraphComponent{
         this.pieChartData = this.companyData.map((item: { key: string; value: number }): [string, number] => [item.key, item.value]);  // Transformamos cada objeto en un array [key, value]
         console.log(this.pieChartData)
         this.renderCompanyGraph()
-      }
+    }
 
-    renderCompanyGraph(): void{
-        
-        
+    renderCompanyGraph(): void {
+
+
         Highcharts.chart('container', {
-            chart : {
-                type : 'pie',
-                options3d : {
-                    enabled : true,
-                    alpha : 50,
-                    beta : 0
+            chart: {
+                type: 'pie',
+                options3d: {
+                    enabled: true,
+                    alpha: 50,
+                    beta: 0
                 }
             },
-            title : {
-                text : 'Result Status'
+            title: {
+                text: 'Result Status'
             },
-            tooltip : {
-                pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
-            plotOptions : {
-                pie : {
-                    allowPointSelect : true,
-                    cursor : 'pointer',
-                    depth : 35,
-                    dataLabels : {
-                        enabled : true,
-                        format : '{point.name}'
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    depth: 35,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
                     }
                 }
             },
-            series : [ {
-                type : 'pie',
-                name : 'Ratio',
+            series: [{
+                type: 'pie',
+                name: 'Ratio',
                 data: this.pieChartData
-                
-            } ]
+
+            }]
         });
 
     }
