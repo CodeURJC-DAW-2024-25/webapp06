@@ -6,6 +6,7 @@ import { Cart, ShoppingCartService } from '../../service/shopping-cart.service';
 import { AuthService } from '../../service/auth/auth.service';
 import { finalize } from 'rxjs';
 import { NavComponent } from '../nav/nav.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -21,32 +22,41 @@ export class ProductDetailComponent implements OnInit {
   showSuccessMessage = false;  // Añadir esta propiedad
   showErrorMessage = false;    // Añadir esta propiedad
   isAdmin = false; // Variable para almacenar si el usuario es administrador
+  reviewForm: FormGroup; // Formulario para las reseñas
+  isUser = false; // Verificar si el usuario tiene el rol USER
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
     private cartService: ShoppingCartService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private fb: FormBuilder // Inyectar FormBuilder
+) {
+    // Inicializar el formulario de reseñas
+    this.reviewForm = this.fb.group({
+        rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+        comment: ['', [Validators.required, Validators.maxLength(500)]],
+    });
+}
 
   ngOnInit(): void {
     const productId = this.route.snapshot.paramMap.get('id');
     if (productId) {
-      this.loadProduct(+productId);
+        this.loadProduct(+productId);
     }
 
     // Suscribirse al observable user$ para obtener la información del usuario
     this.authService.user$.subscribe((user) => {
-      if (user) {
-        this.isAdmin = Array.isArray(user.roles)
-          ? user.roles.includes('ADMIN')
-          : user.roles === 'ADMIN';
-      } else {
-        this.isAdmin = false;
-      }
+        if (user) {
+            this.isUser = Array.isArray(user.roles)
+                ? user.roles.includes('USER')
+                : user.roles === 'USER';
+        } else {
+            this.isUser = false;
+        }
     });
-  }
+}
 
   loadProduct(id: number): void {
     this.loading = true;
@@ -90,5 +100,25 @@ export class ProductDetailComponent implements OnInit {
       console.error('No product loaded to edit.');
     }
   }
+
+  submitReview(): void {
+    if (this.reviewForm.valid) {
+        const reviewData = this.reviewForm.value;
+        console.log('Submitting review:', reviewData);
+
+        // Llamar al servicio para enviar la reseña
+        this.productService.addReview(this.product.id, reviewData).subscribe(
+            (response) => {
+                console.log('Review submitted successfully:', response);
+                // Actualizar las reseñas del producto
+                this.product.reviews.push(response);
+                this.reviewForm.reset();
+            },
+            (error) => {
+                console.error('Error submitting review:', error);
+            }
+        );
+    }
+}
 
 }

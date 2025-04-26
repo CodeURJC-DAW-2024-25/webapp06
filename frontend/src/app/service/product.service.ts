@@ -163,6 +163,10 @@ export class ProductService {
             })
         );
     }
+
+    addReview(productId: number, review: { rating: number; comment: string }): Observable<any> {
+        return this.http.post<any>(`${environment.apiUrl}/reviews/${productId}`, review);
+    }
 }
 
 function tap(arg0: (products: any[]) => void): import("rxjs").OperatorFunction<any, any[]> {

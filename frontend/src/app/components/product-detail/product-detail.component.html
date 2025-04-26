@@ -47,8 +47,8 @@
                     <div class="d-flex justify-content-between">
                         <p class="mb-1 fw-bold">{{ review.username }}</p>
                         <div class="rating">
-                            <span *ngFor="let star of [1,2,3,4,5]">
-                                <i class="bi" [ngClass]="star <= review.rating ? 'bi-star-fill' : 'bi-star'"></i>
+                            <span *ngFor="let star of [1, 2, 3, 4, 5]">
+                                <i class="bi" [ngClass]="star <= review.calification ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
                             </span>
                         </div>
                     </div>
@@ -57,5 +57,22 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="add-review mt-5" *ngIf="isUser">
+        <h3>Add a Review</h3>
+        <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating (1-5)</label>
+                <select id="rating" class="form-select" formControlName="rating">
+                    <option *ngFor="let star of [1, 2, 3, 4, 5]" [value]="star">{{ star }}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment</label>
+                <textarea id="comment" class="form-control" formControlName="comment" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success" [disabled]="reviewForm.invalid">Submit Review</button>
+        </form>
     </div>
 </div>
