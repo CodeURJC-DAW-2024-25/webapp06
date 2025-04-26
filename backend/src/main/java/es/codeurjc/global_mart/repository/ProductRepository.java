@@ -26,6 +26,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByIsAcceptedFalse();
 
     List<Product> findByIsAcceptedTrueAndType(String type);
+
+    Page<Product> findByIsAcceptedFalse(Pageable pageable);
     
 
     Page<Product> findByIsAcceptedTrue(Pageable pageable);

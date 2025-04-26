@@ -1,3 +1,4 @@
+
 package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
@@ -46,27 +47,61 @@ public class APIProductController {
 	// ------------------------------------------BASIC
 	// CRUD------------------------------------------
 
-	@Operation(summary = "Get all products", description = "Retrieve a list of all products.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of products retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-    })
+	@Operation(summary = "Get products", description = "Retrieve products based on filters.")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "List of products retrieved successfully",
+				content = @Content(mediaType = "application/json", 
+						schema = @Schema(implementation = ProductDTO.class))),
+		@ApiResponse(responseCode = "404", description = "No products found")
+	})
 	@GetMapping("/")
-	public ResponseEntity<Page<ProductDTO>> getAllProducts(@PageableDefault(size = 5) Pageable pageable) {
-		Page<ProductDTO> products = productRepository.findByIsAcceptedTrue(pageable)
-				.map(productMapper::toProductDTO);
+	public ResponseEntity<Page<ProductDTO>> getProducts(
+			@RequestParam(name = "accepted", required = false) Boolean accepted,
+			@RequestParam(name = "company", required = false) String company,
+			@PageableDefault(size = 5) Pageable pageable,
+			Authentication authentication) {
+
+		Page<ProductDTO> products;
+
+		if (accepted && company != null) {
+			// Only users with ROLE_COMPANY can access this
+			if (authentication == null || authentication.getAuthorities().stream()
+					.noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
+				return ResponseEntity.status(403).build();
+			}
+			// Get accepted products by company
+			products = productService.getAcceptedCompanyProducts(company, pageable);
+		} else if (company == null && !accepted) {
+			// Only users with ROLE_ADMIN can access this
+			if (authentication == null || authentication.getAuthorities().stream()
+					.noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+				return ResponseEntity.status(403).build();
+			}
+			// Get not accepted products
+			products = productRepository.findByIsAcceptedFalse(pageable)
+					.map(productMapper::toProductDTO);
+		} else {
+			// All users can access this
+			// Get all products
+			products = productRepository.findByIsAcceptedTrue(pageable)
+					.map(productMapper::toProductDTO);
+		}
+
+		
+
 		return ResponseEntity.ok(products);
 	}
 
 	@Operation(summary = "Get products by type", description = "Retrieve products filtered by type.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of products retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-    })
-	@GetMapping("/type/{type}")
-	public ResponseEntity<Page<ProductDTO>> getProductsByType(@PathVariable String type, @PageableDefault(size = 5) Pageable pageable) {
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "List of products retrieved successfully",
+				content = @Content(mediaType = "application/json", 
+						schema = @Schema(implementation = ProductDTO.class))),
+	})
+	@GetMapping("/type")
+	public ResponseEntity<Page<ProductDTO>> getProductsByType(
+			@RequestParam(name = "type", required = true) String type, 
+			@PageableDefault(size = 5) Pageable pageable) {
 		Page<ProductDTO> products = productRepository.findByIsAcceptedTrueAndType(type, pageable)
 				.map(productMapper::toProductDTO);
 		return ResponseEntity.ok(products);
@@ -392,70 +427,22 @@ public class APIProductController {
 	}
 
 
-	@Operation(summary = "Get accepted products", description = "Retrieve a list of all accepted products.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of accepted products retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-    })
-	@GetMapping("/acceptedProducts")
-	public ResponseEntity<?> getAcceptedProducts() {
-		List<ProductDTO> acceptedProducts = productService.getAcceptedProducts();
-		return ResponseEntity.ok(acceptedProducts);
-	}
 
 
-	@Operation(summary = "Get not accepted products", description = "Retrieve a list of all not accepted products.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of not accepted products retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-    })
-	@GetMapping("/notAcceptedProducts")
-	public ResponseEntity<?> getNotAcceptedProducts() {
-		List<ProductDTO> acceptedProducts = productService.getNotAcceptedProducts();
-		return ResponseEntity.ok(acceptedProducts);
-	}
+	@PutMapping("/accept")
+	public ResponseEntity<ProductDTO> acceptProduct(@RequestParam Long id) {
+		Optional<Product> productOptional = productRepository.findById(id);
 
-
-	@Operation(summary = "Get accepted products by type", description = "Retrieve accepted products filtered by type.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of accepted products by type retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-    })
-	@GetMapping("/acceptedProductsByType")
-	public ResponseEntity<List<ProductDTO>> getAcceptedProductsByType(
-			@RequestParam(name = "type", required = true) String type) {
-		List<ProductDTO> acceptedProductsByType = productService.getAcceptedProductsByType(type);
-		return ResponseEntity.ok(acceptedProductsByType);
-	}
-
-
-	@Operation(summary = "Get accepted company products", description = "Retrieve accepted products filtered by company.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of accepted company products retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Company not found")
-    })
-	@GetMapping("/acceptedCompanyProducts")
-	public ResponseEntity<Page<ProductDTO>> getAcceptedCompanyProducts(
-			@RequestParam(name = "company", required = true) String company, 
-			@PageableDefault(size = 5) Pageable pageable) {
-		Page<ProductDTO> acceptedCompanyProducts = productService.getAcceptedCompanyProducts(company, pageable);
-
-		if (acceptedCompanyProducts.isEmpty()) {
+		if (productOptional.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		return ResponseEntity.ok(acceptedCompanyProducts);
-	}
 
-	@PutMapping("")
-	public ResponseEntity<?> acceptProduct(@PathVariable String id, Authentication authentication) {
-		// TODO: process PUT request
+		Product product = productOptional.get();
+		product.setIsAccepted(true);
+		productRepository.save(product);
 
-		return null;
+		ProductDTO productDTO = productMapper.toProductDTO(product);
+		return ResponseEntity.ok(productDTO);
 	}
 
 	private void addImageDataToProducts(List<ProductDTO> products) {
@@ -478,25 +465,7 @@ public class APIProductController {
 		}
 	}
 
-	// Not working the ajax, it doesnt find the url
 
 
-
-	@GetMapping("/moreProdsTypes/{type}")
-	public ResponseEntity<List<ProductDTO>> loadMoreProductsByType(@RequestParam int page, @PathVariable String type) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<ProductDTO> productsPage = productService.getAcceptedProductsByType(type, pageable);
-		List<ProductDTO> products = productsPage.getContent();
-		return ResponseEntity.ok(products);
-	}
-
-	@GetMapping("/moreProdsCompany")
-	public ResponseEntity<List<ProductDTO>> loadMoreProductsByCompany(@RequestParam int page,
-			@RequestParam String company) {
-		Pageable pageable = Pageable.ofSize(5).withPage(page);
-		Page<ProductDTO> productsPage = productService.getAcceptedCompanyProducts(company, pageable);
-		List<ProductDTO> products = productsPage.getContent();
-		return ResponseEntity.ok(products);
-	}
 
 }
