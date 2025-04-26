@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError, forkJoin } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from './auth.service';
+import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 
 export interface CartItem {

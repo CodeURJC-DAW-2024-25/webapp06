@@ -43,7 +43,8 @@ export class AuthService {
             .pipe(
                 switchMap(() => {
                     // Realizar la segunda solicitud para obtener el perfil del usuario
-                    return this.http.get<any>(`${this.apiUrl}/main/profile`);}),
+                    return this.http.get<any>(`${this.apiUrl}/main/profile`);
+                }),
                 map(profile => {
                     console.log('Usuario obtenido del perfil:', profile);
 
@@ -156,7 +157,7 @@ export class AuthService {
             email,
             password,
             roles: [role]
-        });
+        }, { responseType: 'text' });  // Specify text response type
     }
 
     logout(): Observable<void> {

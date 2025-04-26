@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../service/product.service';
 import { Cart, ShoppingCartService } from '../../service/shopping-cart.service';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../service/auth/auth.service';
 import { finalize } from 'rxjs';
 import { NavComponent } from '../nav/nav.component';
 

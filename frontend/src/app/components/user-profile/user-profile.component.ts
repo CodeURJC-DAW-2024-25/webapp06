@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserProfileService } from '../../service/user-profile.service';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../service/auth/auth.service';
 import { map, switchMap, switchScan } from 'rxjs';
 
 @Component({
@@ -33,22 +33,22 @@ export class UserProfileComponent {
     const currentUser = this.authService.getCurrentUser();
     console.log("Usuario" + currentUser.username)
     this.authService.getUserIdByUsername(currentUser.username).subscribe({
-        next: (userIdObject ) => {
-          userId = userIdObject.toString()
-          this.loadProfileInfo(userId);
-        },
-        error: (err) => {
-          console.error('Error al cargar el perfil', err);
-        }
+      next: (userIdObject) => {
+        userId = userIdObject.toString()
+        this.loadProfileInfo(userId);
+      },
+      error: (err) => {
+        console.error('Error al cargar el perfil', err);
       }
-      
-    ) 
+    }
+
+    )
   }
 
 
   loadProfileInfo(userId: string): void {
     this.userService.getUserInfo(userId).subscribe({
-      next: (data) => { 
+      next: (data) => {
         this.user = data;
 
       },
@@ -58,7 +58,7 @@ export class UserProfileComponent {
     });
   }
 
-  
+
 
   showStadistics() {
     console.log('Show statistics clicked');
