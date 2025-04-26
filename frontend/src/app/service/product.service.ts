@@ -122,20 +122,21 @@ export class ProductService {
      * Carga la imagen de un producto por su ID
      */
     loadProductImage(productId: number): Observable<string> {
-        return this.http.get(`${this.apiUrl}/${productId}/image`, { responseType: 'blob' })
-            .pipe(
-                switchMap(blob => from(this.convertBlobToBase64(blob)))
-            );
+        return this.http.get(`${this.apiUrl}/${productId}/image`, { responseType: 'blob' }).pipe(
+            switchMap((blob) => this.convertBlobToBase64(blob))
+        );
     }
 
-    /**
-     * Convierte un Blob a string Base64
-     */
-    private convertBlobToBase64(blob: Blob): Promise<string> {
-        return new Promise((resolve, reject) => {
+    private convertBlobToBase64(blob: Blob): Observable<string> {
+        return new Observable((observer) => {
             const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.onerror = reject;
+            reader.onloadend = () => {
+                observer.next(reader.result as string);
+                observer.complete();
+            };
+            reader.onerror = (error) => {
+                observer.error(error);
+            };
             reader.readAsDataURL(blob);
         });
     }

@@ -69,18 +69,31 @@ export class ProductDetailComponent implements OnInit {
 
   loadProduct(id: number): void {
     this.loading = true;
+
+    // Obtener los datos del producto
     this.productService.getProductById(id).subscribe(
-      data => {
-        this.product = data;
-        this.loading = false;
-      },
-      error => {
-        console.error('Error loading product', error);
-        this.loading = false;
-        this.router.navigate(['/products/allProducts']);
-      }
+        (data) => {
+            this.product = data;
+
+            // Obtener la imagen del producto por separado
+            this.productService.loadProductImage(id).subscribe(
+                (imageBase64) => {
+                    this.product.imageBase64 = imageBase64; // Asignar la imagen al producto
+                },
+                (error) => {
+                    console.error('Error loading product image:', error);
+                }
+            );
+
+            this.loading = false;
+        },
+        (error) => {
+            console.error('Error loading product:', error);
+            this.loading = false;
+            this.router.navigate(['/products/allProducts']);
+        }
     );
-  }
+}
 
   addToCart(): void {
     if (!this.authService.getCurrentUser()) {

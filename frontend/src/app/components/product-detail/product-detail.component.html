@@ -8,10 +8,8 @@
     <div *ngIf="!loading && product" class="row">
         <div class="col-md-6">
             <div class="product-image-container">
-                <img *ngIf="product.imageBase64" [src]="product.imageBase64" class="img-fluid product-image"
-                    alt="{{ product.name }}">
-                <img *ngIf="!product.imageBase64" src="assets/images/product-placeholder.jpg"
-                    class="img-fluid product-image" alt="Placeholder">
+                <img *ngIf="product.imageBase64" [src]="product.imageBase64" class="img-fluid product-image" alt="{{ product.name }}">
+                <img *ngIf="!product.imageBase64" src="assets/images/product-placeholder.jpg" class="img-fluid product-image" alt="Placeholder">
             </div>
         </div>
         <div class="col-md-6">
