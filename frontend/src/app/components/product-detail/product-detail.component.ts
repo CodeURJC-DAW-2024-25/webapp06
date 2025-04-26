@@ -56,6 +56,15 @@ export class ProductDetailComponent implements OnInit {
             this.isUser = false;
         }
     });
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+          this.isAdmin = Array.isArray(user.roles)
+              ? user.roles.includes('ADMIN')
+              : user.roles === 'ADMIN';
+      } else {
+          this.isAdmin = false;
+      }
+  });
 }
 
   loadProduct(id: number): void {

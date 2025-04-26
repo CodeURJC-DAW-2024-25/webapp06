@@ -12,15 +12,23 @@ export class ProductService {
 
     constructor(private http: HttpClient) { }
 
-    getProducts(page: number = 0, size: number = 5): Observable<any> {
-        const params = new HttpParams()
-            .set('page', page.toString())
-            .set('size', size.toString());
+    getProducts(page: number = 0, size: number = 5, params?: { accepted?: boolean; company?: string }): Observable<any> {
+        let queryParams: any = {
+            page: page.toString(),
+            size: size.toString(),
+        };
 
-        return this.http.get(`${this.apiUrl}/`, { params })
-            .pipe(
-                map((response: any) => this.processProductsResponse(response)) // Corregido 'Map' a 'map' y añadido tipo
-            );
+        // Agregar parámetros opcionales si están presentes
+        if (params?.accepted !== undefined) {
+            queryParams.accepted = params.accepted.toString();
+        }
+        if (params?.company) {
+            queryParams.company = params.company;
+        }
+
+        return this.http.get<any>(`${this.apiUrl}/`, { params: queryParams }).pipe(
+            map((response: any) => this.processProductsResponse(response)) // Procesar las imágenes
+        );
     }
 
     getProductsByType(type: string, page: number = 0, size: number = 5): Observable<any> {
@@ -67,11 +75,11 @@ export class ProductService {
     }
     setProduct(product: any): void {
         this.product = product;
-      }
-    
-      getProduct(): any {
+    }
+
+    getProduct(): any {
         return this.product;
-      }
+    }
 
 
     /**

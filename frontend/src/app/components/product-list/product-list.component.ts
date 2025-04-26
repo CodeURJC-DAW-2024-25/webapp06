@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../service/product.service';
+import { AuthService } from '../../service/auth/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -21,7 +22,8 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private authService: AuthService // Inyectar AuthService
   ) { }
 
   ngOnInit(): void {
@@ -36,18 +38,24 @@ export class ProductListComponent implements OnInit {
   loadProducts(): void {
     this.loading = true;
 
-    if (this.type && this.type !== 'allProducts') {
-      this.productService.getProductsByType(this.type, this.page, this.pageSize).subscribe(
-        response => {
-          this.handleProductsResponse(response);
-        },
-        error => {
-          console.error('Error loading products by type', error);
-          this.loading = false;
-        }
-      );
-    } else {
-      this.productService.getProducts(this.page, this.pageSize).subscribe(
+    // Determinar los parámetros según el rol del usuario
+    this.authService.user$.subscribe(user => {
+      const params: any = {};
+
+      if (
+        !user || 
+        (Array.isArray(user.roles) && (user.roles.includes('USER') || user.roles.includes('ADMIN')))
+      ) {
+        // Caso: Usuario no autenticado, con rol USER o ADMIN
+        params.accepted = true;
+      } else if (Array.isArray(user.roles) && user.roles.includes('COMPANY')) {
+        // Caso: Usuario con rol COMPANY
+        params.accepted = true;
+        params.company = user.username; // Nombre del usuario como compañía
+      }
+
+      // Llamar al servicio con los parámetros construidos
+      this.productService.getProducts(this.page, this.pageSize, params).subscribe(
         response => {
           this.handleProductsResponse(response);
         },
@@ -56,7 +64,7 @@ export class ProductListComponent implements OnInit {
           this.loading = false;
         }
       );
-    }
+    });
   }
 
   handleProductsResponse(response: any): void {
