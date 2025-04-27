@@ -1,0 +1,22 @@
+<div *ngIf="productsNotAccepted && productsNotAccepted.length > 0">
+    <div class="requests_container" *ngFor="let product of productsNotAccepted">
+        <div class="requests">
+            <img [src]="product.imageBase64" alt="{{ product.name }}">
+            <h3>{{ product.company }}</h3>
+            <p>{{ product.name }}</p>
+            <p>{{ product.price + ' €' }}</p>
+
+            <div class="request_buttons">
+                <button class="accepted_button" (click)="acceptProduct(product.id)">Aceptar</button>
+                <button class="decline_button" (click)="declineProduct(product.id)">Rechazar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!productsNotAccepted || productsNotAccepted.length === 0">
+    <div>
+        <h1 class="messageAllProcessed">All products processed</h1>
+    </div>
+</div>
+
