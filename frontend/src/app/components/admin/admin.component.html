@@ -1,22 +1,28 @@
-<div *ngIf="productsNotAccepted && productsNotAccepted.length > 0">
-    <div class="requests_container" *ngFor="let product of productsNotAccepted">
-        <div class="requests">
-            <img [src]="product.imageBase64" alt="{{ product.name }}">
-            <h3>{{ product.company }}</h3>
-            <p>{{ product.name }}</p>
-            <p>{{ product.price + ' €' }}</p>
-
-            <div class="request_buttons">
-                <button class="accepted_button" (click)="acceptProduct(product.id)">Aceptar</button>
-                <button class="decline_button" (click)="declineProduct(product.id)">Rechazar</button>
+<div class="admin-container">
+    <!-- Lista de productos no aceptados -->
+    <div *ngIf="productsNotAccepted && productsNotAccepted.length > 0">
+        <h2 class="section-title">Pending Product Requests</h2>
+        <div class="requests-grid">
+            <div class="request-card" *ngFor="let product of productsNotAccepted">
+                <div class="request-image">
+                    <img [src]="product.imageBase64" alt="{{ product.name }}">
+                </div>
+                <div class="request-details">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-company">Company: {{ product.company }}</p>
+                    <p class="product-price">{{ product.price + ' €' }}</p>
+                </div>
+                <div class="request-buttons">
+                    <button class="btn accept-btn" (click)="acceptProduct(product.id)">Aceptar</button>
+                    <button class="btn decline-btn" (click)="declineProduct(product.id)">Rechazar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div *ngIf="!productsNotAccepted || productsNotAccepted.length === 0">
-    <div>
-        <h1 class="messageAllProcessed">All products processed</h1>
+    <!-- Mensaje cuando no hay productos pendientes -->
+    <div *ngIf="!productsNotAccepted || productsNotAccepted.length === 0" class="no-requests">
+        <h1 class="message-all-processed">All products processed</h1>
     </div>
 </div>
 

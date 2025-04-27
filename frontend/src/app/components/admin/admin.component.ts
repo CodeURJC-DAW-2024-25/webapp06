@@ -14,7 +14,8 @@ export class AdminComponent implements OnInit {
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.loadProductsNotAccepted();
+    this.productsNotAccepted = [this.generateExampleProduct(),this.generateExampleProduct(),this.generateExampleProduct()]; // Inicializar con productos de ejemplo
+    
   }
 
   // Cargar productos no aceptados
@@ -54,4 +55,19 @@ export class AdminComponent implements OnInit {
       }
     );
   }
+
+  //Generame un producto de ejemplo para poder mostrarlo en la vista
+  generateExampleProduct(): any {
+    return {
+      id: 1,
+      name: 'Example Product',
+      description: 'This is an example product.',
+      price: 100,
+      imageBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...',
+      company: 'Example Company',
+      isAccepted: false
+    };
+  }
+
+  
 }
