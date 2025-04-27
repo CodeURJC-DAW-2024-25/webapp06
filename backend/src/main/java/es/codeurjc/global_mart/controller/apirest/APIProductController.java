@@ -447,19 +447,15 @@ public class APIProductController {
 
 	
 	@DeleteMapping("/delete")
-	public ResponseEntity<ProductDTO> deleteProduct(@RequestParam Long id) {
+	public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
 		Optional<Product> productOptional = productRepository.findById(id);
 
 		if (productOptional.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		Product product = productOptional.get();
-		product.setIsAccepted(false);
-		productRepository.save(product);
-
-		ProductDTO productDTO = productMapper.toProductDTO(product);
-		return ResponseEntity.ok(productDTO);
+		productRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	private void addImageDataToProducts(List<ProductDTO> products) {
