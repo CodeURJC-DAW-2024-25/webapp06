@@ -16,8 +16,10 @@
 /* Grid de solicitudes */
 .requests-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ajustar el tamaño mínimo */
     gap: 20px;
+    max-width: 1200px; /* Limitar el ancho máximo del grid */
+    margin: 0 auto; /* Centrar el grid */
 }
 
 /* Tarjeta de solicitud */
@@ -32,6 +34,8 @@
     justify-content: space-between;
     padding: 15px;
     transition: transform 0.2s ease-in-out;
+    max-width: 300px; /* Limitar el tamaño máximo de cada tarjeta */
+    margin: 0 auto; /* Centrar la tarjeta si es la única */
 }
 
 .request-card:hover {

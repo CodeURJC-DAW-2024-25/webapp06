@@ -137,6 +137,8 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
                 // Product
                 .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/products/accept").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/products/delete").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/type/{type}").permitAll()

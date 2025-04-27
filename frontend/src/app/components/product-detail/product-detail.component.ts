@@ -143,4 +143,20 @@ export class ProductDetailComponent implements OnInit {
     }
 }
 
+deleteProduct(): void {
+  if (this.product) {
+    this.productService.declineProduct(this.product.id).subscribe(
+      () => {
+        console.log(`Product ${this.product.id} deleted successfully.`);
+        this.router.navigate(['/products']); // Redirigir a la lista de productos
+      },
+      (error) => {
+        console.error(`Error deleting product ${this.product.id}:`, error);
+      }
+    );
+  } else {
+    console.error('No product loaded to delete.');
+  }
+}
+
 }

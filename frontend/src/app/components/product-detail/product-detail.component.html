@@ -30,12 +30,14 @@
 
             <div class="d-grid gap-2">
                 <button class="btn btn-primary" [disabled]="addingToCart || product.stock <= 0" (click)="addToCart()">
-                    <span *ngIf="addingToCart" class="spinner-border spinner-border-sm me-2" role="status"
-                        aria-hidden="true"></span>
+                    <span *ngIf="addingToCart" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     Add to Cart
                 </button>
                 <button *ngIf="isAdmin" class="btn btn-warning" (click)="editProduct()">
                     Edit Product
+                </button>
+                <button *ngIf="isAdmin" class="btn btn-danger btn-sm" (click)="deleteProduct()">
+                    Delete Product
                 </button>
             </div>
 
