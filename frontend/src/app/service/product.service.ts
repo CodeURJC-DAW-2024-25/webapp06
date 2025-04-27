@@ -182,13 +182,13 @@ export class ProductService {
     }
 
     acceptProduct(productId: number): Observable<any> {
-        return this.http.post(`${this.apiUrl}/accept`, null, {
+        return this.http.put(`${this.apiUrl}/accept`, null, {
             params: { id: productId.toString() }
         });
     }
 
     declineProduct(productId: number): Observable<any> {
-        return this.http.post(`${this.apiUrl}/decline`, null, {
+        return this.http.delete(`${this.apiUrl}/delete`, {
             params: { id: productId.toString() }
         });
     }
