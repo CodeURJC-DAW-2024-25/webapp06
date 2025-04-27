@@ -42,28 +42,40 @@ export class ProductListComponent implements OnInit {
     this.authService.user$.subscribe(user => {
       const params: any = {};
 
-      if (
-        !user || 
-        (Array.isArray(user.roles) && (user.roles.includes('USER') || user.roles.includes('ADMIN')))
-      ) {
-        // Caso: Usuario no autenticado, con rol USER o ADMIN
-        params.accepted = true;
-      } else if (Array.isArray(user.roles) && user.roles.includes('COMPANY')) {
-        // Caso: Usuario con rol COMPANY
-        params.accepted = true;
-        params.company = user.username; // Nombre del usuario como compañía
-      }
-
-      // Llamar al servicio con los parámetros construidos
-      this.productService.getProducts(this.page, this.pageSize, params).subscribe(
-        response => {
-          this.handleProductsResponse(response);
-        },
-        error => {
-          console.error('Error loading products', error);
-          this.loading = false;
+      if (this.type) {
+        // Si hay un tipo definido, filtrar por tipo
+        this.productService.getProductsByType(this.type, this.page, this.pageSize).subscribe(
+          response => {
+            this.handleProductsResponse(response);
+          },
+          error => {
+            console.error('Error loading products by type', error);
+            this.loading = false;
+          }
+        );
+      } else {
+        // Caso general: cargar productos sin filtro de tipo
+        if (
+          !user || 
+          (Array.isArray(user.roles) && (user.roles.includes('USER') || user.roles.includes('ADMIN')))
+        ) {
+          params.accepted = true;
+        } else if (Array.isArray(user.roles) && user.roles.includes('COMPANY')) {
+          params.accepted = true;
+          params.company = user.username; // Nombre del usuario como compañía
         }
-      );
+
+        // Llamar al servicio con los parámetros construidos
+        this.productService.getProducts(this.page, this.pageSize, params).subscribe(
+          response => {
+            this.handleProductsResponse(response);
+          },
+          error => {
+            console.error('Error loading products', error);
+            this.loading = false;
+          }
+        );
+      }
     });
   }
 

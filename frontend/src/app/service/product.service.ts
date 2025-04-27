@@ -33,12 +33,13 @@ export class ProductService {
 
     getProductsByType(type: string, page: number = 0, size: number = 5): Observable<any> {
         const params = new HttpParams()
+            .set('type', type)
             .set('page', page.toString())
             .set('size', size.toString());
 
-        return this.http.get(`${this.apiUrl}/type/${type}`, { params })
+        return this.http.get(`${this.apiUrl}/type`, { params })
             .pipe(
-                map((response: any) => this.processProductsResponse(response)) // Añadido tipo
+                map((response: any) => this.processProductsResponse(response)) // Procesar las imágenes
             );
     }
 
