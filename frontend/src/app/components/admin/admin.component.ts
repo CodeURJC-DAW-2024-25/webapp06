@@ -9,23 +9,36 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class AdminComponent implements OnInit {
-  productsNotAccepted: any[] = []; // Lista de productos no aceptados
+  productsNotAccepted: { content: any[]; page: any } = { content: [], page: {} }; // Inicializar con valores vacíos
 
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.productsNotAccepted = [this.generateExampleProduct(),this.generateExampleProduct(),this.generateExampleProduct()]; // Inicializar con productos de ejemplo
-    
+    this.loadProductsNotAccepted();
   }
 
   // Cargar productos no aceptados
   loadProductsNotAccepted(): void {
     this.productService.getProductsNotAccepted().subscribe(
-      (products) => {
-        this.productsNotAccepted = products;
+      (response) => {
+        console.log('Products not accepted:', response); // Verificar la respuesta del backend
+        this.productsNotAccepted = response;
+
+        // Cargar imágenes para cada producto
+        this.productsNotAccepted.content.forEach(product => {
+          this.productService.loadProductImage(product.id).subscribe(
+            (imageBase64) => {
+              product.imageBase64 = imageBase64; // Asignar la imagen al producto
+            },
+            (error) => {
+              console.error(`Error loading image for product ${product.id}:`, error);
+            }
+          );
+        });
       },
       (error) => {
         console.error('Error loading products not accepted:', error);
+        this.productsNotAccepted = { content: [], page: {} };
       }
     );
   }
@@ -35,7 +48,9 @@ export class AdminComponent implements OnInit {
     this.productService.acceptProduct(productId).subscribe(
       () => {
         console.log(`Product ${productId} accepted successfully.`);
-        this.productsNotAccepted = this.productsNotAccepted.filter(product => product.id !== productId);
+        if (this.productsNotAccepted) {
+          this.productsNotAccepted.content = this.productsNotAccepted.content.filter(product => product.id !== productId);
+        }
       },
       (error) => {
         console.error(`Error accepting product ${productId}:`, error);
@@ -48,26 +63,13 @@ export class AdminComponent implements OnInit {
     this.productService.declineProduct(productId).subscribe(
       () => {
         console.log(`Product ${productId} declined successfully.`);
-        this.productsNotAccepted = this.productsNotAccepted.filter(product => product.id !== productId);
+        if (this.productsNotAccepted) {
+          this.productsNotAccepted.content = this.productsNotAccepted.content.filter(product => product.id !== productId);
+        }
       },
       (error) => {
         console.error(`Error declining product ${productId}:`, error);
       }
     );
   }
-
-  //Generame un producto de ejemplo para poder mostrarlo en la vista
-  generateExampleProduct(): any {
-    return {
-      id: 1,
-      name: 'Example Product',
-      description: 'This is an example product.',
-      price: 100,
-      imageBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...',
-      company: 'Example Company',
-      isAccepted: false
-    };
-  }
-
-  
 }

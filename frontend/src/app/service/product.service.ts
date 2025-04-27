@@ -177,8 +177,8 @@ export class ProductService {
         return this.http.post<any>(`${environment.apiUrl}/reviews/${productId}`, review);
     }
 
-    getProductsNotAccepted(): Observable<any[]> {
-        return this.http.get<any[]>(`${this.apiUrl}/?accepted=false`);
+    getProductsNotAccepted(): Observable<{ content: any[]; page: any }> {
+        return this.http.get<{ content: any[]; page: any }>(`${this.apiUrl}/?accepted=false`);
     }
 
     acceptProduct(productId: number): Observable<any> {
