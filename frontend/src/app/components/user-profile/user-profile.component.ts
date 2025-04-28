@@ -19,7 +19,7 @@ export class UserProfileComponent {
   username: string = '';
   email: string = "";
   isGoogleUser: boolean = false;
-  isUser: boolean = true;
+  isUser: boolean = false;
   isCompany: boolean = false;
 
   constructor(
@@ -32,6 +32,18 @@ export class UserProfileComponent {
     let userId = null
     const currentUser = this.authService.getCurrentUser();
     console.log("Usuario" + currentUser.username)
+    console.log("Rol del usuario" + currentUser.roles)
+
+    if (currentUser.roles == "COMPANY"){
+      this.isCompany = true
+      console.log("Rol de compañia ")
+    } else if (currentUser.roles == "USER"){
+      this.isUser = true
+      console.log("Rol de usaurio")
+    } else {
+      console.log("Otro rol" + currentUser.roles)
+    }
+    
     this.authService.getUserIdByUsername(currentUser.username).subscribe({
       next: (userIdObject) => {
         userId = userIdObject.toString()
