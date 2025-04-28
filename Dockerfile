@@ -1,3 +1,14 @@
+# --- Build Angular ---
+FROM node:23.11 AS angular
+
+WORKDIR /angular
+COPY frontend/package*.json /angular/
+RUN npm install
+COPY frontend/src /angular//src
+RUN npm run build -- --configuration production --base-href=/new/
+
+
+
 # Use an official OpenJDK runtime as a base image
 FROM maven:3.9-eclipse-temurin-21 AS builder
 
@@ -5,8 +16,11 @@ FROM maven:3.9-eclipse-temurin-21 AS builder
 # Set working directory
 WORKDIR /app
 
-COPY webapp6/pom.xml /app/
-COPY webapp6/src /app/src
+COPY backend/pom.xml /app/
+
+COPY backend/src /app/src
+COPY --from=angular /angular/dist/frontend/browser/ /project/src/main/resources/static/new
+
 
 RUN mvn clean package -DskipTests
 
