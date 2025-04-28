@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Date;
 
 import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.data.domain.Page;
@@ -57,18 +58,22 @@ public class ProductService {
         return productMapper.toProductDTO(product);
     }
 
-    public ProductDTO addProduct(ProductDTO productDTO) {
+    // Add to your addProduct method
+    public ProductDTO addProduct(ProductDTO productDTO, String username) {
+        // Convert DTO to entity
         Product product = productMapper.toProduct(productDTO);
-        productRepository.save(product);
-        return productMapper.toProductDTO(product);
-    }
 
-    public ProductDTO addProduct(ProductDTO productDTO, String company) {
-        Product product = productMapper.toProduct(productDTO);
-        product.setCompany(company);
-        product.setIsAccepted(false);
-        productRepository.save(product);
-        return productMapper.toProductDTO(product);
+        // Set defaults for new products
+        product.setDate(new java.sql.Timestamp(new Date().getTime())); // Set creation date to current time
+        product.setViews_count(0); // Initialize views count to 0
+        product.setCompany(username); // Set company name from username
+        product.setIsAccepted(false); // Products start as not accepted
+
+        // Save the product
+        Product savedProduct = productRepository.save(product);
+
+        // Convert back to DTO and return
+        return productMapper.toProductDTO(savedProduct);
     }
 
     public void addReviewToProduct(ProductDTO productDTO, ReviewDTO reviewDTO) {
@@ -460,7 +465,7 @@ public class ProductService {
             }
         }
 
-        addProduct(productMapper.toProductDTO(product));
+        addProduct(productMapper.toProductDTO(product), product.getCompany());
     }
 
     public Resource getProductImage(long id) throws SQLException {

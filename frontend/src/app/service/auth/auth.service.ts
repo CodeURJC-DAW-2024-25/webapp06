@@ -38,64 +38,28 @@ export class AuthService {
     login(username: string, password: string): Observable<any> {
         console.log('Intentando login con:', username);
 
-        // POST al endpoint de autenticación
-        return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password })
+        // Add withCredentials: true to handle cookies
+        return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password }, { withCredentials: true })
             .pipe(
-                switchMap(() => {
-                    // Realizar la segunda solicitud para obtener el perfil del usuario
-                    return this.http.get<any>(`${this.apiUrl}/main/profile`);
-                }),
-                map(profile => {
-                    console.log('Usuario obtenido del perfil:', profile);
-
-                    // Si no hay respuesta, crear una respuesta temporal con el nombre de usuario
-                    if (profile) {
-                        profile = {
-                            // Generar un token fake solo para desarrollo
-                            token: `fake_token_${new Date().getTime()}`,
-                            user: {
-                                id: profile.id,
-                                name: profile.name,
-                                username: profile.username,
-                                email: profile.email,
-                                roles: profile.role, // Asumimos que "role" es un array
-                                orders: profile.orders,
-                                reviews: profile.reviews,
-                                cart: profile.cart,
-                                cartPrice: profile.cartPrice,
-                                historicalOrderPrices: profile.historicalOrderPrices
-                            }
-                        };
-                        console.log('Generando respuesta temporal:', profile);
-                    }
-
-                    return profile;
-                }),
                 tap(response => {
-                    console.log('Procesando respuesta de login:', response);
+                    console.log('Respuesta de login:', response);
 
-                    // Asegurarse de que hay una respuesta con token antes de almacenar
-                    if (response && response.token) {
-                        // Guardar el token
-                        localStorage.setItem(this.tokenKey, response.token);
-
-                        // Guardar datos del usuario si existen
+                    // Check for successful authentication by response status
+                    if (response && response.status === 'SUCCESS') {
+                        // Store user information from response
                         if (response.user) {
                             localStorage.setItem('user', JSON.stringify(response.user));
                             this.userSubject.next(response.user);
-                        } else {
-                            // Si no hay datos de usuario pero sí token, crear un usuario básico
-                            const basicUser = { username: username, roles: response.roles };
-                            localStorage.setItem('user', JSON.stringify(basicUser));
-                            this.userSubject.next(basicUser);
                         }
 
-                        // Actualizar el estado de inicio de sesión
+                        // Set a flag in localStorage to indicate logged-in status
+                        localStorage.setItem(this.tokenKey, 'authenticated');
                         this.isLoggedInSubject.next(true);
-                        console.log('Estado de autenticación actualizado:', {
-                            isLoggedIn: true,
-                            user: this.userSubject.value
-                        });
+
+                        console.log('Login exitoso, sesión almacenada');
+                    } else {
+                        console.error('Respuesta de login sin éxito', response);
+                        throw new Error('Login failed');
                     }
                 }),
                 catchError(error => {
@@ -105,13 +69,63 @@ export class AuthService {
             );
     }
 
+    // Añadir dentro de la clase AuthService
+    refreshToken(): Observable<boolean> {
+        console.log('Intentando refrescar token...');
+        return this.http.post<any>(`${this.apiUrl}/auth/refresh`, {}, { withCredentials: true })
+            .pipe(
+                map(response => {
+                    if (response && response.accessToken) {
+                        console.log('Token refrescado con éxito');
+                        localStorage.setItem(this.tokenKey, response.accessToken);
+                        return true;
+                    }
+                    return false;
+                }),
+                catchError(error => {
+                    console.error('Error al refrescar token:', error);
+                    // No cerrar sesión automáticamente aquí
+                    return of(false);
+                })
+            );
+    }
+
+    getUserProfile(): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/main/profile`)
+            .pipe(
+                tap(userData => {
+                    console.log('Datos de usuario recibidos del perfil:', userData);
+
+                    // Normalizar formato de roles (convertir 'role' a 'roles' si es necesario)
+                    if (userData) {
+                        // Si existe role pero no roles, usar role como roles
+                        if (userData.role && !userData.roles) {
+                            console.log('Normalizando formato de roles: role → roles');
+                            userData.roles = userData.role;
+                        }
+
+                        // Asegurar que roles siempre sea un array para consistencia
+                        if (userData.roles && !Array.isArray(userData.roles)) {
+                            userData.roles = [userData.roles];
+                        }
+
+                        console.log('Datos de usuario normalizados:', userData);
+                    }
+
+                    // Guardar datos del usuario en localStorage
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    this.userSubject.next(userData);
+                }),
+                catchError(error => {
+                    console.error('Error obteniendo perfil de usuario:', error);
+                    throw error;
+                })
+            );
+    }
+
     // Métodos necesarios para compatibilidad
     isLoggedIn(): Observable<boolean> {
         return this.isLoggedIn$;
-    }
-
-    getCurrentUser(): any {
-        return this.userSubject.value;
     }
 
     getUserIdByUsername(username: string): Observable<number> {
@@ -146,9 +160,70 @@ export class AuthService {
     }
 
     hasRole(role: string): boolean {
-        const user = this.getCurrentUser();
-        return user && user.roles &&
-            (Array.isArray(user.roles) ? user.roles.includes(role) : user.roles === role);
+        // Obtener usuario directamente del localStorage como respaldo
+        let user = this.userSubject.value;
+
+        if (!user) {
+            // Intento obtener del localStorage si userSubject está vacío
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    user = JSON.parse(userStr);
+                    console.log('Usuario recuperado de localStorage:', user);
+                } catch (e) {
+                    console.error('Error al parsear usuario de localStorage:', e);
+                }
+            }
+        }
+
+        if (!user) {
+            console.log('No hay usuario definido');
+            return false;
+        }
+
+        console.log('Verificando rol:', role, 'en usuario:', user);
+
+        // Comprobar roles (plural)
+        if (user.roles) {
+            if (Array.isArray(user.roles)) {
+                return user.roles.some((r: any) =>
+                    typeof r === 'string' && r.toLowerCase() === role.toLowerCase()
+                );
+            } else if (typeof user.roles === 'string') {
+                return user.roles.toLowerCase() === role.toLowerCase();
+            }
+        }
+
+        // Comprobar role (singular) como respaldo
+        if (user.role) {
+            if (Array.isArray(user.role)) {
+                return user.role.some((r: any) =>
+                    typeof r === 'string' && r.toLowerCase() === role.toLowerCase()
+                );
+            } else if (typeof user.role === 'string') {
+                return user.role.toLowerCase() === role.toLowerCase();
+            }
+        }
+
+        console.log('No se encontraron roles en el usuario');
+        return false;
+    }
+
+    // Agregar o modificar este método para asegurar que obtenemos el usuario correctamente
+    getCurrentUser(): any {
+        const user = this.userSubject.value;
+        if (user) return user;
+
+        // Respaldo desde localStorage
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                return JSON.parse(userStr);
+            } catch (e) {
+                console.error('Error al parsear usuario de localStorage:', e);
+            }
+        }
+        return null;
     }
 
     register(username: string, email: string, password: string, role: string = 'USER'): Observable<any> {
@@ -179,6 +254,6 @@ export class AuthService {
     }
 
     getToken(): string | null {
-        return localStorage.getItem(this.tokenKey);
+        return localStorage.getItem(this.tokenKey) ? 'authenticated' : null;
     }
 }

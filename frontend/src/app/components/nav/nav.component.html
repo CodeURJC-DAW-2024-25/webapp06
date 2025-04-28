@@ -33,8 +33,9 @@
 
     <div *ngIf="logged" class="login_user">
         <div *ngIf="isCompany" class="add_product_div">
-            <a routerLink="/newProduct" class="add_product_link"><i class="bi bi-plus-circle"
-                    id="add_product_button"></i></a>
+            <a routerLink="/newProduct" class="add_product_link">
+                <i class="bi bi-plus-circle" id="add_product_button"></i>
+            </a>
         </div>
         <div class="user_div">
             <a routerLink="/user-profile" class="user"><i class="bi bi-person"></i></a>
@@ -42,7 +43,6 @@
         </div>
         <a *ngIf="isUser" routerLink="/shoppingcart" class="cart"><i class="bi bi-cart"></i></a>
         <form action="/logout" style="display:inline;">
-            <!-- Si CSRF está habilitado, añade el token -->
             <button (click)="logout()" type="submit" class="logout">Log Out</button>
         </form>
     </div>
@@ -65,8 +65,3 @@
     <a routerLink="/products/category/Cinema" class="category">Cinema</a>
     <a routerLink="/products/category/Others" class="category">Others</a>
 </div>
-
-<!--  Para mostrar el pop-up -->
-<!-- <ng-container *ngTemplateOutlet="chooseLoginRegisterOption"></ng-container> -->
-
-<script src="../../js/login.js"></script>

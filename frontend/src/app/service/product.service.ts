@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, from, switchMap, map, catchError } from 'rxjs'; // Añadir 'map' a las importaciones
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, from, tap, switchMap, map, catchError, throwError } from 'rxjs'; // Añadir 'map' a las importaciones
 import { environment } from '../enviroments/enviroment';
+import { AuthService } from './auth/auth.service'; // Asegúrate de que la ruta es correcta
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,7 @@ export class ProductService {
     private apiUrl = `${environment.apiUrl}/products`;
     private product: any; // Variable para almacenar el producto
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private authService: AuthService) { }
 
     getProducts(page: number = 0, size: number = 5, params?: { accepted?: boolean; company?: string }): Observable<any> {
         let queryParams: any = {
@@ -64,7 +65,52 @@ export class ProductService {
     }
 
     createProduct(product: any): Observable<any> {
-        return this.http.post<any>(`${environment.apiUrl}/products/`, product);
+        console.log('Creando producto:', product);
+
+        // Obtener el token JWT actualizado
+        const token = this.authService.getToken();
+        console.log('Token JWT actual:', token?.substring(0, 20) + '...'); // Solo mostrar parte del token por seguridad
+
+        if (!token) {
+            console.error('No hay token disponible');
+            return throwError(() => new Error('No hay token de autenticación disponible'));
+        }
+
+        // Obtener información del usuario actual
+        const currentUser = this.authService.getCurrentUser();
+        if (!currentUser || !this.authService.hasRole('COMPANY')) {
+            console.error('Usuario no tiene permisos para crear productos');
+            return throwError(() => new Error('No tienes permisos para crear productos'));
+        }
+
+        // Añadir información de la compañía al producto si es necesario
+        if (currentUser && currentUser.id) {
+            product.userId = currentUser.id; // Asignar ID del usuario/compañía al producto
+        }
+
+        // Crear headers con el token de autenticación
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        });
+
+        console.log('Enviando solicitud con encabezado de autorización y datos de usuario');
+
+        return this.http.post<any>(`${this.apiUrl}/`, product, {
+            headers: headers,
+            withCredentials: true
+        }).pipe(
+            tap(response => console.log('Respuesta de creación de producto:', response)),
+            catchError(error => {
+                console.error('Error creando producto:', error);
+
+                if (error.status === 401) {
+                    console.error('Error de autenticación o autorización. Verifica que tu cuenta tenga los permisos necesarios.');
+                }
+
+                throw error;
+            })
+        );
     }
 
     updateProduct(id: number, product: any): Observable<any> {
@@ -193,8 +239,4 @@ export class ProductService {
             params: { id: productId.toString() }
         });
     }
-}
-
-function tap(arg0: (products: any[]) => void): import("rxjs").OperatorFunction<any, any[]> {
-    throw new Error('Function not implemented.');
 }

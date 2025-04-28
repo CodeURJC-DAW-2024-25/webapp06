@@ -1,30 +1,45 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+    HttpRequest,
+    HttpHandler,
+    HttpEvent,
+    HttpInterceptor,
+    HttpErrorResponse
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { AuthService } from '../service/auth/auth.service';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     constructor(private authService: AuthService) { }
 
-    intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-        // Update paths to match the actual API endpoints
-        if (request.url.includes('/api/auth/login') ||
-            request.url.includes('/v1/api/users/')) {  // Changed to match your actual endpoint
-            console.log('Skipping auth for:', request.url);
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        // No interceptar peticiones a login, register, refresh
+        if (request.url.includes('/auth/login') ||
+            request.url.includes('/auth/register') ||
+            request.url.includes('/auth/refresh')) {
+            console.log('No interceptando petición de autenticación');
             return next.handle(request);
         }
 
-        // For other requests, add the auth token if available
+        // Obtener el token del localStorage
         const token = this.authService.getToken();
+
         if (token) {
-            request = request.clone({
+            // Añadir el token a la solicitud Y mantener withCredentials
+            const authRequest = request.clone({
                 setHeaders: {
                     Authorization: `Bearer ${token}`
-                }
+                },
+                withCredentials: true // Asegurar que withCredentials se mantiene
             });
+
+            console.log(`Interceptando petición a ${request.url} - Agregando token`);
+            return next.handle(authRequest).pipe(/* resto del código */);
         }
 
+        // Si no hay token...
         return next.handle(request);
     }
 }
