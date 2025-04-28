@@ -22,6 +22,7 @@ import { FormComponent } from './components/newProdFrom/form.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ProductSearchComponent } from './components/search/search.component';
 import { UserGraphComponent } from './components/user-graph/user-graph.component';
+import { CompanyGraphComponent } from './components/company-graph/company-graph.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { UserGraphComponent } from './components/user-graph/user-graph.component
     FormComponent,
     UserProfileComponent,
     ProductSearchComponent,
-    UserGraphComponent
+    UserGraphComponent,
+    CompanyGraphComponent,
 
   ],
   imports: [

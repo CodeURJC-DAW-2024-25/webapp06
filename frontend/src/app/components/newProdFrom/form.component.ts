@@ -15,6 +15,7 @@ export class FormComponent implements OnInit {
   productTypes: string[] = ['Technology', 'Books', 'Education', 'Appliances', 'Sports', 'Home', 'Music', 'Cinema'];
   form_title: string = 'Create New Product';
   selectedFile: File | null = null; // Añadir esta propiedad para el archivo seleccionado
+  selectedFile: File | null = null; // Variable para almacenar el archivo de imagen seleccionado
 
   constructor(
     private fb: FormBuilder,
@@ -77,48 +78,68 @@ export class FormComponent implements OnInit {
     );
   }
 
-  onSubmit() {
-    const token = this.productService['authService'].getToken();
+  // Manejar el envío del formulario
+  onSubmit(): void {
+    if (this.productForm.valid) {
+      const formData = this.productForm.value;
 
-    if (!token) {
-      console.error('No hay token de autenticación. Inicie sesión primero.');
-      alert('Su sesión ha expirado. Por favor, inicie sesión nuevamente.');
-      this.router.navigate(['/login']);
-      return;
-    }
+      if (this.product) {
+        // Actualizar producto existente
+        this.productService.updateProduct(this.product.id, formData).subscribe(
+          () => {
+            console.log('Product updated successfully');
 
-    // Verifica explícitamente si el usuario tiene rol COMPANY
-    const user = this.productService['authService'].getCurrentUser();
-    const isCompany = this.productService['authService'].hasRole('COMPANY');
+            // Si hay una imagen seleccionada, actualizar la imagen
+            if (this.selectedFile) {
+              const imageFormData = new FormData();
+              imageFormData.append('file', this.selectedFile); // Adjuntar el archivo seleccionado
 
-    if (!isCompany) {
-      console.error('Usuario no tiene permisos para crear productos. Se requiere rol COMPANY');
-      alert('No tienes permisos para crear productos. Se requiere una cuenta de empresa.');
-      return;
-    }
+              this.productService.updateProductImage(this.product.id, imageFormData).subscribe(
+                () => {
+                  console.log('Product image updated successfully');
+                  this.router.navigate(['/products']); // Redirigir después de actualizar
+                },
+                (error) => {
+                  console.error('Error updating product image:', error);
+                }
+              );
+            } else {
+              this.router.navigate(['/products']); // Redirigir si no hay imagen
+            }
+          },
+          (error) => {
+            console.error('Error updating product:', error);
+          }
+        );
+      } else {
+        // Crear un nuevo producto
+        this.productService.createProduct(formData).subscribe(
+          (createdProduct) => {
+            console.log('Product created successfully');
 
-    // Continuar con la creación del producto si tiene los permisos necesarios
-    if (this.productForm.invalid) {
-      console.error('Formulario inválido');
-      return;
-    }
-    // Si hay una imagen, convertirla a Base64 primero
-    if (this.selectedFile) {
-      const reader = new FileReader();
-      reader.readAsDataURL(this.selectedFile);
-      reader.onload = () => {
-        // Crea un objeto JSON con todos los datos, incluida la imagen en base64
-        const productData = {
-          name: this.productForm.value.name,
-          price: this.productForm.value.price,
-          description: this.productForm.value.description,
-          type: this.productForm.value.type,
-          stock: this.productForm.value.stock,
-          imageBase64: reader.result?.toString().split(',')[1] // Quita el prefijo 'data:image/jpeg;base64,'
-        };
+            // Si hay una imagen seleccionada, subir la imagen
+            if (this.selectedFile) {
+              const imageFormData = new FormData();
+              imageFormData.append('file', this.selectedFile); // Adjuntar el archivo seleccionado
 
-        this.sendProduct(productData);
-      };
+              this.productService.updateProductImage(createdProduct.id, imageFormData).subscribe(
+                () => {
+                  console.log('Product image uploaded successfully');
+                  this.router.navigate(['/products']); // Redirigir después de crear
+                },
+                (error) => {
+                  console.error('Error uploading product image:', error);
+                }
+              );
+            } else {
+              this.router.navigate(['/products']); // Redirigir si no hay imagen
+            }
+          },
+          (error) => {
+            console.error('Error creating product:', error);
+          }
+        );
+      }
     } else {
       // Si no hay imagen, envía los datos sin imagen
       const productData = {
@@ -168,6 +189,10 @@ export class FormComponent implements OnInit {
       this.selectedFile = file;
       // Usar el operador de acceso seguro (?) o non-null assertion (!), ya que sabemos que selectedFile no es null aquí
       console.log('Archivo seleccionado:', this.selectedFile?.name, 'Tipo:', this.selectedFile?.type);
+      const file = event.target.files[0];
+      if (file) {
+        this.selectedFile = file; // Almacenar el archivo seleccionado
+        console.log('Imagen seleccionada:', file.name);
+      }
     }
   }
-}

@@ -24,6 +24,7 @@ export class ProductDetailComponent implements OnInit {
   isAdmin = false; // Variable para almacenar si el usuario es administrador
   reviewForm: FormGroup; // Formulario para las reseñas
   isUser = false; // Verificar si el usuario tiene el rol USER
+  isCompany = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -63,6 +64,15 @@ export class ProductDetailComponent implements OnInit {
               : user.roles === 'ADMIN';
       } else {
           this.isAdmin = false;
+      }
+    });
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+          this.isCompany = Array.isArray(user.roles)
+              ? user.roles.includes('COMPANY')
+              : user.roles === 'COMPANY';
+      } else {
+          this.isCompany = false;
       }
   });
 }

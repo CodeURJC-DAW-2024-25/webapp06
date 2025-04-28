@@ -174,6 +174,8 @@ export class ProductService {
         );
     }
 
+    
+
     private convertBlobToBase64(blob: Blob): Observable<string> {
         return new Observable((observer) => {
             const reader = new FileReader();
@@ -238,5 +240,10 @@ export class ProductService {
         return this.http.delete(`${this.apiUrl}/delete`, {
             params: { id: productId.toString() }
         });
+    }
+
+    updateProductImage(productId: number, imageFormData: FormData): Observable<any> {
+        return this.http.put(`${this.apiUrl}/${productId}/image`, imageFormData);
+        
     }
 }

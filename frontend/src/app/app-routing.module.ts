@@ -11,6 +11,7 @@ import { FormComponent } from './components/newProdFrom/form.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { UserGraphComponent } from './components/user-graph/user-graph.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { CompanyGraphComponent } from './components/company-graph/company-graph.component';
 
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'newProduct', component: FormComponent},
   { path: 'user-profile', component: UserProfileComponent},
   { path: 'user-graph', component: UserGraphComponent},
+  { path: 'company-graph', component: CompanyGraphComponent},
   { path: 'admin', component: AdminComponent }, // Ruta protegida para el administrador
 
   // Rutas protegidas
