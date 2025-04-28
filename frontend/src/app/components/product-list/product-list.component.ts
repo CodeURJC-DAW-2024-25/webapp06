@@ -55,14 +55,12 @@ export class ProductListComponent implements OnInit {
         );
       } else {
         // Caso general: cargar productos sin filtro de tipo
-        if (
-          !user || 
-          (Array.isArray(user.roles) && (user.roles.includes('USER') || user.roles.includes('ADMIN')))
-        ) {
-          params.accepted = true;
-        } else if (Array.isArray(user.roles) && user.roles.includes('COMPANY')) {
+        
+        if (this.authService.hasRole("COMPANY")) {
           params.accepted = true;
           params.company = user.username; // Nombre del usuario como compañía
+        } else {
+          params.accepted = true;
         }
 
         // Llamar al servicio con los parámetros construidos
