@@ -14,6 +14,7 @@ export class FormComponent implements OnInit {
   product: any = null;
   productTypes: string[] = ['Technology', 'Books', 'Education', 'Appliances', 'Sports', 'Home', 'Music', 'Cinema'];
   form_title: string = 'Create New Product';
+  selectedFile: File | null = null; // Variable para almacenar el archivo de imagen seleccionado
 
   constructor(
     private fb: FormBuilder,
@@ -85,7 +86,24 @@ export class FormComponent implements OnInit {
             this.productService.updateProduct(this.product.id, formData).subscribe(
                 () => {
                     console.log('Product updated successfully');
-                    this.router.navigate(['/products']); // Redirige después de actualizar
+
+                    // Si hay una imagen seleccionada, actualizar la imagen
+                    if (this.selectedFile) {
+                        const imageFormData = new FormData();
+                        imageFormData.append('file', this.selectedFile); // Adjuntar el archivo seleccionado
+                        
+                        this.productService.updateProductImage(this.product.id, imageFormData).subscribe(
+                            () => {
+                                console.log('Product image updated successfully');
+                                this.router.navigate(['/products']); // Redirigir después de actualizar
+                            },
+                            (error) => {
+                                console.error('Error updating product image:', error);
+                            }
+                        );
+                    } else {
+                        this.router.navigate(['/products']); // Redirigir si no hay imagen
+                    }
                 },
                 (error) => {
                     console.error('Error updating product:', error);
@@ -94,9 +112,26 @@ export class FormComponent implements OnInit {
         } else {
             // Crear un nuevo producto
             this.productService.createProduct(formData).subscribe(
-                () => {
+                (createdProduct) => {
                     console.log('Product created successfully');
-                    this.router.navigate(['/products']); // Redirige después de crear
+
+                    // Si hay una imagen seleccionada, subir la imagen
+                    if (this.selectedFile) {
+                        const imageFormData = new FormData();
+                        imageFormData.append('file', this.selectedFile); // Adjuntar el archivo seleccionado
+
+                        this.productService.updateProductImage(createdProduct.id, imageFormData).subscribe(
+                            () => {
+                                console.log('Product image uploaded successfully');
+                                this.router.navigate(['/products']); // Redirigir después de crear
+                            },
+                            (error) => {
+                                console.error('Error uploading product image:', error);
+                            }
+                        );
+                    } else {
+                        this.router.navigate(['/products']); // Redirigir si no hay imagen
+                    }
                 },
                 (error) => {
                     console.error('Error creating product:', error);
@@ -112,11 +147,8 @@ export class FormComponent implements OnInit {
   onImageChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.productForm.patchValue({ image: reader.result });
-      };
-      reader.readAsDataURL(file);
+        this.selectedFile = file; // Almacenar el archivo seleccionado
+        console.log('Imagen seleccionada:', file.name);
     }
   }
 }
