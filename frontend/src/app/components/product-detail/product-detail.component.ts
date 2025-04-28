@@ -33,77 +33,69 @@ export class ProductDetailComponent implements OnInit {
     private cartService: ShoppingCartService,
     private authService: AuthService,
     private fb: FormBuilder // Inyectar FormBuilder
-) {
+  ) {
     // Inicializar el formulario de reseñas
     this.reviewForm = this.fb.group({
-        rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
-        comment: ['', [Validators.required, Validators.maxLength(500)]],
+      rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+      comment: ['', [Validators.required, Validators.maxLength(500)]],
     });
-}
+  }
 
   ngOnInit(): void {
     const productId = this.route.snapshot.paramMap.get('id');
     if (productId) {
-        this.loadProduct(+productId);
+      this.loadProduct(+productId);
     }
 
-    // Suscribirse al observable user$ para obtener la información del usuario
-    this.authService.user$.subscribe((user) => {
-        if (user) {
-            this.isUser = Array.isArray(user.roles)
-                ? user.roles.includes('USER')
-                : user.roles === 'USER';
-        } else {
-            this.isUser = false;
-        }
-    });
+    // Just one subscription to monitor user state
     this.authService.user$.subscribe((user) => {
       if (user) {
-          this.isAdmin = Array.isArray(user.roles)
-              ? user.roles.includes('ADMIN')
-              : user.roles === 'ADMIN';
+        // Use the AuthService's hasRole method which handles different role formats
+        this.isUser = this.authService.hasRole('USER');
+        this.isAdmin = this.authService.hasRole('ADMIN');
+        this.isCompany = this.authService.hasRole('COMPANY');
+
+        console.log('User roles detected:', {
+          isUser: this.isUser,
+          isAdmin: this.isAdmin,
+          isCompany: this.isCompany,
+          userObject: user
+        });
       } else {
-          this.isAdmin = false;
+        this.isUser = false;
+        this.isAdmin = false;
+        this.isCompany = false;
       }
     });
-    this.authService.user$.subscribe((user) => {
-      if (user) {
-          this.isCompany = Array.isArray(user.roles)
-              ? user.roles.includes('COMPANY')
-              : user.roles === 'COMPANY';
-      } else {
-          this.isCompany = false;
-      }
-  });
-}
+  }
 
   loadProduct(id: number): void {
     this.loading = true;
 
     // Obtener los datos del producto
     this.productService.getProductById(id).subscribe(
-        (data) => {
-            this.product = data;
+      (data) => {
+        this.product = data;
 
-            // Obtener la imagen del producto por separado
-            this.productService.loadProductImage(id).subscribe(
-                (imageBase64) => {
-                    this.product.imageBase64 = imageBase64; // Asignar la imagen al producto
-                },
-                (error) => {
-                    console.error('Error loading product image:', error);
-                }
-            );
+        // Obtener la imagen del producto por separado
+        this.productService.loadProductImage(id).subscribe(
+          (imageBase64) => {
+            this.product.imageBase64 = imageBase64; // Asignar la imagen al producto
+          },
+          (error) => {
+            console.error('Error loading product image:', error);
+          }
+        );
 
-            this.loading = false;
-        },
-        (error) => {
-            console.error('Error loading product:', error);
-            this.loading = false;
-            this.router.navigate(['/products/allProducts']);
-        }
+        this.loading = false;
+      },
+      (error) => {
+        console.error('Error loading product:', error);
+        this.loading = false;
+        this.router.navigate(['/products/allProducts']);
+      }
     );
-}
+  }
 
   addToCart(): void {
     if (!this.authService.getCurrentUser()) {
@@ -135,38 +127,38 @@ export class ProductDetailComponent implements OnInit {
 
   submitReview(): void {
     if (this.reviewForm.valid) {
-        const reviewData = this.reviewForm.value;
-        console.log('Submitting review:', reviewData);
+      const reviewData = this.reviewForm.value;
+      console.log('Submitting review:', reviewData);
 
-        // Llamar al servicio para enviar la reseña
-        this.productService.addReview(this.product.id, reviewData).subscribe(
-            (response) => {
-                console.log('Review submitted successfully:', response);
-                // Actualizar las reseñas del producto
-                this.product.reviews.push(response);
-                this.reviewForm.reset();
-            },
-            (error) => {
-                console.error('Error submitting review:', error);
-            }
-        );
+      // Llamar al servicio para enviar la reseña
+      this.productService.addReview(this.product.id, reviewData).subscribe(
+        (response) => {
+          console.log('Review submitted successfully:', response);
+          // Actualizar las reseñas del producto
+          this.product.reviews.push(response);
+          this.reviewForm.reset();
+        },
+        (error) => {
+          console.error('Error submitting review:', error);
+        }
+      );
     }
-}
-
-deleteProduct(): void {
-  if (this.product) {
-    this.productService.declineProduct(this.product.id).subscribe(
-      () => {
-        console.log(`Product ${this.product.id} deleted successfully.`);
-        this.router.navigate(['/products']); // Redirigir a la lista de productos
-      },
-      (error) => {
-        console.error(`Error deleting product ${this.product.id}:`, error);
-      }
-    );
-  } else {
-    console.error('No product loaded to delete.');
   }
-}
+
+  deleteProduct(): void {
+    if (this.product) {
+      this.productService.declineProduct(this.product.id).subscribe(
+        () => {
+          console.log(`Product ${this.product.id} deleted successfully.`);
+          this.router.navigate(['/products']); // Redirigir a la lista de productos
+        },
+        (error) => {
+          console.error(`Error deleting product ${this.product.id}:`, error);
+        }
+      );
+    } else {
+      console.error('No product loaded to delete.');
+    }
+  }
 
 }
