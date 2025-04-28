@@ -56,9 +56,9 @@ export class RegisterComponent {
 
     // Imprime los datos que se envían
     console.log('Enviando datos:', { username, email, password, roles: [role] });
-
+    const rolString = role.toString();
     // En el método onSubmit() del RegisterComponent
-    this.authService.register(username, email, password, role).subscribe({
+    this.authService.register(username, email, password, rolString).subscribe({
       next: (response: any) => {
         console.log('Registro exitoso:', response);
         this.router.navigate(['/login'], { queryParams: { registered: true } });

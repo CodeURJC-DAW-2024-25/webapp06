@@ -151,7 +151,7 @@ export class AuthService {
             (Array.isArray(user.roles) ? user.roles.includes(role) : user.roles === role);
     }
 
-    register(username: string, email: string, password: string, role: string = 'USER'): Observable<any> {
+    register(username: string, email: string, password: string, role: string): Observable<any> {
         return this.http.post(`${this.apiUrl}/users/`, {
             username,
             email,
