@@ -1,4 +1,3 @@
-
 package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
@@ -445,7 +444,25 @@ public class APIProductController {
 		return ResponseEntity.ok(productDTO);
 	}
 
-	
+	@PutMapping("/addViewsCount")
+	public ResponseEntity<ProductDTO> addViewsCount(@RequestParam Long id) {
+	    System.out.println("ID recibido: " + id); // Log para depuración
+
+	    Optional<Product> productOptional = productRepository.findById(id);
+
+	    if (productOptional.isEmpty()) {
+	        return ResponseEntity.notFound().build();
+	    }
+
+	    Product product = productOptional.get();
+	    product.setViewsCount(product.getViewsCount() + 1);
+	    productRepository.save(product);
+
+	    ProductDTO productDTO = productMapper.toProductDTO(product);
+	    return ResponseEntity.ok(productDTO);
+	}
+
+
 	@DeleteMapping("/delete")
 	public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
 		Optional<Product> productOptional = productRepository.findById(id);

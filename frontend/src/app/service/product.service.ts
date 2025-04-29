@@ -252,4 +252,9 @@ export class ProductService {
     createProductImage(productId: number, imageFormData: FormData): Observable<any> {
         return this.http.post(`${this.apiUrl}/${productId}/image`, imageFormData);
     }
+
+    updateViewsCount(productId: number): Observable<any> {
+        const params = new HttpParams().set('id', productId.toString());
+        return this.http.put(`${this.apiUrl}/addViewsCount`, null, { params });
+    }
 }
