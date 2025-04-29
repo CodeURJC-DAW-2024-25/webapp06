@@ -63,8 +63,8 @@
         <h3>Add a Review</h3>
         <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
             <div class="mb-3">
-                <label for="rating" class="form-label">Rating (1-5)</label>
-                <select id="rating" class="form-select" formControlName="rating">
+                <label for="calification" class="form-label">Rating (1-5)</label>
+                <select id="calification" class="form-select" formControlName="calification">
                     <option *ngFor="let star of [1, 2, 3, 4, 5]" [value]="star">{{ star }}</option>
                 </select>
             </div>

@@ -36,7 +36,7 @@ export class ProductDetailComponent implements OnInit {
   ) {
     // Inicializar el formulario de reseñas
     this.reviewForm = this.fb.group({
-      rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+      calification: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
       comment: ['', [Validators.required, Validators.maxLength(500)]],
     });
   }
