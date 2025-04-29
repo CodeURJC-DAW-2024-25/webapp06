@@ -7,7 +7,7 @@
                 <div class="request-image">
                     <img *ngIf="product.imageBase64; else placeholder" [src]="product.imageBase64" alt="{{ product.name }}">
                     <ng-template #placeholder>
-                        <img src="assets/images/product-placeholder.jpg" alt="Placeholder">
+                        <img src="/images/product-placeholder.jpg" alt="Placeholder">
                     </ng-template>
                 </div>
                 <div class="request-details">
