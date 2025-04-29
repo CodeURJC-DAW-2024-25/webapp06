@@ -32,12 +32,12 @@ export class UserProfileComponent {
     let userId = null
     const currentUser = this.authService.getCurrentUser();
     console.log("Usuario" + currentUser.username)
-    console.log("Rol del usuario" + currentUser.roles)
+    console.log("Rol del usuario:  " + currentUser.role)
 
-    if (currentUser.roles == "COMPANY"){
+    if (currentUser.role == "COMPANY"){
       this.isCompany = true
       console.log("Rol de compañia ")
-    } else if (currentUser.roles == "USER"){
+    } else if (currentUser.role == "USER"){
       this.isUser = true
       console.log("Rol de usaurio")
     } else {

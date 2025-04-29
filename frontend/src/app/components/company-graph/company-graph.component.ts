@@ -24,56 +24,56 @@ export class CompanyGraphComponent {
 
 
     loadPieChartData(): void {
-        // this.graphService.getCompanyGraphData().subscribe({
-        //   next: (data) => {
-        //     // Transformamos los datos para que Highcharts los acepte
-        //     this.pieChartData = data.map((item: { key: string; value: number }): [string, number] => [item.key, item.value]);  // Transformamos cada objeto en un array [key, value]
-        //     this.renderCompanyGraph();
-        //   },
-        //   error: (err) => {
-        //     console.error('Error al cargar los datos para el gráfico de pie', err);
-        //   }
-        // });
+        this.graphService.getCompanyGraphData().subscribe({
+          next: (data) => {
+            // Transformamos los datos para que Highcharts los acepte
+            this.pieChartData = data.map((item: { key: string; value: number }): [string, number] => [item.key, item.value]);  // Transformamos cada objeto en un array [key, value]
+            this.renderCompanyGraph();
+          },
+          error: (err) => {
+            console.error('Error al cargar los datos para el gráfico de pie', err);
+          }
+        });
 
         // datos como llegarian de la api 
-        this.companyData = [
-            {
-                "key": "Others",
-                "value": 0
-            },
-            {
-                "key": "Appliances",
-                "value": 0
-            },
-            {
-                "key": "Technology",
-                "value": 1
-            },
-            {
-                "key": "Education",
-                "value": 0
-            },
-            {
-                "key": "Music",
-                "value": 0
-            },
-            {
-                "key": "Books",
-                "value": 0
-            },
-            {
-                "key": "Home",
-                "value": 0
-            },
-            {
-                "key": "Cinema",
-                "value": 0
-            },
-            {
-                "key": "Sports",
-                "value": 0
-            }
-        ]
+        // this.companyData = [
+        //     {
+        //         "key": "Others",
+        //         "value": 0
+        //     },
+        //     {
+        //         "key": "Appliances",
+        //         "value": 0
+        //     },
+        //     {
+        //         "key": "Technology",
+        //         "value": 1
+        //     },
+        //     {
+        //         "key": "Education",
+        //         "value": 0
+        //     },
+        //     {
+        //         "key": "Music",
+        //         "value": 0
+        //     },
+        //     {
+        //         "key": "Books",
+        //         "value": 0
+        //     },
+        //     {
+        //         "key": "Home",
+        //         "value": 0
+        //     },
+        //     {
+        //         "key": "Cinema",
+        //         "value": 0
+        //     },
+        //     {
+        //         "key": "Sports",
+        //         "value": 0
+        //     }
+        // ]
         this.pieChartData = this.companyData.map((item: { key: string; value: number }): [string, number] => [item.key, item.value]);  // Transformamos cada objeto en un array [key, value]
         console.log(this.pieChartData)
         this.renderCompanyGraph()

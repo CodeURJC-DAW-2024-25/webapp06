@@ -19,18 +19,17 @@ export class UserGraphComponent {
 
     ngOnInit(): void {
         // funcion que depende de la url desde la que se llame cargue un tipo de grafico u otro
-        // this.loadGraphData()
-        this.loadPieChartData()
+        this.loadGraphData()
     }
 
 
     loadGraphData(): void {
-        // this.graphService.getUserGraphData().subscribe(data => {
-        //     this.orderPrices = [12, 12, 43, 54];
-        //     this.renderChart()
-        // });
-        this.orderPrices = [12, 1234, 9]
-        this.renderUserChart()
+        this.graphService.getUserGraphData().subscribe(data => {
+            console.log("datos user graph: " + data)
+            this.orderPrices = data;
+            this.renderUserChart()
+        });
+        
 
     }
 
