@@ -32,15 +32,9 @@ export class FormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // El código existente se mantiene igual
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state as { product: any };
-
-    if (state?.product) {
-      this.product = state.product;
-    } else {
+   
       this.product = this.productService.getProduct();
-    }
+    
 
     if (this.product) {
       this.form_title = 'Edit Product';
@@ -56,26 +50,7 @@ export class FormComponent implements OnInit {
     }
   }
 
-  // Cargar un producto desde la API
-  loadProduct(id: number): void {
-    this.productService.getProductById(id).subscribe({
-      next: (data) => {
-        this.product = data;
-        this.form_title = 'Edit Product';
-        this.productForm.patchValue({
-          name: this.product.name,
-          price: this.product.price,
-          description: this.product.description,
-          type: this.product.type,
-          stock: this.product.stock,
-        });
-      },
-      error: (error) => {
-        console.error('Error loading product:', error);
-      }
-    });
-  }
-
+ 
   // Manejar el envío del formulario
   onSubmit(): void {
     if (this.productForm.valid) {
@@ -120,7 +95,7 @@ export class FormComponent implements OnInit {
               const imageFormData = new FormData();
               imageFormData.append('file', this.selectedFile); // Adjuntar el archivo seleccionado
 
-              this.productService.updateProductImage(createdProduct.id, imageFormData).subscribe({
+              this.productService.createProductImage(createdProduct.id, imageFormData).subscribe({
                 next: () => {
                   console.log('Product image uploaded successfully');
                   this.router.navigate(['/products']); // Redirigir después de crear

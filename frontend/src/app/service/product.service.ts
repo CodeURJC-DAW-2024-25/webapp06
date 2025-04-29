@@ -26,7 +26,7 @@ export class ProductService {
         if (params?.company) {
             queryParams.company = params.company;
         }
-
+        
         return this.http.get<any>(`${this.apiUrl}/`, { params: queryParams }).pipe(
             map((response: any) => this.processProductsResponse(response)) // Procesar las imágenes
         );
@@ -125,7 +125,9 @@ export class ProductService {
     }
 
     getProduct(): any {
-        return this.product;
+        const producto = this.product;
+        this.setProduct(null); // Limpiar la variable después de obtener el producto
+        return producto;
     }
 
 
@@ -245,5 +247,9 @@ export class ProductService {
     updateProductImage(productId: number, imageFormData: FormData): Observable<any> {
         return this.http.put(`${this.apiUrl}/${productId}/image`, imageFormData);
         
+    }
+
+    createProductImage(productId: number, imageFormData: FormData): Observable<any> {
+        return this.http.post(`${this.apiUrl}/${productId}/image`, imageFormData);
     }
 }
