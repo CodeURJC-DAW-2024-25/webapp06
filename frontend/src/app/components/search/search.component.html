@@ -1,75 +1,37 @@
 <div class="container mt-4">
-    <h2>Product Search</h2>
-
-    <form [formGroup]="searchForm" class="mb-4">
-        <div class="row g-3">
-            <!-- Search query -->
-            <div class="col-md-6">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" placeholder="Search products..." formControlName="query"
-                        aria-label="Search">
-                </div>
-            </div>
-
-            <!-- Category filter -->
-            <div class="col-md-3">
-                <select class="form-select" formControlName="category" (change)="searchProducts()">
-                    <option *ngFor="let category of categories" [value]="category">
-                        {{ category }}
-                    </option>
-                </select>
-            </div>
-
-            <!-- Search button -->
-            <div class="col-md-3">
-                <button type="button" class="btn btn-primary w-100" (click)="searchProducts()">
-                    Search
-                </button>
-            </div>
-
-            <!-- Price range -->
-            <div class="col-md-3">
-                <input type="number" class="form-control" placeholder="Min Price" formControlName="minPrice">
-            </div>
-
-            <div class="col-md-3">
-                <input type="number" class="form-control" placeholder="Max Price" formControlName="maxPrice">
-            </div>
-
-            <div class="col-md-3">
-                <button type="button" class="btn btn-outline-secondary w-100" (click)="searchProducts()">
-                    Apply Filters
-                </button>
-            </div>
-        </div>
-    </form>
-
-    <!-- Loading spinner -->
-    <div *ngIf="loading" class="text-center my-5">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+    <div *ngIf="products.length === 0 && !loading" class="text-center my-5">
+        <h3>No products found</h3>
+        <p>Try searching for something else or check back later.</p>
     </div>
 
-    <!-- Results -->
-    <div class="row" *ngIf="!loading">
-        <div class="col-md-4 mb-4" *ngFor="let product of products">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col" *ngFor="let product of products">
             <div class="card h-100">
-                <img [src]="product.imageBase64 || 'assets/images/product-placeholder.jpg'"
-                    class="card-img-top product-thumbnail" alt="{{ product.name }}">
+                <div class="card-img-top-wrapper">
+                    <img *ngIf="product.imageBase64" [src]="product.imageBase64" class="card-img-top"
+                        alt="{{ product.name }}">
+                    <img *ngIf="!product.imageBase64" src="/images/product-placeholder.jpg" class="card-img-top"
+                        alt="Placeholder">
+                </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">{{ product.price | currency:'EUR' }}</p>
-                    <p class="card-text text-muted">{{ product.company }}</p>
-                    <a [routerLink]="['/products', product.id]" class="btn btn-outline-primary">View Details</a>
+                    <p class="card-text">{{ product.description | slice:0:100 }}{{ product.description?.length > 100 ?
+                        '...' : '' }}</p>
+                    <p class="card-text"><strong>Price:</strong> {{ product.price | currency:'EUR' }}</p>
+                    <p class="card-text"><small class="text-muted">Company: {{ product.company }}</small></p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a routerLink="/products/{{product.id}}" class="btn btn-primary">View Details</a>
                 </div>
             </div>
         </div>
-
-        <!-- No results message -->
-        <div *ngIf="products.length === 0" class="col-12 text-center my-5">
-            <p>No products found. Try different search criteria.</p>
-        </div>
     </div>
+    <!-- Load more button
+    <div class="load_more_div" *ngIf="hasMoreProducts">
+        <button class="btn btn-outline-primary" [disabled]="loading" (click)="loadMore()">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Load More
+        </button>
+    </div>
+ -->
 </div>

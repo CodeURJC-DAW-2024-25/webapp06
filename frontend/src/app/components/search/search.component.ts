@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { ProductService } from '../../service/product.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-search',
@@ -10,55 +9,39 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   standalone: false
 })
 export class ProductSearchComponent implements OnInit {
-  searchForm: FormGroup;
   products: any[] = [];
   loading = false;
-  categories: string[] = ['All', 'Electronics', 'Clothing', 'Books', 'Home']; // Adjust based on your categories
 
   constructor(
-    private fb: FormBuilder,
-    private productService: ProductService
-  ) {
-    this.searchForm = this.fb.group({
-      query: [''],
-      category: ['All'],
-      minPrice: [''],
-      maxPrice: ['']
-    });
-  }
+    private productService: ProductService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    // Reactive search as user types with debounce
-    this.searchForm.get('query')?.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(() => this.searchProducts());
+    // Leer parámetros de búsqueda desde la URL
+    this.route.queryParams.subscribe(params => {
+      const query = params['search_text'] || '';
+      const type = params['type'] || 'All';
 
-    // Initial search to load products
-    this.searchProducts();
+      this.searchProducts(query, type);
+    });
   }
 
-  searchProducts(): void {
+  searchProducts(query: string, type?: string): void {
     this.loading = true;
-    const formValues = this.searchForm.value;
 
-    // Only pass category if it's not 'All'
-    const category = formValues.category !== 'All' ? formValues.category : undefined;
+    const category = type !== 'All' ? type : undefined;
 
-    this.productService.searchProducts(
-      formValues.query,
-      category,
-      formValues.minPrice || undefined,
-      formValues.maxPrice || undefined
-    ).subscribe({
-      next: (results) => {
-        this.products = results;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error in product search:', error);
-        this.loading = false;
-      }
-    });
+    this.productService.searchProducts(query, category)
+      .subscribe({
+        next: (results) => {
+          this.products = results;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+          this.loading = false;
+        }
+      });
   }
 }

@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.Product.SearchProductDTO;
 
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -495,7 +497,33 @@ public class APIProductController {
 		}
 	}
 
+	@GetMapping("/search")
+    public ResponseEntity<List<SearchProductDTO>> searchProducts(
+            @RequestParam(required = false) String search_text,
+            @RequestParam(required = false, defaultValue = "all") String type) {
 
+        List<SearchProductDTO> searchResults;
+
+        if (search_text != null && !search_text.isEmpty()) {
+            // Buscar por texto
+            if ("all".equalsIgnoreCase(type)) {
+                searchResults = productService.searchProductsByName(search_text);
+            } else {
+                // Buscar por texto y tipo
+                searchResults = productService.searchProductsByNameAndType(search_text, type);
+            }
+        } else if (!"all".equalsIgnoreCase(type)) {
+            // Buscar por tipo
+            searchResults = productService.getProductsByTypeToSearch(type);
+        } else {
+            // Todos los productos
+            searchResults = productService.getAllProductsToSearch();
+        }
+
+        
+
+        return ResponseEntity.ok(searchResults);
+    }
 
 
 }

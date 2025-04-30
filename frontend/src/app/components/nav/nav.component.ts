@@ -23,6 +23,9 @@ export class NavComponent implements OnInit, OnDestroy {
   isCompany = false;
   isUser = false;
 
+  searchText: string = '';
+  searchType: string = 'all';
+
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -148,4 +151,15 @@ export class NavComponent implements OnInit, OnDestroy {
       this.router.navigate(['/login']);
     });
   }
+
+  onSearch(): void {
+    // Navega al componente de búsqueda con parámetros query
+    this.router.navigate(['/search'], {
+      queryParams: {
+        search_text: this.searchText,
+        type: this.searchType
+      }
+    });
+  }
+
 }
