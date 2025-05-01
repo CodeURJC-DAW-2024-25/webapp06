@@ -1,23 +1,18 @@
 <div class="user_container">
     <div class="profile_section">
         <ng-container *ngIf="user; else noUserData">
-            <img [src]="user.imageBase64" alt="User profile">
+            <!-- Mostrar la imagen del usuario -->
+            <img *ngIf="profile_image" [src]="profile_image" alt="User profile" class="profile-image" />
             <div class="user_data">
-                <h2>{{user.name}}</h2>
-                <p>Username: {{user.username}}</p>
-                <p>Email: {{user.email}}</p>
+                <h2>{{ user.name }}</h2>
+                <p>Username: {{ user.username }}</p>
+                <p>Email: {{ user.email }}</p>
                 <a *ngIf="!user.isGoogleUser" routerLink="/edit_profile" class="edit_profile_button">Edit Profile</a>
             </div>
         </ng-container>
 
         <ng-template #noUserData>
-            <img [src]="profile_image" alt="User profile">
-            <div class="user_data">
-                <h2>{{name}}</h2>
-                <p>Username: {{username}}</p>
-                <p>Email: {{email}}</p>
-                <a *ngIf="!isGoogleUser" routerLink="/edit_profile" class="edit_profile_button">Edit Profile</a>
-            </div>
+            <p>No user data available.</p>
         </ng-template>
     </div>
 </div>
