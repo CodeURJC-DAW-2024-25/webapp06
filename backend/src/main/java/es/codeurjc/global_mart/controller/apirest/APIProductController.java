@@ -525,5 +525,4 @@ public class APIProductController {
         return ResponseEntity.ok(searchResults);
     }
 
-
 }
