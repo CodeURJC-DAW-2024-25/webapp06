@@ -23,6 +23,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { ProductSearchComponent } from './components/search/search.component';
 import { UserGraphComponent } from './components/user-graph/user-graph.component';
 import { CompanyGraphComponent } from './components/company-graph/company-graph.component';
+import { EditProfileForm } from './components/edit-profile-form/profile-form.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { CompanyGraphComponent } from './components/company-graph/company-graph.
     ProductSearchComponent,
     UserGraphComponent,
     CompanyGraphComponent,
+    EditProfileForm
 
   ],
   imports: [

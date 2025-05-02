@@ -256,4 +256,17 @@ export class AuthService {
     getToken(): string | null {
         return localStorage.getItem(this.tokenKey) ? 'authenticated' : null;
     }
+
+    decodeToken(token: string): any {
+        // Implement token decoding logic here
+        // Example: Use a library like jwt-decode or custom logic
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload;
+        } catch (error) {
+            console.error("Error decoding token:", error);
+            return null;
+        }
+    }
+    
 }
