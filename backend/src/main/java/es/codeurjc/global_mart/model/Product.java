@@ -113,8 +113,14 @@ public class Product {
     public Timestamp getDate() {
         return date;
     }
+    public Integer getViewsCount() {
+        return views_count;
+    }
 
     // !Setters
+    public void setViewsCount(Integer views_count) {
+        this.views_count = views_count;
+    }
     public void setIsAccepted(Boolean isAccepted) {
         this.isAccepted = isAccepted;
     }

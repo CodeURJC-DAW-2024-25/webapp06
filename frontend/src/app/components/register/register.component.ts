@@ -46,31 +46,51 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (this.registerForm.invalid) {
-      return;
+        return;
     }
 
     this.loading = true;
     this.error = '';
 
     const { username, email, password, role } = this.registerForm.value;
+    const roles = [role];
 
-    // Imprime los datos que se envían
-    console.log('Enviando datos:', { username, email, password, roles: [role] });
-    const rolString = role.toString();
-    // En el método onSubmit() del RegisterComponent
-    this.authService.register(username, email, password, rolString).subscribe({
-      next: (response: any) => {
-        console.log('Registro exitoso:', response);
-        this.router.navigate(['/login'], { queryParams: { registered: true } });
-      },
-      error: (err: any) => {
-        console.error('Error durante el registro:', err);
-        this.error = err.error?.message || 'Se produjo un error durante el registro.';
-        this.loading = false;
-      },
-      complete: () => {
-        this.loading = false;
-      }
+    console.log('Enviando datos:', { username, email, password, role: roles });
+
+    this.authService.register(username, email, password, roles).subscribe({
+        next: (response: any) => {
+            console.log('Registro exitoso:', response);
+
+            // Obtener el ID del usuario registrado
+            const userId = response; // Asegúrate de que el backend devuelva el ID del usuario registrado
+            // Asegúrate de que el backend devuelva el ID del usuario registrado
+            console.log('ID del usuario registrado:', userId);
+            if (this.selectedFile) {
+                const imageFormData = new FormData();
+                imageFormData.append('file', this.selectedFile);
+
+                this.authService.createUserImage(userId, imageFormData).subscribe({
+                    next: () => {
+                        console.log('Imagen del usuario actualizada correctamente');
+                        this.router.navigate(['/login'], { queryParams: { registered: true } });
+                    },
+                    error: (error) => {
+                        console.error('Error al actualizar la imagen del usuario:', error);
+                        this.router.navigate(['/login'], { queryParams: { registered: true } });
+                    }
+                });
+            } else {
+                this.router.navigate(['/login'], { queryParams: { registered: true } });
+            }
+        },
+        error: (err: any) => {
+            console.error('Error durante el registro:', err);
+            this.error = err.error?.message || 'Se produjo un error durante el registro.';
+            this.loading = false;
+        },
+        complete: () => {
+            this.loading = false;
+        }
     });
-  }
+}
 }

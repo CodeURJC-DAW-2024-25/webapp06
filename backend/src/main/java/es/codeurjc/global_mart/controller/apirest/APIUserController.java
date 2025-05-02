@@ -66,7 +66,7 @@ public class APIUserController {
 
 	@Operation(summary = "Create a new user", description = "Register a new user in the system.")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "User created successfully"),
+			@ApiResponse(responseCode = "200", description = "User created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
 			@ApiResponse(responseCode = "400", description = "Username already exists"),
 			@ApiResponse(responseCode = "500", description = "Internal server error")
 	})
@@ -77,13 +77,13 @@ public class APIUserController {
 			return ResponseEntity.badRequest().body("Username already exists");
 		} else {
 			try {
-				userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
+				User createdUser = userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
 						passwordEncoder.encode(userDto.password()), userDto.role());
+				return ResponseEntity.ok(createdUser.getId());
 			} catch (IOException e) {
 				return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
 			}
 		}
-		return ResponseEntity.ok("User registered successfully");
 	}
 
 	@Operation(summary = "Update user profile", description = "Update the details of an existing user.")
@@ -193,45 +193,16 @@ public class APIUserController {
 	@Operation(summary = "Upload user image", description = "Upload a new image for a user.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Image uploaded successfully"),
-			@ApiResponse(responseCode = "401", description = "Unauthorized"),
-			@ApiResponse(responseCode = "403", description = "Forbidden"),
 			@ApiResponse(responseCode = "400", description = "Image already exists")
 	})
 	@PostMapping("/{id}/image")
-	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
-			Authentication authentication)
+	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile)
 			throws SQLException, IOException {
 
-		if (authentication == null)
-			return ResponseEntity.status(401).body("Unauthorized");
+		
 
-		if (userService.getUserImage(id) != null) {
-			return ResponseEntity.badRequest().body("Image already exists");
-		}
-
-		Object principal = authentication.getPrincipal();
-
-		if (principal instanceof OAuth2User) {
-			OAuth2User oAuth2User = (OAuth2User) principal;
-			if (oAuth2User.getAuthorities().stream()
-					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
-					|| userService.getUserById(id).get().username().equals(oAuth2User.getAttribute("name"))) {
-				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
-				return ResponseEntity.ok().build();
-			}
-
-		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
-			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
-			if (userDetails.getAuthorities().stream()
-					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
-					|| userService.getUserById(id).get().username().equals(userDetails.getUsername())) {
-				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
-				return ResponseEntity.ok().build();
-			}
-		}
-
-		return ResponseEntity.status(403).body("Forbidden");
-
+		userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "Replace user image", description = "Replace the existing image for a user.")

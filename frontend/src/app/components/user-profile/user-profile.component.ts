@@ -60,13 +60,23 @@ export class UserProfileComponent {
 
   loadProfileInfo(userId: string): void {
     this.userService.getUserInfo(userId).subscribe({
-      next: (data) => {
-        this.user = data;
+        next: (data) => {
+            this.user = data;
 
-      },
-      error: (err) => {
-        console.error('Error al cargar el perfil', err);
-      }
+            // Cargar la imagen del usuario
+            this.userService.getUserImage(userId).subscribe({
+                next: (imageData) => {
+                    console.log('Imagen cargada:', imageData);
+                    this.profile_image = imageData;
+                },
+                error: (err) => {
+                    console.error('Error al cargar la imagen del usuario', err);
+                }
+            });
+        },
+        error: (err) => {
+            console.error('Error al cargar el perfil', err);
+        }
     });
   }
 

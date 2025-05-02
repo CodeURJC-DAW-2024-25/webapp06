@@ -12,7 +12,9 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { UserGraphComponent } from './components/user-graph/user-graph.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { CompanyGraphComponent } from './components/company-graph/company-graph.component';
+import { ProductSearchComponent } from './components/search/search.component';
 import { EditProfileForm } from './components/edit-profile-form/profile-form.component';
+
 
 
 export const routes: Routes = [
@@ -30,8 +32,9 @@ export const routes: Routes = [
   { path: 'user-graph', component: UserGraphComponent},
   { path: 'company-graph', component: CompanyGraphComponent},
   { path: 'admin', component: AdminComponent }, // Ruta protegida para el administrador
+  { path: 'search', component: ProductSearchComponent },
   { path: 'edit-profile', component: EditProfileForm},
-  
+
 
   // Rutas protegidas
   { path: 'shoppingcart', component: ShoppingCartComponent, canActivate: [AuthGuard] },

@@ -26,7 +26,7 @@ export class ProductService {
         if (params?.company) {
             queryParams.company = params.company;
         }
-        
+
         return this.http.get<any>(`${this.apiUrl}/`, { params: queryParams }).pipe(
             map((response: any) => this.processProductsResponse(response)) // Procesar las imágenes
         );
@@ -176,7 +176,7 @@ export class ProductService {
         );
     }
 
-    
+
 
     private convertBlobToBase64(blob: Blob): Observable<string> {
         return new Observable((observer) => {
@@ -192,37 +192,30 @@ export class ProductService {
         });
     }
 
-    searchProducts(
-        query: string,
-        category?: string,
-        minPrice?: number,
-        maxPrice?: number
-    ): Observable<any[]> {
+    searchProducts(search_text: string, type?: string): Observable<any[]> {
         let params = new HttpParams();
 
-        if (query) {
-            params = params.append('query', query);
+        if (search_text) {
+            params = params.append('search_text', search_text);
         }
 
-        if (category) {
-            params = params.append('category', category);
-        }
-
-        if (minPrice !== undefined) {
-            params = params.append('minPrice', minPrice.toString());
-        }
-
-        if (maxPrice !== undefined) {
-            params = params.append('maxPrice', maxPrice.toString());
+        if (type && type !== 'All') {
+            params = params.append('type', type);
         }
 
         return this.http.get<any[]>(`${this.apiUrl}/search`, { params }).pipe(
+            map(products => {
+                // Procesar cada producto para cargar su imagen
+                products.forEach(product => this.processProductResponse(product));
+                return products;
+            }),
             catchError(error => {
                 console.error('Error searching products:', error);
                 throw error;
             })
         );
     }
+
 
     addReview(productId: number, review: { rating: number; comment: string }): Observable<any> {
         return this.http.post<any>(`${environment.apiUrl}/reviews/${productId}`, review);
@@ -246,10 +239,15 @@ export class ProductService {
 
     updateProductImage(productId: number, imageFormData: FormData): Observable<any> {
         return this.http.put(`${this.apiUrl}/${productId}/image`, imageFormData);
-        
+
     }
 
     createProductImage(productId: number, imageFormData: FormData): Observable<any> {
         return this.http.post(`${this.apiUrl}/${productId}/image`, imageFormData);
+    }
+
+    updateViewsCount(productId: number): Observable<any> {
+        const params = new HttpParams().set('id', productId.toString());
+        return this.http.put(`${this.apiUrl}/addViewsCount`, null, { params });
     }
 }

@@ -1,4 +1,3 @@
-
 package es.codeurjc.global_mart.controller.apirest;
 
 import es.codeurjc.global_mart.dto.Product.ProductDTO;
@@ -22,11 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.Product.SearchProductDTO;
 
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -445,7 +446,25 @@ public class APIProductController {
 		return ResponseEntity.ok(productDTO);
 	}
 
-	
+	@PutMapping("/addViewsCount")
+	public ResponseEntity<ProductDTO> addViewsCount(@RequestParam Long id) {
+	    System.out.println("ID recibido: " + id); // Log para depuración
+
+	    Optional<Product> productOptional = productRepository.findById(id);
+
+	    if (productOptional.isEmpty()) {
+	        return ResponseEntity.notFound().build();
+	    }
+
+	    Product product = productOptional.get();
+	    product.setViewsCount(product.getViewsCount() + 1);
+	    productRepository.save(product);
+
+	    ProductDTO productDTO = productMapper.toProductDTO(product);
+	    return ResponseEntity.ok(productDTO);
+	}
+
+
 	@DeleteMapping("/delete")
 	public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
 		Optional<Product> productOptional = productRepository.findById(id);
@@ -478,7 +497,32 @@ public class APIProductController {
 		}
 	}
 
+	@GetMapping("/search")
+    public ResponseEntity<List<SearchProductDTO>> searchProducts(
+            @RequestParam(required = false) String search_text,
+            @RequestParam(required = false, defaultValue = "all") String type) {
 
+        List<SearchProductDTO> searchResults;
 
+        if (search_text != null && !search_text.isEmpty()) {
+            // Buscar por texto
+            if ("all".equalsIgnoreCase(type)) {
+                searchResults = productService.searchProductsByName(search_text);
+            } else {
+                // Buscar por texto y tipo
+                searchResults = productService.searchProductsByNameAndType(search_text, type);
+            }
+        } else if (!"all".equalsIgnoreCase(type)) {
+            // Buscar por tipo
+            searchResults = productService.getProductsByTypeToSearch(type);
+        } else {
+            // Todos los productos
+            searchResults = productService.getAllProductsToSearch();
+        }
+
+        
+
+        return ResponseEntity.ok(searchResults);
+    }
 
 }

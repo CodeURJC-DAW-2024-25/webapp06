@@ -14,6 +14,7 @@ export class AuthService {
     public user$: Observable<any>; // Alias para compatibilidad
     private isLoggedInSubject = new BehaviorSubject<boolean>(false);
     isLoggedIn$ = this.isLoggedInSubject.asObservable();
+    private tempUser: any;
 
     constructor(private http: HttpClient) {
         // Comprobar si hay información de sesión guardada
@@ -226,12 +227,12 @@ export class AuthService {
         return null;
     }
 
-    register(username: string, email: string, password: string, role: string): Observable<any> {
+    register(username: string, email: string, password: string, role: string[]): Observable<any> {
         return this.http.post(`${this.apiUrl}/users/`, {
             username,
             email,
             password,
-            roles: [role]
+            role
         }, { responseType: 'text' });  // Specify text response type
     }
 
@@ -257,16 +258,17 @@ export class AuthService {
         return localStorage.getItem(this.tokenKey) ? 'authenticated' : null;
     }
 
-    decodeToken(token: string): any {
-        // Implement token decoding logic here
-        // Example: Use a library like jwt-decode or custom logic
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload;
-        } catch (error) {
-            console.error("Error decoding token:", error);
-            return null;
-        }
+    createUserImage(userId: number, imageFormData: FormData): Observable<any> {
+        return this.http.post(`${this.apiUrl}/users/${userId}/image`, imageFormData);
     }
-    
+
+    setUser(tempUser: any): void {
+        this.tempUser = tempUser;
+    }
+
+    getProduct(): any {
+        const tempUser = this.tempUser;
+        this.setUser(null); // Limpiar la variable después de obtener el producto
+        return tempUser;
+    }
 }

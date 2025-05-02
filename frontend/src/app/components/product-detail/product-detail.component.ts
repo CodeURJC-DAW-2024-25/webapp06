@@ -46,7 +46,7 @@ export class ProductDetailComponent implements OnInit {
     if (productId) {
       this.loadProduct(+productId);
     }
-
+    
     // Just one subscription to monitor user state
     this.authService.user$.subscribe((user) => {
       if (user) {
@@ -69,6 +69,24 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  updateViewsCount(): void {
+    if (this.product) {
+      this.productService.updateViewsCount(this.product.id).subscribe(
+        (response) => {
+          console.log('Views count updated successfully:', response);
+        },
+        (error) => {
+          console.error('Error updating views count:', error);
+        }
+      );
+    } else {
+      console.error('No product loaded to update views count.');
+    }
+  }
+
+
+
+
   loadProduct(id: number): void {
     this.loading = true;
 
@@ -76,7 +94,8 @@ export class ProductDetailComponent implements OnInit {
     this.productService.getProductById(id).subscribe(
       (data) => {
         this.product = data;
-
+        this.updateViewsCount();
+        console.log('Product loaded:', this.product);
         // Obtener la imagen del producto por separado
         this.productService.loadProductImage(id).subscribe(
           (imageBase64) => {
@@ -95,6 +114,7 @@ export class ProductDetailComponent implements OnInit {
         this.router.navigate(['/products/allProducts']);
       }
     );
+    
   }
 
   addToCart(): void {
