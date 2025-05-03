@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.global_mart.dto.Product.ProductMapper;
+import es.codeurjc.global_mart.dto.Product.SearchProductDTO;
 
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
@@ -270,7 +272,7 @@ public class APIProductController {
         @ApiResponse(responseCode = "400", description = "Bad request")
     })
 	@PostMapping("/{id}/image")
-	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile,
 			Authentication authentication)
 			throws IOException {
 
@@ -315,7 +317,7 @@ public class APIProductController {
         @ApiResponse(responseCode = "400", description = "Bad request")
     })
 	@PutMapping("/{id}/image")
-	public ResponseEntity<ProductDTO> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+	public ResponseEntity<ProductDTO> replaceProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile,
 			Authentication authentication)
 			throws IOException {
 
@@ -444,26 +446,41 @@ public class APIProductController {
 		return ResponseEntity.ok(productDTO);
 	}
 
-	private void addImageDataToProducts(List<ProductDTO> products) {
-		for (ProductDTO product : products) {
-			addImageDataToProduct(product);
-		}
+	@PutMapping("/addViewsCount")
+	public ResponseEntity<ProductDTO> addViewsCount(@RequestParam Long id) {
+	    System.out.println("ID recibido: " + id); // Log para depuración
+
+	    Optional<Product> productOptional = productRepository.findById(id);
+
+	    if (productOptional.isEmpty()) {
+	        return ResponseEntity.notFound().build();
+	    }
+
+	    Product product = productOptional.get();
+	    product.setViewsCount(product.getViewsCount() + 1);
+	    productRepository.save(product);
+
+	    ProductDTO productDTO = productMapper.toProductDTO(product);
+	    return ResponseEntity.ok(productDTO);
 	}
 
+
 	@DeleteMapping("/delete")
-	public ResponseEntity<ProductDTO> deleteProduct(@RequestParam Long id) {
+	public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
 		Optional<Product> productOptional = productRepository.findById(id);
 
 		if (productOptional.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		Product product = productOptional.get();
-		product.setIsAccepted(false);
-		productRepository.save(product);
+		productRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
 
-		ProductDTO productDTO = productMapper.toProductDTO(product);
-		return ResponseEntity.ok(productDTO);
+	private void addImageDataToProducts(List<ProductDTO> products) {
+		for (ProductDTO product : products) {
+			addImageDataToProduct(product);
+		}
 	}
 
 	private void addImageDataToProduct(ProductDTO productDTO) {
@@ -480,7 +497,32 @@ public class APIProductController {
 		}
 	}
 
+	@GetMapping("/search")
+    public ResponseEntity<List<SearchProductDTO>> searchProducts(
+            @RequestParam(required = false) String search_text,
+            @RequestParam(required = false, defaultValue = "all") String type) {
 
+        List<SearchProductDTO> searchResults;
 
+        if (search_text != null && !search_text.isEmpty()) {
+            // Buscar por texto
+            if ("all".equalsIgnoreCase(type)) {
+                searchResults = productService.searchProductsByName(search_text);
+            } else {
+                // Buscar por texto y tipo
+                searchResults = productService.searchProductsByNameAndType(search_text, type);
+            }
+        } else if (!"all".equalsIgnoreCase(type)) {
+            // Buscar por tipo
+            searchResults = productService.getProductsByTypeToSearch(type);
+        } else {
+            // Todos los productos
+            searchResults = productService.getAllProductsToSearch();
+        }
+
+        
+
+        return ResponseEntity.ok(searchResults);
+    }
 
 }
