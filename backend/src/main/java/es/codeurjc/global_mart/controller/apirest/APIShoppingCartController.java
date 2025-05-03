@@ -37,8 +37,8 @@ public class APIShoppingCartController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @GetMapping("/{id}/shoppingcarts")
-    public ResponseEntity<?> getShoppingCart(@PathVariable Long id, Authentication authentication) {
+    @GetMapping("/shoppingcarts")
+    public ResponseEntity<?> getShoppingCart(@RequestParam Long id, Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(401).body(null);
         }
@@ -61,8 +61,8 @@ public class APIShoppingCartController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "User or product not found")
     })
-    @PostMapping("/{id}/shoppingcarts/{productId}")
-    public ResponseEntity<ProductDTO> addProductToCart(@PathVariable Long id, @PathVariable Long productId,
+    @PostMapping("/shoppingcarts/{productId}")
+    public ResponseEntity<ProductDTO> addProductToCart(@RequestParam Long id, @PathVariable Long productId,
             Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(401).body(null);
@@ -89,8 +89,8 @@ public class APIShoppingCartController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Product or user not found")
     })
-    @DeleteMapping("/{id}/shoppingcarts/{productId}")
-    public ResponseEntity<ProductDTO> removeProductFromCart(@PathVariable Long id, @PathVariable Long productId,
+    @DeleteMapping("/shoppingcarts/{productId}")
+    public ResponseEntity<ProductDTO> removeProductFromCart(@RequestParam Long id, @PathVariable Long productId,
             Authentication authentication) {
         if (authentication == null) {
             return ResponseEntity.status(401).body(null);
@@ -123,7 +123,7 @@ public class APIShoppingCartController {
             @ApiResponse(responseCode = "200", description = "Payment processed successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @PostMapping("/{id}/shoppingcarts/payment")
+    @PostMapping("/shoppingcarts/payment")
     public ResponseEntity<?> payment(Authentication authentication) {
 
         UserDTO user = getUserFromAuthentication(authentication);

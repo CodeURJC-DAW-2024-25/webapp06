@@ -64,8 +64,9 @@ export class ShoppingCartService {
                     console.log('No se pudo obtener el ID del usuario');
                     return of({ items: [], totalPrice: 0 } as Cart);
                 }
+                const params = { id: userId.toString() };
                 console.log('Cargando carrito para usuario con ID:', userId);
-                return this.http.get<Cart>(`${this.apiUrl}/users/${userId}/shoppingcarts`)
+                return this.http.get<Cart>(`${this.apiUrl}/users/shoppingcarts`,{ params })
                     .pipe(
                         catchError(error => {
                             console.error('Error al cargar el carrito:', error);
@@ -97,8 +98,8 @@ export class ShoppingCartService {
                 if (!userId) {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
-
-                return this.http.get<any>(`${this.apiUrl}/users/${userId}/shoppingcarts`)
+                const params = { id: userId.toString() };
+                return this.http.get<any>(`${this.apiUrl}/users/shoppingcarts`,{params})
                     .pipe(
                         tap(cart => console.log('Carrito recibido del servidor:', cart)),
                         switchMap(cart => {
@@ -171,17 +172,6 @@ export class ShoppingCartService {
             reader.readAsDataURL(blob);
         });
     }
-    private getUserId(): string | number {
-        const user = JSON.parse(localStorage.getItem('user') || localStorage.getItem('currentUser') || '{}');
-
-        console.log('getUserId() - Usuario recuperado:', user);
-
-        if (user.id) {
-            return user.id;
-        }
-
-        return this.authService.getCurrentUser()?.id || 'current';
-    }
 
     addProductToCart(productId: number, quantity: number = 1): Observable<Cart> {
         return this.addToCart(productId, quantity);
@@ -193,9 +183,10 @@ export class ShoppingCartService {
                 if (!userId) {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
+                const params = { id: userId.toString() };
 
-                return this.http.post<Cart>(`${this.apiUrl}/users/${userId}/shoppingcarts/${productId}`,
-                    { productId, quantity })
+                return this.http.post<Cart>(`${this.apiUrl}/users/shoppingcarts/${productId}`,
+                    { productId, quantity },{params})
                     .pipe(
                         tap(cart => this.cartSubject.next(cart)),
                         catchError(error => {
@@ -230,8 +221,8 @@ export class ShoppingCartService {
                 if (!userId) {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
-
-                return this.http.delete(`${this.apiUrl}/users/${userId}/shoppingcarts/${itemId}`)
+                const params = { id: userId.toString() };
+                return this.http.delete(`${this.apiUrl}/users/shoppingcarts/${itemId}`,{ params })
                     .pipe(
                         // After deleting, fetch the updated cart
                         switchMap(() => this.getCart()),
@@ -251,9 +242,9 @@ export class ShoppingCartService {
                 if (!userId) {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
-
-                return this.http.put<Cart>(`${this.apiUrl}/users/${userId}/shoppingcarts/update/${itemId}`,
-                    { quantity })
+                const params = { id: userId.toString() };
+                return this.http.put<Cart>(`${this.apiUrl}/users/shoppingcarts/update/${itemId}`,
+                    { quantity },{ params })
                     .pipe(
                         tap(cart => this.cartSubject.next(cart)),
                         catchError(error => {
@@ -271,8 +262,8 @@ export class ShoppingCartService {
                 if (!userId) {
                     return throwError(() => new Error('Usuario no autenticado'));
                 }
-
-                return this.http.post<any>(`${this.apiUrl}/users/${userId}/shoppingcarts/payment`, {})
+                const params = { id: userId.toString() };
+                return this.http.post<any>(`${this.apiUrl}/users/shoppingcarts/payment`, {params})
                     .pipe(
                         tap(() => {
                             // Limpiar el carrito después del pago exitoso
