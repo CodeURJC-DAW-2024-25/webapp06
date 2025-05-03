@@ -66,7 +66,7 @@ public class APIUserController {
 
 	@Operation(summary = "Create a new user", description = "Register a new user in the system.")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "User created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+			@ApiResponse(responseCode = "200", description = "User created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
 			@ApiResponse(responseCode = "400", description = "Username already exists"),
 			@ApiResponse(responseCode = "500", description = "Internal server error")
 	})
@@ -79,7 +79,8 @@ public class APIUserController {
 			try {
 				User createdUser = userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
 						passwordEncoder.encode(userDto.password()), userDto.role());
-				return ResponseEntity.ok(createdUser.getId());
+				UserDTO createdUserDto = userMapper.toUserDTO(createdUser);
+				return ResponseEntity.ok(createdUserDto);
 			} catch (IOException e) {
 				return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
 			}
