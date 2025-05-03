@@ -93,11 +93,14 @@ public class APIUserController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized"),
 			@ApiResponse(responseCode = "404", description = "User not found")
 	})
-	@PutMapping("/")
+	@PutMapping("/update-profile")
 	public ResponseEntity<?> updateProfile(
 			@RequestBody UserCreationDTO userUpdateDTO,
 			Authentication authentication) {
 
+		System.out.println("llamada recibida");
+		System.out.println("Datos usuario actualizado: " + userUpdateDTO);
+		
 		if (authentication == null) {
 			return ResponseEntity.status(401).body("Unauthorized");
 		}
@@ -105,22 +108,32 @@ public class APIUserController {
 		Object principal = authentication.getPrincipal();
 
 		if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			System.out.println("Nombre anterior" + userDetails.getUsername());
 			Optional<UserDTO> optionalUser = userService.findByUsername(userDetails.getUsername());
 
 			if (optionalUser.isPresent()) {
 				UserDTO userDTO = optionalUser.get();
 				User user = userMapper.toUser(userDTO);
-
-				user.setUsername(userUpdateDTO.username());
-				user.setEmail(userUpdateDTO.email());
-				user.setName(userUpdateDTO.name());
-
-				if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
-					user.setPassword(passwordEncoder.encode(userUpdateDTO.password()));
+				if (userUpdateDTO.username() != null){
+					user.setUsername(userUpdateDTO.username());
 				}
 
+				if (userUpdateDTO.name() != null) {
+					user.setName(userUpdateDTO.name());
+				}
+
+				if (userUpdateDTO.email() != null) {
+					user.setEmail(userUpdateDTO.email());
+				}
+
+				System.out.println("Usuario antes de guardarlo actualizado: " + user.getUsername());
+				// if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
+				// 	user.setPassword(passwordEncoder.encode(userUpdateDTO.password()));
+				// }
+
 				userService.save(user);
-				return ResponseEntity.ok("Profile updated successfully");
+				System.out.println("Despues de guardar" + user.getUsername());
+				return ResponseEntity.ok(user);
 			}
 		}
 
@@ -156,6 +169,8 @@ public class APIUserController {
 		// Retornamos SOLO el ID como un número, no como parte de un objeto
 		return ResponseEntity.ok(user.get().id());
 	}
+
+	
 
 	// ------------------------------------------Images------------------------------------------
 

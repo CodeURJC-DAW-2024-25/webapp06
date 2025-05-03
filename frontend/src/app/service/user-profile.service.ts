@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../enviroments/enviroment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable, switchMap } from "rxjs";
+import { catchError, switchMap, tap } from "rxjs/operators";
 import { AuthService } from "./auth/auth.service";
+import { Observable } from "rxjs";
 
 
 
@@ -13,11 +14,24 @@ import { AuthService } from "./auth/auth.service";
 export class UserProfileService {
     private apiUrl = `${environment.apiUrl}/users`
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private authService: AuthService) { }
 
     getUserInfo(userId: string): Observable<any> {
 
         return this.http.get(`${this.apiUrl}/${userId}`)
+    }
+
+
+    editProfile(userData: any): Observable<any> {
+        console.log("Username" + userData.username)
+        console.log("Name " + userData.name)
+        console.log("Email " + userData.email)
+
+        return this.http.put(`${this.apiUrl}/update-profile`, userData).pipe(
+            switchMap(() => this.authService.refreshToken()),
+            tap(() => console.log("Usuarioo service profile ", localStorage.getItem('user')))
+        );
+
     }
 
     getUserImage(userId: string): Observable<string> {
