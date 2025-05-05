@@ -44,20 +44,22 @@ export class RegisterComponent {
     }
   }
 
-  onSubmit(): void {
+  onSubmit() {
+    // Stop here if form is invalid
     if (this.registerForm.invalid) {
-        return;
+      return;
     }
 
     this.loading = true;
     this.error = '';
 
-    const { username, email, password, role } = this.registerForm.value;
-    const roles = [role];
+    const { username, email, password } = this.registerForm.value;
+    // By default, register as 'USER'
+    const role = ['USER'];
 
-    console.log('Enviando datos:', { username, email, password, role: roles });
+    console.log('Enviando datos:', { username, email, password, role: role });
 
-    this.authService.register(username, email, password, roles).subscribe({
+    this.authService.register(username, email, password, role).subscribe({
         next: (response: any) => {
             console.log('Registro exitoso:', response);
 
@@ -83,14 +85,11 @@ export class RegisterComponent {
                 this.router.navigate(['/login'], { queryParams: { registered: true } });
             }
         },
-        error: (err: any) => {
-            console.error('Error durante el registro:', err);
-            this.error = err.error?.message || 'Se produjo un error durante el registro.';
-            this.loading = false;
-        },
-        complete: () => {
-            this.loading = false;
+        error: (error) => {
+          console.error('Registration error', error);
+          this.error = error.error || 'Registration failed. Please try again.';
+          this.loading = false;
         }
-    });
-}
+      });
+  }
 }

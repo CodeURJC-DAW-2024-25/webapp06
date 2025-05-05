@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, catchError, map, switchMap } from 'rxjs/operators';
 
 
@@ -11,11 +11,13 @@ import { tap, catchError, map, switchMap } from 'rxjs/operators';
 export class AuthService {
     private apiUrl = '/v1/api'; // Asegúrate de que coincida con tu backend
     private tokenKey = 'auth_token';
-    private userSubject: BehaviorSubject<any>;
+    // Cambiar a público para permitir acceso desde el nav component
+    public userSubject: BehaviorSubject<any>;
     public user: Observable<any>;
     public user$: Observable<any>; // Alias para compatibilidad
-    private isLoggedInSubject = new BehaviorSubject<boolean>(false);
-    isLoggedIn$ = this.isLoggedInSubject.asObservable();
+    // Cambiar a público para permitir acceso desde el nav component
+    public isLoggedInSubject = new BehaviorSubject<boolean>(false);
+    public isLoggedIn$ = this.isLoggedInSubject.asObservable();
     private tempUser: any;
 
     constructor(private http: HttpClient) {
@@ -49,16 +51,21 @@ export class AuthService {
 
                     // Check for successful authentication by response status
                     if (response && response.status === 'SUCCESS') {
+                        // Store token if provided
+                        if (response.token) {
+                            localStorage.setItem(this.tokenKey, response.token);
+                        } else {
+                            // Si no hay token explícito, usar un marcador
+                            localStorage.setItem(this.tokenKey, 'authenticated');
+                        }
+
                         // Store user information from response
                         if (response.user) {
                             localStorage.setItem('user', JSON.stringify(response.user));
                             this.userSubject.next(response.user);
                         }
 
-                        // Set a flag in localStorage to indicate logged-in status
-                        localStorage.setItem(this.tokenKey, 'authenticated');
                         this.isLoggedInSubject.next(true);
-
                         console.log('Login exitoso, sesión almacenada');
                     } else {
                         console.error('Respuesta de login sin éxito', response);
@@ -72,29 +79,49 @@ export class AuthService {
             );
     }
 
-    // Añadir dentro de la clase AuthService
-    refreshToken(): Observable<boolean> {
-        console.log('Intentando refrescar token...');
+    refreshToken(): Observable<any> {
+        console.log('Intentando refrescar el token de autenticación...');
+
         return this.http.post<any>(`${this.apiUrl}/auth/refresh`, {}, { withCredentials: true })
             .pipe(
-                map(response => {
-                    if (response && response.accessToken) {
-                        console.log('Token refrescado con éxito');
-                        localStorage.setItem(this.tokenKey, response.accessToken);
-                        return true;
+                tap(response => {
+                    console.log('Respuesta de refresh token:', response);
+
+                    if (response && response.status === 'SUCCESS') {
+                        // Actualizar el token si se proporciona
+                        if (response.token) {
+                            localStorage.setItem(this.tokenKey, response.token);
+                            console.log('Token actualizado en localStorage');
+                        }
+
+                        // Si también viene usuario en la respuesta, actualizarlo
+                        if (response.user) {
+                            localStorage.setItem('user', JSON.stringify(response.user));
+                            this.userSubject.next(response.user);
+                            console.log('Usuario actualizado después del refresh');
+                        }
+
+                        return response;
+                    } else {
+                        console.warn('Respuesta inesperada en refresh token:', response);
+                        return null;
                     }
-                    return false;
                 }),
                 catchError(error => {
                     console.error('Error al refrescar token:', error);
-                    // No cerrar sesión automáticamente aquí
-                    return of(false);
+                    // En caso de error, no limpiar automáticamente para permitir 
+                    // que el consumidor decida qué hacer
+                    return throwError(() => error);
                 })
             );
     }
 
+    setToken(token: string): void {
+        localStorage.setItem(this.tokenKey, token);
+    }
+
     getUserProfile(): Observable<any> {
-        return this.http.get<any>(`${this.apiUrl}/main/profile`)
+        return this.http.get<any>(`${this.apiUrl}/users/profile`)
             .pipe(
                 tap(userData => {
                     console.log('Datos de usuario recibidos del perfil:', userData);
@@ -118,12 +145,30 @@ export class AuthService {
                     // Guardar datos del usuario en localStorage
                     localStorage.setItem('user', JSON.stringify(userData));
                     this.userSubject.next(userData);
+
+                    // Asegurarse de que isLoggedIn es true cuando tenemos perfil válido
+                    this.isLoggedInSubject.next(true);
                 }),
                 catchError(error => {
                     console.error('Error obteniendo perfil de usuario:', error);
+
+                    // Si hay un error 401, probablemente el token expiró
+                    if (error.status === 401) {
+                        this.handleUnauthorized();
+                    }
+
                     throw error;
                 })
             );
+    }
+
+    // Método para manejar respuestas 401 (no autorizado)
+    private handleUnauthorized(): void {
+        console.warn('Sesión no autorizada (401), limpiando datos locales');
+        localStorage.removeItem(this.tokenKey);
+        localStorage.removeItem('user');
+        this.userSubject.next(null);
+        this.isLoggedInSubject.next(false);
     }
 
     // Métodos necesarios para compatibilidad
@@ -244,6 +289,14 @@ export class AuthService {
         return new Observable<void>((observer) => {
             console.log('Cerrando sesión...');
 
+            // Opcional: hacer una petición al servidor para invalidar la sesión
+            // this.http.post(`${this.apiUrl}/auth/logout`, {}, { withCredentials: true })
+            //   .subscribe({
+            //     complete: () => {
+            //       // Continuar con la limpieza local
+            //     }
+            //   });
+
             // Limpiar datos de autenticación
             localStorage.removeItem(this.tokenKey);
             localStorage.removeItem('user');
@@ -259,7 +312,7 @@ export class AuthService {
     }
 
     getToken(): string | null {
-        return localStorage.getItem(this.tokenKey) ? 'authenticated' : null;
+        return localStorage.getItem(this.tokenKey);
     }
 
     createUserImage(userId: number, imageFormData: FormData): Observable<any> {
@@ -274,5 +327,22 @@ export class AuthService {
         const tempUser = this.tempUser;
         this.setUser(null); // Limpiar la variable después de obtener el producto
         return tempUser;
+    }
+
+    // Método para verificar la validez del token actual
+    verifySession(): Observable<boolean> {
+        if (!this.getToken()) {
+            return of(false);
+        }
+
+        return this.refreshToken().pipe(
+            map(response => {
+                return response && response.status === 'SUCCESS';
+            }),
+            catchError(() => {
+                // Si falla, la sesión no es válida
+                return of(false);
+            })
+        );
     }
 }
