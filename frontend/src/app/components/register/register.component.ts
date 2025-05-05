@@ -44,53 +44,32 @@ export class RegisterComponent {
     }
   }
 
-  onSubmit(): void {
+  onSubmit() {
+    // Stop here if form is invalid
     if (this.registerForm.invalid) {
-        return;
+      return;
     }
 
     this.loading = true;
     this.error = '';
 
-    const { username, email, password, role } = this.registerForm.value;
-    const roles = [role];
+    const { username, email, password } = this.registerForm.value;
+    // By default, register as 'USER'
+    const role = ['USER'];
 
-    console.log('Enviando datos:', { username, email, password, role: roles });
-
-    this.authService.register(username, email, password, roles).subscribe({
-        next: (response: any) => {
-            console.log('Registro exitoso:', response);
-
-            // Obtener el ID del usuario registrado
-            const userId = response.id; // Asegúrate de que el backend devuelva el ID del usuario registrado
-            // Asegúrate de que el backend devuelva el ID del usuario registrado
-            console.log('ID del usuario registrado:', userId);
-            if (this.selectedFile) {
-                const imageFormData = new FormData();
-                imageFormData.append('file', this.selectedFile);
-
-                this.authService.createUserImage(userId, imageFormData).subscribe({
-                    next: () => {
-                        console.log('Imagen del usuario actualizada correctamente');
-                        this.router.navigate(['/login'], { queryParams: { registered: true } });
-                    },
-                    error: (error) => {
-                        console.error('Error al actualizar la imagen del usuario:', error);
-                        this.router.navigate(['/login'], { queryParams: { registered: true } });
-                    }
-                });
-            } else {
-                this.router.navigate(['/login'], { queryParams: { registered: true } });
-            }
+    this.authService.register(username, email, password, role)
+      .subscribe({
+        next: (response) => {
+          console.log('Registration successful', response);
+          this.loading = false;
+          // Navigate to login page after successful registration
+          this.router.navigate(['/login']);
         },
-        error: (err: any) => {
-            console.error('Error durante el registro:', err);
-            this.error = err.error?.message || 'Se produjo un error durante el registro.';
-            this.loading = false;
-        },
-        complete: () => {
-            this.loading = false;
+        error: (error) => {
+          console.error('Registration error', error);
+          this.error = error.error || 'Registration failed. Please try again.';
+          this.loading = false;
         }
-    });
-}
+      });
+  }
 }
