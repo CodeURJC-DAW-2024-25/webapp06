@@ -53,13 +53,13 @@ export class RegisterComponent {
     this.loading = true;
     this.error = '';
 
-    const { username, email, password } = this.registerForm.value;
+    const { username, email, password, role } = this.registerForm.value;
     // By default, register as 'USER'
-    const role = ['USER'];
+    const roles = [role];
 
-    console.log('Enviando datos:', { username, email, password, role: role });
+    console.log('Enviando datos:', { username, email, password, role: roles });
 
-    this.authService.register(username, email, password, role).subscribe({
+    this.authService.register(username, email, password, roles).subscribe({
         next: (response: any) => {
             console.log('Registro exitoso:', response);
 
