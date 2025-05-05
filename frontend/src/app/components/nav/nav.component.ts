@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service/auth/auth.service';
 import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { catchError, of } from 'rxjs';
 
 interface User {
   username: string;
@@ -30,10 +32,14 @@ export class NavComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
+    // Primero verificar la validez de la sesión actual
+    this.validateCurrentSession();
+
     // Suscripción al estado de autenticación
     const authSub = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       console.log('Estado de autenticación:', isLoggedIn);
@@ -71,7 +77,84 @@ export class NavComponent implements OnInit, OnDestroy {
     this.subscriptions.push(authSub);
   }
 
-  // Nuevo método para procesar datos del usuario
+  // Método para validar la sesión actual al inicio
+  validateCurrentSession(): void {
+    // Comprobar si hay un token en localStorage
+    const token = localStorage.getItem('auth_token');
+
+    if (token) {
+      console.log('Token encontrado en localStorage, verificando validez con el servidor...');
+
+      // Intentar refrescar el token para verificar si la sesión sigue siendo válida
+      this.http.post('/v1/api/auth/refresh', {}, { withCredentials: true })
+        .pipe(
+          catchError(error => {
+            console.error('Error al refrescar la sesión:', error);
+
+            // Si hay un error, la sesión no es válida
+            console.log('Sesión inválida o expirada, cerrando sesión...');
+            this.handleInvalidSession();
+
+            return of(null);
+          })
+        )
+        .subscribe((response: any) => {
+          if (response && response.status === 'SUCCESS') {
+            console.log('Sesión verificada correctamente, token actualizado');
+
+            // Si tenemos nuevo token en la respuesta, actualizar
+            if (response.token) {
+              localStorage.setItem('auth_token', response.token);
+            }
+
+            // Actualizar información del usuario
+            this.authService.getUserProfile().subscribe({
+              next: (userProfile) => {
+                console.log('Perfil de usuario actualizado después de verificar sesión');
+                // No es necesario hacer nada más aquí porque el servicio se encarga
+                // de actualizar userSubject y el estado de isLoggedIn
+              },
+              error: (error) => {
+                console.error('Error al obtener perfil de usuario:', error);
+                this.handleInvalidSession();
+              }
+            });
+          } else if (response === null) {
+            // Ya se manejó el error en el catchError
+          } else {
+            console.log('Respuesta inesperada del servidor al verificar sesión');
+            this.handleInvalidSession();
+          }
+        });
+    } else {
+      // No hay token, asegurarse de que el estado refleje que no hay sesión
+      console.log('No hay token en localStorage, no hay sesión activa');
+      this.handleInvalidSession();
+    }
+  }
+
+  // Método para manejar sesiones inválidas
+  handleInvalidSession(): void {
+    // Limpiar localStorage
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user');
+
+    // Notificar al servicio de autenticación
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('Sesión cerrada correctamente');
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+        // A pesar del error, asegurar que localmente se considere deslogueado
+        if (this.authService.isLoggedInSubject) {
+          this.authService.isLoggedInSubject.next(false);
+        }
+      }
+    });
+  }
+
+  // Método para procesar datos del usuario
   private processUserData(user: any): void {
     console.log('Procesando datos de usuario en NavComponent:', user);
     this.username = user.username;
@@ -130,6 +213,7 @@ export class NavComponent implements OnInit, OnDestroy {
       isUser: this.isUser
     });
   }
+
   ngOnDestroy(): void {
     // Limpiar suscripciones para prevenir memory leaks
     this.subscriptions.forEach(sub => sub.unsubscribe());
@@ -147,8 +231,23 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
+    this.authService.logout().subscribe({
+      next: () => {
+        // Limpiar datos locales
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+        // A pesar del error, forzar el cierre de sesión local
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        if (this.authService.isLoggedInSubject) {
+          this.authService.isLoggedInSubject.next(false);
+        }
+        this.router.navigate(['/login']);
+      }
     });
   }
 
@@ -161,5 +260,4 @@ export class NavComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 }

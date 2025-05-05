@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -96,11 +98,12 @@ public class APIUserController {
 	@PutMapping("/update-profile")
 	public ResponseEntity<?> updateProfile(
 			@RequestBody UserCreationDTO userUpdateDTO,
-			Authentication authentication) {
+			Authentication authentication,
+			HttpServletResponse response) {
 
 		System.out.println("llamada recibida");
 		System.out.println("Datos usuario actualizado: " + userUpdateDTO);
-		
+
 		if (authentication == null) {
 			return ResponseEntity.status(401).body("Unauthorized");
 		}
@@ -108,13 +111,17 @@ public class APIUserController {
 		Object principal = authentication.getPrincipal();
 
 		if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-			System.out.println("Nombre anterior" + userDetails.getUsername());
-			Optional<UserDTO> optionalUser = userService.findByUsername(userDetails.getUsername());
+			System.out.println("Nombre anterior: " + userDetails.getUsername());
 
-			if (optionalUser.isPresent()) {
-				UserDTO userDTO = optionalUser.get();
-				User user = userMapper.toUser(userDTO);
-				if (userUpdateDTO.username() != null){
+			// Obtener el usuario directamente del servicio en lugar de convertir desde DTO
+			User user = userService.findUserByUsername(userDetails.getUsername());
+
+			if (user != null) {
+				boolean usernameChanged = false;
+
+				// Actualizar campos solo si se proporcionan valores
+				if (userUpdateDTO.username() != null && !userUpdateDTO.username().equals(user.getUsername())) {
+					usernameChanged = true;
 					user.setUsername(userUpdateDTO.username());
 				}
 
@@ -126,14 +133,24 @@ public class APIUserController {
 					user.setEmail(userUpdateDTO.email());
 				}
 
-				System.out.println("Usuario antes de guardarlo actualizado: " + user.getUsername());
-				// if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
-				// 	user.setPassword(passwordEncoder.encode(userUpdateDTO.password()));
-				// }
+				// Solo actualizar la contraseña si se proporciona una nueva
+				if (userUpdateDTO.password() != null && !userUpdateDTO.password().isEmpty()) {
+					user.setEncodedPassword(passwordEncoder.encode(userUpdateDTO.password()));
+				}
+				// La contraseña existente se mantiene porque estamos usando el usuario original
+				// de la base de datos
 
+				System.out.println("Usuario actualizado: " + user);
 				userService.save(user);
-				System.out.println("Despues de guardar" + user.getUsername());
-				return ResponseEntity.ok(user);
+
+				// Si el nombre de usuario cambió, indicarlo en la respuesta
+				if (usernameChanged) {
+					return ResponseEntity.status(205).body(userMapper.toUserDTO(user));
+				}
+
+				return ResponseEntity.ok(userMapper.toUserDTO(user));
+			} else {
+				return ResponseEntity.status(404).body("User not found");
 			}
 		}
 
@@ -170,8 +187,6 @@ public class APIUserController {
 		return ResponseEntity.ok(user.get().id());
 	}
 
-	
-
 	// ------------------------------------------Images------------------------------------------
 
 	@Operation(summary = "Get user image", description = "Retrieve the image of a user.")
@@ -199,8 +214,6 @@ public class APIUserController {
 	@PostMapping("/{id}/image")
 	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile)
 			throws SQLException, IOException {
-
-		
 
 		userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
 		return ResponseEntity.ok().build();
@@ -293,37 +306,36 @@ public class APIUserController {
 	}
 
 	@Operation(summary = "Get user profile", description = "Retrieve the profile details of the authenticated user.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User profile retrieved successfully",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(Authentication authentication) {
-        if (authentication == null) {
-            return ResponseEntity.status(401).body(null);
-        }
-        Object principal = authentication.getPrincipal();
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User profile retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "404", description = "User not found")
+	})
+	@GetMapping("/profile")
+	public ResponseEntity<?> getProfile(Authentication authentication) {
+		if (authentication == null) {
+			return ResponseEntity.status(401).body(null);
+		}
+		Object principal = authentication.getPrincipal();
 
-        if (principal instanceof OAuth2User oAuth2User) {
-            // Para usuarios OAuth2, necesitamos buscar o crear el usuario en nuestra base
-            // de datos
-            Optional<UserDTO> existingUser = userService.findByUsername(oAuth2User.getAttribute("name"));
+		if (principal instanceof OAuth2User oAuth2User) {
+			// Para usuarios OAuth2, necesitamos buscar o crear el usuario en nuestra base
+			// de datos
+			Optional<UserDTO> existingUser = userService.findByUsername(oAuth2User.getAttribute("name"));
 
-            if (existingUser.isPresent()) {
-                return ResponseEntity.ok(existingUser.get());
-            } else {
-                return ResponseEntity.status(404).body(null);
-            }
-        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
-            if (user.isPresent()) {
-                return ResponseEntity.ok(user.get());
-            }
-        }
+			if (existingUser.isPresent()) {
+				return ResponseEntity.ok(existingUser.get());
+			} else {
+				return ResponseEntity.status(404).body(null);
+			}
+		} else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+			Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
+			if (user.isPresent()) {
+				return ResponseEntity.ok(user.get());
+			}
+		}
 
-        return ResponseEntity.status(404).body(null);
-    }
+		return ResponseEntity.status(404).body(null);
+	}
 
 }

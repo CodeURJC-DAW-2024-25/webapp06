@@ -3,7 +3,7 @@ import { environment } from "../enviroments/enviroment";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { catchError, switchMap, tap } from "rxjs/operators";
 import { AuthService } from "./auth/auth.service";
-import { Observable } from "rxjs";
+import { Observable, of } from "rxjs";
 
 
 
@@ -21,18 +21,51 @@ export class UserProfileService {
         return this.http.get(`${this.apiUrl}/${userId}`)
     }
 
+    getUserProfile(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/profile`);
+    }
 
     editProfile(userData: any): Observable<any> {
-        console.log("Username" + userData.username)
-        console.log("Name " + userData.name)
-        console.log("Email " + userData.email)
+        console.log("Updating profile with data:", userData);
 
-        return this.http.put(`${this.apiUrl}/update-profile`, userData).pipe(
-            switchMap(() => this.authService.refreshToken()),
-            tap(() => console.log("Usuarioo service profile ", localStorage.getItem('user')))
-        );
-
+        return this.http.put(`${this.apiUrl}/update-profile`, userData);
     }
+
+
+    // editProfile(userData: any): Observable<any> {
+    //     const currentUser = this.authService.getCurrentUser();
+    //     const usernameChanged = currentUser && userData.username && currentUser.username !== userData.username;
+
+    //     console.log("Username: " + userData.username);
+    //     console.log("Name: " + userData.name);
+    //     console.log("Email: " + userData.email);
+    //     console.log("Username changed: " + usernameChanged);
+
+    //     return this.http.put(`${this.apiUrl}/update-profile`, userData).pipe(
+    //         switchMap(updatedUser => {
+    //             if (usernameChanged) {
+    //                 // If username changed, we need to log in with the new credentials
+    //                 // Assuming we have the password (you might need to ask for it)
+    //                 console.log("Username changed, logging in with new credentials");
+
+    //                 // Option 1: Force logout and redirect to login page
+    //                 this.authService.logout().subscribe(() => {
+    //                     // You might want to show a message explaining why they need to log in again
+    //                     window.location.href = '/login?message=username_changed';
+    //                 });
+
+    //                 return of(updatedUser);
+
+    //                 // Option 2 (if you have password): Auto re-login
+    //                 // return this.authService.login(userData.username, storedPassword);
+    //             } else {
+    //                 return this.authService.refreshToken().pipe(
+    //                     tap(() => console.log("User profile updated: ", localStorage.getItem('user')))
+    //                 );
+    //             }
+    //         })
+    //     );
+    // }
 
     getUserImage(userId: string): Observable<string> {
         return this.http.get(`${this.apiUrl}/${userId}/image`, { responseType: 'blob' }).pipe(
@@ -57,5 +90,17 @@ export class UserProfileService {
             };
             reader.readAsDataURL(blob);
         });
+    }
+
+    // getUserProfile(): Observable<any> {
+    //     return this.http.get('/v1/api/users/profile');
+    // }
+
+    updateUserProfile(userData: any): Observable<any> {
+        return this.http.put('/v1/api/users/update-profile', userData);
+    }
+
+    getUserById(id: number): Observable<any> {
+        return this.http.get(`/v1/api/users/${id}`);
     }
 }

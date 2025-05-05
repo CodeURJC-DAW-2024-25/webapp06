@@ -89,6 +89,10 @@ public class UserService {
         return Optional.of(userMapper.toUserDTO(users.get(0)));
     }
 
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

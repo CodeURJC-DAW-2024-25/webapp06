@@ -13,7 +13,7 @@ import { UserGraphComponent } from './components/user-graph/user-graph.component
 import { AdminComponent } from './components/admin/admin.component';
 import { CompanyGraphComponent } from './components/company-graph/company-graph.component';
 import { ProductSearchComponent } from './components/search/search.component';
-import { EditProfileForm } from './components/edit-profile-form/profile-form.component';
+import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 
 
 
@@ -27,13 +27,13 @@ export const routes: Routes = [
   { path: 'products/category/:category', component: ProductListComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'newProduct', component: FormComponent},
-  { path: 'user-profile', component: UserProfileComponent},
-  { path: 'user-graph', component: UserGraphComponent},
-  { path: 'company-graph', component: CompanyGraphComponent},
+  { path: 'newProduct', component: FormComponent },
+  { path: 'user-profile', component: UserProfileComponent },
+  { path: 'user-graph', component: UserGraphComponent },
+  { path: 'company-graph', component: CompanyGraphComponent },
   { path: 'admin', component: AdminComponent }, // Ruta protegida para el administrador
   { path: 'search', component: ProductSearchComponent },
-  { path: 'edit-profile', component: EditProfileForm},
+  { path: 'edit-profile', component: ProfileFormComponent },
 
 
   // Rutas protegidas
