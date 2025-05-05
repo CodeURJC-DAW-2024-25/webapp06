@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, catchError, map, switchMap } from 'rxjs/operators';
 
+
+
 @Injectable({
     providedIn: 'root'
 })
@@ -227,13 +229,15 @@ export class AuthService {
         return null;
     }
 
-    register(username: string, email: string, password: string, role: string[]): Observable<any> {
-        return this.http.post(`${this.apiUrl}/users/`, {
+    register(username: string, email: string, password: string, role: string[]): Observable<number> {
+        return this.http.post<any>(`${this.apiUrl}/users/`, {
             username,
             email,
             password,
             role
-        }, { responseType: 'text' });  // Specify text response type
+        }).pipe(
+            map(response => response.id) // Extraer solo el campo `id` de la respuesta
+        );
     }
 
     logout(): Observable<void> {

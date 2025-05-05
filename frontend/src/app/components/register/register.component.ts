@@ -62,7 +62,7 @@ export class RegisterComponent {
             console.log('Registro exitoso:', response);
 
             // Obtener el ID del usuario registrado
-            const userId = response.id; // Asegúrate de que el backend devuelva el ID del usuario registrado
+            const userId = response // Asegúrate de que el backend devuelva el ID del usuario registrado
             // Asegúrate de que el backend devuelva el ID del usuario registrado
             console.log('ID del usuario registrado:', userId);
             if (this.selectedFile) {

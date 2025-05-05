@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/api/users")
@@ -80,7 +82,13 @@ public class APIUserController {
 				User createdUser = userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
 						passwordEncoder.encode(userDto.password()), userDto.role());
 				UserDTO createdUserDto = userMapper.toUserDTO(createdUser);
-				return ResponseEntity.ok(createdUserDto);
+
+				// Crear un objeto que contenga el ID y el JSON completo del usuario
+				Map<String, Object> response = new HashMap<>();
+				response.put("id", createdUserDto.id());
+				response.put("user", createdUserDto);
+
+				return ResponseEntity.ok(response);
 			} catch (IOException e) {
 				return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
 			}
