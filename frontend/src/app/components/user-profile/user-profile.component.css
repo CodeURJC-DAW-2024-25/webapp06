@@ -3,14 +3,20 @@
   margin: 40px auto;
   background-color: #ffffff;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   animation: fadeIn 0.6s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-header {
@@ -196,8 +202,14 @@
 }
 
 @keyframes slideIn {
-  from { transform: translateY(-10px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .alert-success {
@@ -222,7 +234,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .photo-modal {
@@ -240,8 +254,12 @@
 }
 
 @keyframes fadeInModal {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal-content {
@@ -255,8 +273,12 @@
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.9); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 .modal-header {
@@ -401,27 +423,27 @@
     text-align: center;
     padding: 30px 20px;
   }
-  
+
   .btn-container {
     flex-direction: column;
   }
-  
+
   .profile-avatar {
     width: 150px;
     height: 150px;
   }
-  
+
   .profile-body {
     padding: 25px;
   }
-  
+
   .change-photo-btn {
     bottom: 5px;
     right: 5px;
     width: 40px;
     height: 40px;
   }
-  
+
   .profile-name {
     font-size: 28px;
   }
@@ -490,9 +512,50 @@
   .info-row {
     flex-direction: column;
   }
-  
+
   .info-label {
     width: 100%;
     margin-bottom: 5px;
+  }
+}
+
+/* Estilo para los botones de gráficos */
+.graph-btn {
+  background-color: #5a6476;
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.graph-btn:hover {
+  background-color: #424f62;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.graph-btn i {
+  font-size: 16px;
+}
+
+.btn-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* Responsive para botones */
+@media (max-width: 767px) {
+  .btn-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
   }
 }
