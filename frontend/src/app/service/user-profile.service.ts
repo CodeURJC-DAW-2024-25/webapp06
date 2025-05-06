@@ -96,11 +96,19 @@ export class UserProfileService {
     //     return this.http.get('/v1/api/users/profile');
     // }
 
-    updateUserProfile(userData: any): Observable<any> {
-        return this.http.put('/v1/api/users/update-profile', userData);
-    }
-
     getUserById(id: number): Observable<any> {
         return this.http.get(`/v1/api/users/${id}`);
     }
+
+  uploadUserImage(userId: number, formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${userId}/image`, formData);
+  }
+
+  updateUserImage(userId: number, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${userId}/image`, formData);
+  }
+
+  updateUserProfile(userData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update-profile`, userData, { observe: 'response' });
+  }
 }
