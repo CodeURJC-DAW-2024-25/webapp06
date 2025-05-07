@@ -388,10 +388,13 @@ Acceder en el navegador a la url: https://localhost:8443
 - #### Pasos para la instalación:
 1. Descarga la imagen de la aplicación desde el repositorio de Docker Hub:
     ```
-    docker pull alvaro3517/webapp6
+    sudo docker pull alvaro3517/webapp6
     ```
 2. Ubica tu terminal en la carpeta donde tengas el archivo [docker-compose.yml].
     ```
+    cd webapp06
+    ```
+    
 3. Ejecuta el archivo docker-compose.yml:
     ```
     docker-compose up
