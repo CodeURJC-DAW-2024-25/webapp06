@@ -231,8 +231,8 @@ Antes de ejecutar la aplicación, asegúrate de tener instalados los siguientes 
 ## Clonar el repositorio  
 - Ejecuta el siguiente comando en la terminal para descargar el código fuente:
 
-git clone <URL_DEL_REPOSITORIO>
-cd <NOMBRE_DEL_PROYECTO>
+git clone https://github.com/CodeURJC-DAW-2024-25/webapp06
+cd webapp06
 
 ---
 
@@ -402,7 +402,7 @@ Acceder en el navegador a la url: https://localhost:8443
 Para poder crear a imagen de la aplicación es necesario tener docker instalado en tu máquina. Una vez tengas docker instalado, sigue los siguientes pasos:
 1. Clona el repositorio a tu ruta deseada:    
     ```
-     git clone https://github.com/CodeURJC-DAW-2023-24/webapp03
+     git clone https://github.com/CodeURJC-DAW-2023-24/webapp06
     ```
 2. Inicia sesión en tu cuenta de Docker Hub. Si no tienes una, puedes crearla [aquí](https://hub.docker.com/signup). Se te pedirá introducir tu usuario y contraseña:
     ```
@@ -410,10 +410,10 @@ Para poder crear a imagen de la aplicación es necesario tener docker instalado 
     ```    
 3. Ejecuta el ejecutable bash script que creará la imagen de la aplicación:
     ```
-    ./create_image.sh
+    ./docker_image.sh
     ```
 
-   Ten en cuenta que este script crea la imagen con el nombre "alvaro3517/webapp6" y la subirá a tu cuenta de Docker Hub. Si deseas cambiar el nombre de la imagen o el nombre de usuario, puedes hacerlo modificando el script.
+   Ten en cuenta que este script crea la imagen con el nombre "alvaro3517/webapp6" y la subirá a tu cuenta de Docker Hub. Si deseas cambiar el nombre de la imagen o el nombre de usuario, puedes hacerlo modificando el script, pero deberás también cambiar el nombre de la imagen que se usa en el docker compose yml.
 
 
 ## 🛫 Despliegue de la aplicación en una máquina virtual
@@ -427,9 +427,11 @@ Para poder crear a imagen de la aplicación es necesario tener docker instalado 
     ssh -i appWeb06.key vmuser@appWeb06.dawgis.etsii.urjc.es
     ```
 
-
 2. Instalar Docker con Docker Compose en la máquina virtual:
 
+    ```
+    sudo docker install
+    ```
 
 3. Clonar el repositorio en la máquina virtual:
     ```
@@ -438,9 +440,12 @@ Para poder crear a imagen de la aplicación es necesario tener docker instalado 
    
 4. En la carpeta raíz del repositorio, donde se encuentra el fichero docker-compose.yml, ejecutar el siguiente comando para iniciar la aplicación:
     ```
-    sudo docker compose up -d
+    sudo ./docker_script.sh
     ```
-   "-d" permite que se ejecute en segundo plano, para poder ver la consola de la aplicación, se puede omitir.
+   Si antes no creaste la imagen, deberás ejecutar antes:
+   ```
+   sudo ./docker_image.sh
+   ```
 
 
 6. Una vez haya terminado de arrancar, conectarse a:
@@ -459,7 +464,7 @@ Una vez inicializada la aplicación, para detenerla se puede hacer con:
 ### Volver a arrancar la aplicación
 Una vez ya ha sido detenida, se puede volver a arrancar con:
     ```
-    sudo docker compose up -d
+    sudo ./docker_script.sh
     ```
 
 ### Participación de miembros
