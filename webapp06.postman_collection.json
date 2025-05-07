@@ -1,37 +1,12 @@
 {
 	"info": {
-		"_postman_id": "b03afdfe-ede2-4242-8ad6-54a99d49b0e7",
+		"_postman_id": "178224ce-f329-41d0-bbe6-1ea2c05238e8",
 		"name": "webapp06",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "43377067"
+		"_exporter_id": "26474255",
+		"_collection_link": "https://galactic-crater-642553.postman.co/workspace/DAW~f3f4481e-bcb6-4834-ab30-4703dbcef34c/collection/26474255-178224ce-f329-41d0-bbe6-1ea2c05238e8?action=share&source=collection_link&creator=26474255"
 	},
 	"item": [
-		{
-			"name": "Main",
-			"item": [
-				{
-					"name": "currentUser",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/v1/api/main/profile",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"v1",
-								"api",
-								"main",
-								"profile"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "Login",
 			"item": [
@@ -1193,6 +1168,27 @@
 								"api",
 								"users",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "currentUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/v1/api/users/profile",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"v1",
+								"api",
+								"users",
+								"profile"
 							]
 						}
 					},
