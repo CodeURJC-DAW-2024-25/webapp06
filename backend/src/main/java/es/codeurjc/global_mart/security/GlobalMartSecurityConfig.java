@@ -1,8 +1,5 @@
 package es.codeurjc.global_mart.security;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
 import es.codeurjc.global_mart.security.jwt.JwtRequestFilter;
 import es.codeurjc.global_mart.security.jwt.UnauthorizedHandlerJwt;
 
@@ -34,16 +26,17 @@ public class GlobalMartSecurityConfig {
     @Autowired
     public RepositoryUserDetailsService userDetailsService;
 
+    // encode user password
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
     private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -54,149 +47,98 @@ public class GlobalMartSecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
+
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
+
         return authenticationProvider;
-    }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // Permitir peticiones desde cualquier origen durante desarrollo
-        configuration.addAllowedOrigin("http://localhost:4200");
-
-        // Permitir todos los métodos HTTP comunes
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("OPTIONS");
-        configuration.addAllowedMethod("PATCH");
-        configuration.addAllowedMethod("HEAD");
-
-        // Permitir todos los headers comunes
-        configuration.addAllowedHeader("*");
-
-        // Exponer headers específicos que el cliente podría necesitar leer
-        configuration.addExposedHeader("Authorization");
-        configuration.addExposedHeader("Content-Disposition");
-
-        // Permitir credenciales (cookies, auth headers, etc)
-        configuration.setAllowCredentials(true);
-
-        // Cache de preflight por 1 hora
-        configuration.setMaxAge(3600L);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 
     @Bean
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/api/**");
 
-        // Configuración de CORS y CSRF
-        http.cors().configurationSource(corsConfigurationSource())
-                .and()
-                .csrf().disable();
-
-        // Manejo de excepciones
-        http.exceptionHandling()
-                .authenticationEntryPoint(unauthorizedHandlerJwt);
-
-        // Política de sesión
-        http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        // Añadir filtro JWT
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
-        // Configuración de autenticación
         http.authenticationProvider(authenticationProvider());
 
-        // Desactivar login de formulario y basic auth
-        http.formLogin().disable();
-        http.httpBasic().disable();
+        http.securityMatcher("/v1/api/**")
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
 
-        // Configuración de autorizaciones
         http.authorizeHttpRequests(authorize -> authorize
-                // Permitir explícitamente endpoints de autenticación
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/new/**").permitAll()
-                // MainAPI
-                .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
-
+                
                 // ProductsAPI
-                // Image
-                .requestMatchers(HttpMethod.GET, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.POST, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
+                
                 // Product
-                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/products/accept").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/products/delete").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/products/addViewsCount").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/type/{type}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/products/").hasRole("COMPANY")
-                .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/").permitAll()   //Este comando tiene mucha informacion como parametros que hace que pueda ser diferentes tipos de comando (observar info)
+                .requestMatchers(HttpMethod.PUT, "/v1/api/products/accept").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/type").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/products/").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/{id}").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                // Image
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/products/{id}/image").permitAll()
+
                 // Algorithm
-                .requestMatchers(HttpMethod.GET, "/api/products/mostViewedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/lastProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedCompanyProducts").hasRole("COMPANY")
-                // Page
-                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsAll").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/product/moreProdsCompany").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/mostViewedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/products/lastProducts").permitAll()
+                // Page --> se hace introduciendo page= x a traves de la funciona de v1/api/products/
 
                 // ReviewsAPI
-                .requestMatchers(HttpMethod.POST, "/api/reviews/{id}").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/reviews/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/reviews/{id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/v1/api/reviews/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/reviews").permitAll()
 
                 // ShoppingCartAPI
-                .requestMatchers(HttpMethod.GET, "/api/shoppingCarts/").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/shoppingCarts/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/payment").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/v1/api/shoppingCarts/").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/shoppingCarts/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/v1/api/shoppingCarts/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/v1/api/shoppingCarts/payment").hasRole("USER")
 
                 // UserAPI
-                .requestMatchers(HttpMethod.PUT, "/api/users/").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/auth/login").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/users/").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/users/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/users/").permitAll()
                 // Image
-                .requestMatchers(HttpMethod.GET, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.GET, "/v1/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/v1/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/v1/api/users/{id}/image").permitAll()
 
-                .anyRequest().denyAll());
+                .anyRequest().permitAll());
+
+        http.formLogin(formLogin -> formLogin.disable());
+        http.csrf(csrf -> csrf.disable());
+        http.httpBasic(httpBasic -> httpBasic.disable());
+
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Configuración CORS y CSRF
-        http.cors().configurationSource(corsConfigurationSource())
-                .and()
-                .csrf().disable();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // configura las paginas
 
-        // Configuración de autenticación
-        http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider()); // pasas el authProvider que has creado en la
+                                                               // función
+                                                               // anterior
+
+        // Disable CSRF protection
+        http.csrf(csrf -> csrf.disable());
 
         http.authorizeHttpRequests(authorize -> authorize
+
                 // -------------- STYLE PAGES ----------------
                 .requestMatchers("/css/**").permitAll()
                 .requestMatchers("/js/**").permitAll()
@@ -223,7 +165,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/new_product").hasRole("COMPANY")
                 .requestMatchers("/displayGraphs").permitAll()
                 // ----------------- ADMIN PAGES ----------------
-                .requestMatchers("/adminPage").hasAnyRole("ADMIN")
+                .requestMatchers("/admin").hasAnyRole("ADMIN")
                 .requestMatchers("/profile").authenticated()
                 .requestMatchers("/new_product").permitAll()
                 .requestMatchers("/acceptProduct/{id}").hasAnyRole("ADMIN") // only admin can accept products
@@ -231,8 +173,9 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers("/profile").permitAll()
                 .requestMatchers("/showUserGraphic").permitAll()
 
-                .anyRequest().permitAll())
+                .anyRequest().permitAll()
 
+        )
                 // configure login and logout
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
@@ -267,5 +210,7 @@ public class GlobalMartSecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/")));
 
         return http.build();
+
     }
+
 }
