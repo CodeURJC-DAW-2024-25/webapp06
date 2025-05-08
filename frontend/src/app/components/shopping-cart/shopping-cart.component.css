@@ -1,16 +1,16 @@
 /* Main container */
 .cart-container {
+   
     margin-top: 2rem;
-    padding: 0 1rem;
-    max-width: 1140px;
-    margin-left: auto;
-    margin-right: auto;
+    /* padding: 0 1rem; */
+    /* max-width: 1140px; */
+    
+    
 }
 
-/* Cart title */
 .cart-title {
-    margin-bottom: 1.5rem;
-}
+    margin-left: 100px;
+} 
 
 /* Loading state */
 .loading-container {
@@ -78,8 +78,8 @@
 .cart-content {
     display: flex;
     flex-wrap: wrap;
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
+    /* margin-left: -0.5rem;
+    margin-right: -0.5rem; */
 }
 
 .cart-items-container {
@@ -263,6 +263,9 @@
         flex-wrap: wrap;
     }
 
+    .cart-title{
+        margin-left: auto;
+    }
     .cart-item-image-container {
         flex: 0 0 100%;
         max-width: 100%;
