@@ -1,36 +1,12 @@
 {
 	"info": {
-		"_postman_id": "b03afdfe-ede2-4242-8ad6-54a99d49b0e7",
+		"_postman_id": "178224ce-f329-41d0-bbe6-1ea2c05238e8",
 		"name": "webapp06",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "43377067"
+		"_exporter_id": "26474255",
+		"_collection_link": "https://galactic-crater-642553.postman.co/workspace/DAW~f3f4481e-bcb6-4834-ab30-4703dbcef34c/collection/26474255-178224ce-f329-41d0-bbe6-1ea2c05238e8?action=share&source=collection_link&creator=26474255"
 	},
 	"item": [
-		{
-			"name": "Main",
-			"item": [
-				{
-					"name": "currentUser",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/main/profile",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"api",
-								"main",
-								"profile"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "Login",
 			"item": [
@@ -49,12 +25,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/auth/login",
+							"raw": "https://{{URL}}/v1/api/auth/login",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"auth",
 								"login"
@@ -78,12 +55,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/auth/login",
+							"raw": "https://{{URL}}/v1/api/auth/login",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"auth",
 								"login"
@@ -107,12 +85,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/auth/login",
+							"raw": "https://{{URL}}/v1/api/auth/login",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"auth",
 								"login"
@@ -127,12 +106,13 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/auth/logout",
+							"raw": "https://{{URL}}/v1/api/auth/logout",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"auth",
 								"logout"
@@ -147,12 +127,13 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/auth/refresh",
+							"raw": "https://{{URL}}/v1/api/auth/refresh",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"auth",
 								"refresh"
@@ -175,15 +156,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/17/image",
+									"raw": "https://{{URL}}/v1/api/products/18/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"products",
-										"17",
+										"18",
 										"image"
 									]
 								}
@@ -200,19 +182,20 @@
 									"formdata": [
 										{
 											"key": "imageFile",
+											"value": "",
 											"contentType": "",
-											"type": "file",
-											"src": "/Users/mm/Downloads/ejemplo.webp"
+											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "https://{{URL}}/api/products/17/image",
+									"raw": "https://{{URL}}/v1/api/products/17/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"products",
 										"17",
@@ -238,12 +221,13 @@
 									]
 								},
 								"url": {
-									"raw": "https://{{URL}}/api/products/17/image",
+									"raw": "https://{{URL}}/v1/api/products/17/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"products",
 										"17",
@@ -259,12 +243,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/17/image",
+									"raw": "https://{{URL}}/v1/api/products/17/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"products",
 										"17",
@@ -285,12 +270,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/?accepted=true&page=1",
+									"raw": "https://{{URL}}/v1/api/products/?accepted=true&page=1",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"products",
 										""
@@ -315,12 +301,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/type?type=books&accepted=true&page=1",
+									"raw": "https://{{URL}}/v1/api/products/type?type=books&accepted=true&page=1",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"products",
 										"type"
@@ -349,12 +336,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/products/?accepted=true&company=comp&page=1",
+									"raw": "https://{{URL}}/v1/api/products/?accepted=true&company=comp&page=1",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"products",
 										""
@@ -385,12 +373,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/1",
+							"raw": "https://{{URL}}/v1/api/products/1",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								"1"
@@ -405,12 +394,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/?accepted=true",
+							"raw": "https://{{URL}}/v1/api/products/?accepted=true",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								""
@@ -431,12 +421,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/type?type=Appliances",
+							"raw": "https://{{URL}}/v1/api/products/type?type=Appliances",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								"type"
@@ -466,12 +457,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/products/",
+							"raw": "https://{{URL}}/v1/api/products/",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								""
@@ -487,7 +479,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"type\": \"Appliances\",\r\n  \"name\": \"Smartphone Y\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"isAccepted\": true,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}",
+							"raw": "{\r\n  \"type\": \"Appliances\",\r\n  \"name\": \"Smartphone Y\",\r\n  \"price\": 999.99,\r\n  \"description\": \"Latest smartphone with AI-powered camera.\",\r\n  \"stock\": 100,\r\n  \"date\": \"2024-03-23T12:00:00Z\",\r\n  \"views_count\": 0,\r\n  \"reviews\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -495,12 +487,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/products/17",
+							"raw": "https://{{URL}}/v1/api/products/17",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								"17"
@@ -515,12 +508,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/2",
+							"raw": "https://{{URL}}/v1/api/products/2",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								"2"
@@ -535,12 +529,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/mostViewedProducts",
+							"raw": "https://{{URL}}/v1/api/products/mostViewedProducts",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								"mostViewedProducts"
@@ -555,12 +550,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/lastProducts",
+							"raw": "https://{{URL}}/v1/api/products/lastProducts",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								"lastProducts"
@@ -575,12 +571,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/?accepted=false",
+							"raw": "https://{{URL}}/v1/api/products/?accepted=false",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								""
@@ -601,12 +598,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/?company=comp&accepted=true",
+							"raw": "https://{{URL}}/v1/api/products/?company=comp&accepted=true",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								""
@@ -631,12 +629,13 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/products/accept?id=17",
+							"raw": "https://{{URL}}/v1/api/products/accept?id=5",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"products",
 								"accept"
@@ -644,7 +643,61 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "17"
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "declineProduct",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/v1/api/products/delete?id=1",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"v1",
+								"api",
+								"products",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "viewsCount",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/v1/api/products/addViewsCount?id=3",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"v1",
+								"api",
+								"products",
+								"addViewsCount"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
 								}
 							]
 						}
@@ -671,15 +724,16 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/reviews/2",
+							"raw": "https://{{URL}}/v1/api/reviews/3",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"reviews",
-								"2"
+								"3"
 							]
 						}
 					},
@@ -691,15 +745,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/reviews/1",
+							"raw": "https://{{URL}}/v1/api/reviews/3",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"reviews",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -711,16 +766,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/reviews/1/1",
+							"raw": "https://{{URL}}/v1/api/reviews/3/5",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"reviews",
-								"1",
-								"1"
+								"3",
+								"5"
 							]
 						}
 					},
@@ -749,15 +805,50 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/shoppingCarts/",
+							"raw": "https://{{URL}}/v1/api/users/shoppingcarts?id=3",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
-								"shoppingCarts",
-								""
+								"users",
+								"shoppingcarts"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addProduct",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/v1/api/users/shoppingcarts/4?id=3",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"v1",
+								"api",
+								"users",
+								"shoppingcarts",
+								"4"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								}
 							]
 						}
 					},
@@ -778,35 +869,23 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/shoppingCarts/3",
+							"raw": "https://{{URL}}/v1/api/users/shoppingcarts/4?id=3",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
-								"shoppingCarts",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "addProduct",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "https://{{URL}}/api/shoppingCarts/3",
-							"protocol": "https",
-							"host": [
-								"{{URL}}"
+								"users",
+								"shoppingcarts",
+								"4"
 							],
-							"path": [
-								"api",
-								"shoppingCarts",
-								"3"
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								}
 							]
 						}
 					},
@@ -818,15 +897,23 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/shoppingCarts/payment",
+							"raw": "https://{{URL}}/v1/api/users/shoppingcarts/payment?id=3",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
-								"shoppingCarts",
+								"users",
+								"shoppingcarts",
 								"payment"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								}
 							]
 						}
 					},
@@ -846,15 +933,16 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/users/3/image",
+									"raw": "https://{{URL}}/v1/api/users/1/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"users",
-										"3",
+										"1",
 										"image"
 									]
 								}
@@ -871,21 +959,23 @@
 									"formdata": [
 										{
 											"key": "imageFile",
+											"contentType": "",
 											"type": "file",
-											"src": "/Users/mm/Downloads/random3.jpeg"
+											"src": "/Users/mm/Downloads/random2.jpeg"
 										}
 									]
 								},
 								"url": {
-									"raw": "https://{{URL}}/api/users/3/image",
+									"raw": "https://{{URL}}/v1/api/users/18/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"users",
-										"3",
+										"18",
 										"image"
 									]
 								}
@@ -908,12 +998,13 @@
 									]
 								},
 								"url": {
-									"raw": "https://{{URL}}/api/users/3/image",
+									"raw": "https://{{URL}}/v1/api/users/3/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"users",
 										"3",
@@ -929,12 +1020,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "https://{{URL}}/api/users/3/image",
+									"raw": "https://{{URL}}/v1/api/users/3/image",
 									"protocol": "https",
 									"host": [
 										"{{URL}}"
 									],
 									"path": [
+										"v1",
 										"api",
 										"users",
 										"3",
@@ -965,7 +1057,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"holiwis\",\n    \"email\": \"holiwis@example.com\",\n    \"name\": \"holi wis\",\n    \"password\": \"holi\",\n    \"role\": [\"USER\"]\n}",
+							"raw": "{\n    \"username\": \"holiwis\",\n    \"email\": \"holiwis@example.com\",\n    \"name\": \"holi wis\",\n    \"password\": \"holi\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -973,12 +1065,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/users/",
+							"raw": "https://{{URL}}/v1/api/users/",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"users",
 								""
@@ -993,15 +1086,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/users/1",
+							"raw": "https://{{URL}}/v1/api/users/3",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"users",
-								"1"
+								"3"
 							]
 						}
 					},
@@ -1014,7 +1108,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"MediaMart\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"password\": \"1234\",\r\n    \"role\": [\"COMPANY\"]\r\n}\r\n",
+							"raw": "{\r\n    \"username\": \"MediaMart1233\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"name\": \"John Doe\",\r\n    \"password\": \"1234\",\r\n    \"role\": [\"COMPANY\"]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1022,12 +1116,13 @@
 							}
 						},
 						"url": {
-							"raw": "https://{{URL}}/api/users/",
+							"raw": "https://{{URL}}/v1/api/users/",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"users",
 								""
@@ -1042,15 +1137,16 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/users/3",
+							"raw": "https://{{URL}}/v1/api/users/4",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"users",
-								"3"
+								"4"
 							]
 						}
 					},
@@ -1062,15 +1158,37 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/users/",
+							"raw": "https://{{URL}}/v1/api/users/",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"users",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "currentUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{URL}}/v1/api/users/profile",
+							"protocol": "https",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"v1",
+								"api",
+								"users",
+								"profile"
 							]
 						}
 					},
@@ -1087,12 +1205,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/graphs/companyGraph",
+							"raw": "https://{{URL}}/v1/api/graphs/companyGraph",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"graphs",
 								"companyGraph"
@@ -1107,12 +1226,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://{{URL}}/api/graphs/userGraph",
+							"raw": "https://{{URL}}/v1/api/graphs/userGraph",
 							"protocol": "https",
 							"host": [
 								"{{URL}}"
 							],
 							"path": [
+								"v1",
 								"api",
 								"graphs",
 								"userGraph"

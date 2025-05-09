@@ -122,7 +122,12 @@ public class Product {
     public void setId(Long id) {
         this.id = id;
     }
-
+    public void setViewsCount(Integer views_count) {
+        this.views_count = views_count;
+    }
+    public Integer getViewsCount() {
+        return views_count;
+    }
     public void setType(String type) {
         this.type = type;
     }

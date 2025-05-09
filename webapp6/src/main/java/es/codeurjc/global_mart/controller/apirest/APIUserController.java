@@ -39,105 +39,66 @@ public class APIUserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-
-	@Operation(summary = "Get user profile", description = "Retrieve the profile details of the authenticated user.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User profile retrieved successfully",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(Authentication authentication) {
-        if (authentication == null) {
-            return ResponseEntity.status(401).body(null);
-        }
-        Object principal = authentication.getPrincipal();
-
-        if (principal instanceof OAuth2User oAuth2User) {
-            Optional<UserDTO> existingUser = userService.findByUsername(oAuth2User.getAttribute("name"));
-
-            if (existingUser.isPresent()) {
-                return ResponseEntity.ok(existingUser.get());
-            } else {
-                return ResponseEntity.status(404).body(null);
-            }
-        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
-            Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
-            if (user.isPresent()) {
-                return ResponseEntity.ok(user.get());
-            }
-        }
-
-        return ResponseEntity.status(404).body(null);
-    }
-
-
 	@Operation(summary = "Get all users", description = "Retrieve a list of all users in the system.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of users retrieved successfully",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = UserDTO.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "List of users retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
+			@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
 	@GetMapping("/")
 	public ResponseEntity<List<UserDTO>> getAllUsers() {
 		List<UserDTO> users = userService.getAllUsers();
 		return ResponseEntity.ok(users);
 	}
 
-
 	@Operation(summary = "Get user by ID", description = "Retrieve a user by their unique ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User retrieved successfully",
-                content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = UserDTO.class))),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
+			@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getUserById(@PathVariable Long id) {
 		Optional<UserDTO> user = userService.getUserById(id);
 		if (user.isEmpty()) {
-			return ResponseEntity.status(404).body(null);
+			return ResponseEntity.status(404).body("User not found");
 		}
 		return ResponseEntity.ok(user.get());
 	}
 
 	@Operation(summary = "Create a new user", description = "Register a new user in the system.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User created successfully"),
-        @ApiResponse(responseCode = "400", description = "Username already exists"),
-        @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+			@ApiResponse(responseCode = "400", description = "Username already exists"),
+			@ApiResponse(responseCode = "500", description = "Internal server error")
+	})
 	@PostMapping("/")
 	public ResponseEntity<?> createUser(@RequestBody UserCreationDTO userDto) {
 		Optional<UserDTO> user = userService.findByUsername(userDto.username());
 		if (user.isPresent()) {
-			return ResponseEntity.badRequest().body(null);
+			return ResponseEntity.badRequest().body("Username already exists");
 		} else {
 			try {
-				userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
+				User createdUser = userService.createUser(null, userDto.name(), userDto.username(), userDto.email(),
 						passwordEncoder.encode(userDto.password()), userDto.role());
+				return ResponseEntity.ok(createdUser.getId());
 			} catch (IOException e) {
 				return ResponseEntity.status(500).body("Error creating user: " + e.getMessage());
 			}
 		}
-		return ResponseEntity.ok(null);
 	}
 
 	@Operation(summary = "Update user profile", description = "Update the details of an existing user.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Profile updated successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Profile updated successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@PutMapping("/")
 	public ResponseEntity<?> updateProfile(
 			@RequestBody UserCreationDTO userUpdateDTO,
 			Authentication authentication) {
 
 		if (authentication == null) {
-			return ResponseEntity.status(401).body(null);
+			return ResponseEntity.status(401).body("Unauthorized");
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -158,36 +119,50 @@ public class APIUserController {
 				}
 
 				userService.save(user);
-				return ResponseEntity.ok(null);
+				return ResponseEntity.ok("Profile updated successfully");
 			}
 		}
 
-		return ResponseEntity.status(404).body(null);
+		return ResponseEntity.status(404).body("User not found");
 	}
 
 	@Operation(summary = "Delete user", description = "Delete a user by their unique ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User deleted successfully"),
+			@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 		Optional<UserDTO> user = userService.getUserById(id);
 		if (user.isEmpty()) {
-			return ResponseEntity.status(404).body(null);
+			return ResponseEntity.status(404).body("User not found");
 		}
 		userService.deleteUser(id);
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok("User deleted successfully");
+	}
+
+	@Operation(summary = "Get user ID by username", description = "Retrieve a user's ID by their username.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User ID retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+			@ApiResponse(responseCode = "404", description = "User not found")
+	})
+	@GetMapping("/by-username/{username}")
+	public ResponseEntity<Long> getUserIdByUsername(@PathVariable String username) {
+		Optional<UserDTO> user = userService.findByUsername(username);
+		if (user.isEmpty()) {
+			return ResponseEntity.status(404).build();
+		}
+		// Retornamos SOLO el ID como un número, no como parte de un objeto
+		return ResponseEntity.ok(user.get().id());
 	}
 
 	// ------------------------------------------Images------------------------------------------
 
 	@Operation(summary = "Get user image", description = "Retrieve the image of a user.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User image retrieved successfully",
-                content = @Content(mediaType = "image/jpeg")),
-        @ApiResponse(responseCode = "404", description = "User image not found")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User image retrieved successfully", content = @Content(mediaType = "image/jpeg")),
+			@ApiResponse(responseCode = "404", description = "User image not found")
+	})
 	@GetMapping("/{id}/image")
 	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
 
@@ -201,66 +176,37 @@ public class APIUserController {
 	}
 
 	@Operation(summary = "Upload user image", description = "Upload a new image for a user.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Image uploaded successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "400", description = "Image already exists")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Image uploaded successfully"),
+			@ApiResponse(responseCode = "400", description = "Image already exists")
+	})
 	@PostMapping("/{id}/image")
-	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
-			Authentication authentication)
+	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile)
 			throws SQLException, IOException {
 
-		if (authentication == null)
-			return ResponseEntity.status(401).body(null);
+		
 
-		if (userService.getUserImage(id) != null) {
-			return ResponseEntity.badRequest().body(null);
-		}
-
-		Object principal = authentication.getPrincipal();
-
-		if (principal instanceof OAuth2User) {
-			OAuth2User oAuth2User = (OAuth2User) principal;
-			if (oAuth2User.getAuthorities().stream()
-					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
-					|| userService.getUserById(id).get().username().equals(oAuth2User.getAttribute("name"))) {
-				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
-				return ResponseEntity.ok().build();
-			}
-
-		} else if (principal instanceof org.springframework.security.core.userdetails.User) {
-			org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) principal;
-			if (userDetails.getAuthorities().stream()
-					.anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))
-					|| userService.getUserById(id).get().username().equals(userDetails.getUsername())) {
-				userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
-				return ResponseEntity.ok().build();
-			}
-		}
-
-		return ResponseEntity.status(403).body(null);
-
+		userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());
+		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "Replace user image", description = "Replace the existing image for a user.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Image replaced successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "400", description = "Image doesn't exist")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Image replaced successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "403", description = "Forbidden"),
+			@ApiResponse(responseCode = "400", description = "Image doesn't exist")
+	})
 	@PutMapping("/{id}/image")
 	public ResponseEntity<?> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
 			Authentication authentication)
 			throws SQLException, IOException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body(null);
+			return ResponseEntity.status(401).body("Unauthorized");
 
 		if (userService.getUserImage(id) == null) {
-			return ResponseEntity.badRequest().body(null);
+			return ResponseEntity.badRequest().body("Image doesn't exists");
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -284,26 +230,26 @@ public class APIUserController {
 			}
 		}
 
-		return ResponseEntity.status(403).body(null);
+		return ResponseEntity.status(403).body("Forbidden");
 
 	}
 
 	@Operation(summary = "Delete user image", description = "Delete a user's image.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User image deleted successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "Image doesn't exist"),
-        @ApiResponse(responseCode = "403", description = "Forbidden")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User image deleted successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "404", description = "Image doesn't exist"),
+			@ApiResponse(responseCode = "403", description = "Forbidden")
+	})
 	@DeleteMapping("/{id}/image")
 	public ResponseEntity<?> deleteProductImage(@PathVariable long id, Authentication authentication)
 			throws SQLException, IOException {
 
 		if (authentication == null)
-			return ResponseEntity.status(401).body(null);
+			return ResponseEntity.status(401).body("Unauthorized");
 
 		if (userService.getUserImage(id) == null) {
-			return ResponseEntity.badRequest().body(null);
+			return ResponseEntity.badRequest().body("Image doesn't exists");
 		}
 
 		Object principal = authentication.getPrincipal();
@@ -327,6 +273,41 @@ public class APIUserController {
 			}
 		}
 
-		return ResponseEntity.status(403).body(null);
+		return ResponseEntity.status(403).body("Forbidden");
 	}
+
+
+	@Operation(summary = "Get user profile", description = "Retrieve the profile details of the authenticated user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User profile retrieved successfully",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(401).body(null);
+        }
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof OAuth2User oAuth2User) {
+            // Para usuarios OAuth2, necesitamos buscar o crear el usuario en nuestra base
+            // de datos
+            Optional<UserDTO> existingUser = userService.findByUsername(oAuth2User.getAttribute("name"));
+
+            if (existingUser.isPresent()) {
+                return ResponseEntity.ok(existingUser.get());
+            } else {
+                return ResponseEntity.status(404).body(null);
+            }
+        } else if (principal instanceof org.springframework.security.core.userdetails.User userDetails) {
+            Optional<UserDTO> user = userService.findByUsername(userDetails.getUsername());
+            if (user.isPresent()) {
+                return ResponseEntity.ok(user.get());
+            }
+        }
+
+        return ResponseEntity.status(404).body(null);
+    }
 }
