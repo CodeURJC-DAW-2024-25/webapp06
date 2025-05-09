@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@RequestMapping("/v1/api/graphs")
+@RequestMapping("/api/v1/graphs")
 public class APIGraphsController {
 
     @Autowired

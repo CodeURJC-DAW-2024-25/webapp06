@@ -34,7 +34,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 
 @RestController
-@RequestMapping("/v1/api/products")
+@RequestMapping("/api/v1/products")
 public class APIProductController {
 
 	@Autowired
