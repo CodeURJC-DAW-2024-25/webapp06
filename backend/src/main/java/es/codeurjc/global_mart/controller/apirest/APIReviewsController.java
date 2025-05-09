@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/v1/api/reviews")
+@RequestMapping("/api/v1/reviews")
 public class APIReviewsController {
 
     @Autowired
@@ -33,10 +33,8 @@ public class APIReviewsController {
 
     @Operation(summary = "Get all reviews of a product", description = "Retrieve all reviews for a specific product by its ID.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of reviews retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ReviewDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Product not found")
+            @ApiResponse(responseCode = "200", description = "List of reviews retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> getReviewsByProductId(@PathVariable Long id) {
@@ -50,10 +48,8 @@ public class APIReviewsController {
 
     @Operation(summary = "Get a specific review of a product", description = "Retrieve a specific review for a product by its ID and review ID.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Review retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ReviewDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Product or review not found")
+            @ApiResponse(responseCode = "200", description = "Review retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Product or review not found")
     })
     @GetMapping("/{productId}/{reviewId}")
     public ResponseEntity<?> getReviewsOfAProductById(@PathVariable Long productId, @PathVariable Long reviewId) {
@@ -68,12 +64,10 @@ public class APIReviewsController {
 
     @Operation(summary = "Post a new review for a product", description = "Add a new review to a product.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Review added successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ReviewDTO.class))),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "Product not found"),
-        @ApiResponse(responseCode = "500", description = "Error adding review")
+            @ApiResponse(responseCode = "200", description = "Review added successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Product not found"),
+            @ApiResponse(responseCode = "500", description = "Error adding review")
     })
     @PostMapping("/{id}")
     public ResponseEntity<?> postNewReview(

@@ -34,7 +34,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 
 @RestController
-@RequestMapping("/v1/api/products")
+@RequestMapping("/api/v1/products")
 public class APIProductController {
 
 	@Autowired
@@ -50,10 +50,8 @@ public class APIProductController {
 
 	@Operation(summary = "Get products", description = "Retrieve products based on filters.")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "List of products retrieved successfully",
-				content = @Content(mediaType = "application/json", 
-						schema = @Schema(implementation = ProductDTO.class))),
-		@ApiResponse(responseCode = "404", description = "No products found")
+			@ApiResponse(responseCode = "200", description = "List of products retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
+			@ApiResponse(responseCode = "404", description = "No products found")
 	})
 	@GetMapping("/")
 	public ResponseEntity<Page<ProductDTO>> getProducts(
@@ -88,20 +86,16 @@ public class APIProductController {
 					.map(productMapper::toProductDTO);
 		}
 
-		
-
 		return ResponseEntity.ok(products);
 	}
 
 	@Operation(summary = "Get products by type", description = "Retrieve products filtered by type.")
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "List of products retrieved successfully",
-				content = @Content(mediaType = "application/json", 
-						schema = @Schema(implementation = ProductDTO.class))),
+			@ApiResponse(responseCode = "200", description = "List of products retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
 	})
 	@GetMapping("/type")
 	public ResponseEntity<Page<ProductDTO>> getProductsByType(
-			@RequestParam(name = "type", required = true) String type, 
+			@RequestParam(name = "type", required = true) String type,
 			@PageableDefault(size = 5) Pageable pageable) {
 		Page<ProductDTO> products = productRepository.findByIsAcceptedTrueAndType(type, pageable)
 				.map(productMapper::toProductDTO);
@@ -109,12 +103,10 @@ public class APIProductController {
 	}
 
 	@Operation(summary = "Get product by ID", description = "Retrieve a product by its unique ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-        @ApiResponse(responseCode = "404", description = "Product not found")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
+			@ApiResponse(responseCode = "404", description = "Product not found")
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
 		Optional<ProductDTO> product = productService.getProductById(id);
@@ -126,13 +118,11 @@ public class APIProductController {
 	}
 
 	@Operation(summary = "Create a new product", description = "Create a new product with a given set of properties.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product created successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "403", description = "Forbidden")
+	})
 	@PostMapping("/")
 	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO, Authentication authentication)
 			throws IOException {
@@ -160,15 +150,12 @@ public class APIProductController {
 		return ResponseEntity.ok(productDTOfinal);
 	}
 
-
 	@Operation(summary = "Update a product", description = "Update the details of an existing product.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product updated successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "403", description = "Forbidden")
+	})
 	@PutMapping("/{id}")
 	public ResponseEntity<ProductDTO> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO,
 			Authentication authentication) throws SQLException {
@@ -198,14 +185,13 @@ public class APIProductController {
 		return ResponseEntity.status(403).body(null);
 	}
 
-
 	@Operation(summary = "Delete a product", description = "Delete a product by its unique ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product deleted successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Product not found")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product deleted successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "403", description = "Forbidden"),
+			@ApiResponse(responseCode = "404", description = "Product not found")
+	})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ProductDTO> deleteProduct(@PathVariable long id, Authentication authentication) {
 
@@ -238,13 +224,11 @@ public class APIProductController {
 
 	// ------------------------------------------Images------------------------------------------
 
-
 	@Operation(summary = "Get product image", description = "Retrieve the image of a specific product by its ID.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product image retrieved successfully",
-                content = @Content(mediaType = "image/jpeg")),
-        @ApiResponse(responseCode = "404", description = "Product image not found")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product image retrieved successfully", content = @Content(mediaType = "image/jpeg")),
+			@ApiResponse(responseCode = "404", description = "Product image not found")
+	})
 	@GetMapping("/{id}/image")
 	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
 
@@ -263,16 +247,16 @@ public class APIProductController {
 
 	}
 
-
 	@Operation(summary = "Upload product image", description = "Upload a new image for a specific product.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product image uploaded successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "400", description = "Bad request")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product image uploaded successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "403", description = "Forbidden"),
+			@ApiResponse(responseCode = "400", description = "Bad request")
+	})
 	@PostMapping("/{id}/image")
-	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile,
+	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id,
+			@RequestParam("file") MultipartFile imageFile,
 			Authentication authentication)
 			throws IOException {
 
@@ -308,16 +292,16 @@ public class APIProductController {
 
 	}
 
-
 	@Operation(summary = "Replace product image", description = "Replace the existing image of a product with a new one.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product image replaced successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "400", description = "Bad request")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product image replaced successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "403", description = "Forbidden"),
+			@ApiResponse(responseCode = "400", description = "Bad request")
+	})
 	@PutMapping("/{id}/image")
-	public ResponseEntity<ProductDTO> replaceProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile,
+	public ResponseEntity<ProductDTO> replaceProductImage(@PathVariable long id,
+			@RequestParam("file") MultipartFile imageFile,
 			Authentication authentication)
 			throws IOException {
 
@@ -353,14 +337,13 @@ public class APIProductController {
 
 	}
 
-
 	@Operation(summary = "Delete product image", description = "Delete the image of a specific product.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Product image deleted successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "400", description = "Bad request")
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Product image deleted successfully"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized"),
+			@ApiResponse(responseCode = "403", description = "Forbidden"),
+			@ApiResponse(responseCode = "400", description = "Bad request")
+	})
 	@DeleteMapping("/{id}/image")
 	public ResponseEntity<ProductDTO> deleteProductImage(@PathVariable long id, Authentication authentication)
 			throws IOException {
@@ -399,26 +382,20 @@ public class APIProductController {
 
 	// ------------------------------------------ALGORITHM------------------------------------------
 
-
 	@Operation(summary = "Get most viewed products", description = "Retrieve a list of the most viewed products.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of most viewed products retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = ProductDTO.class))),
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "List of most viewed products retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
+	})
 	@GetMapping("/mostViewedProducts")
 	public ResponseEntity<List<ProductDTO>> getMostViewedProducts() {
 		List<ProductDTO> mostViewedProducts = productService.getMostViewedProducts(4);
 		return ResponseEntity.ok(mostViewedProducts);
 	}
 
-
 	@Operation(summary = "Get last products", description = "Retrieve a list of the last added products.")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of last products retrieved successfully",
-                content = @Content(mediaType = "application/json", 
-                        schema = @Schema(implementation = Product.class))),
-    })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "List of last products retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Product.class))),
+	})
 	@GetMapping("/lastProducts")
 	public ResponseEntity<List<Product>> getLastProducts() {
 		List<ProductDTO> lastProducts = productService.getLastProducts();
@@ -426,9 +403,6 @@ public class APIProductController {
 		List<Product> products = productMapper.toProducts(lastProducts);
 		return ResponseEntity.ok(products);
 	}
-
-
-
 
 	@PutMapping("/accept")
 	public ResponseEntity<ProductDTO> acceptProduct(@RequestParam Long id) {
@@ -448,22 +422,21 @@ public class APIProductController {
 
 	@PutMapping("/addViewsCount")
 	public ResponseEntity<ProductDTO> addViewsCount(@RequestParam Long id) {
-	    System.out.println("ID recibido: " + id); // Log para depuración
+		System.out.println("ID recibido: " + id); // Log para depuración
 
-	    Optional<Product> productOptional = productRepository.findById(id);
+		Optional<Product> productOptional = productRepository.findById(id);
 
-	    if (productOptional.isEmpty()) {
-	        return ResponseEntity.notFound().build();
-	    }
+		if (productOptional.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
 
-	    Product product = productOptional.get();
-	    product.setViewsCount(product.getViewsCount() + 1);
-	    productRepository.save(product);
+		Product product = productOptional.get();
+		product.setViewsCount(product.getViewsCount() + 1);
+		productRepository.save(product);
 
-	    ProductDTO productDTO = productMapper.toProductDTO(product);
-	    return ResponseEntity.ok(productDTO);
+		ProductDTO productDTO = productMapper.toProductDTO(product);
+		return ResponseEntity.ok(productDTO);
 	}
-
 
 	@DeleteMapping("/delete")
 	public ResponseEntity<Void> deleteProduct(@RequestParam Long id) {
@@ -498,31 +471,29 @@ public class APIProductController {
 	}
 
 	@GetMapping("/search")
-    public ResponseEntity<List<SearchProductDTO>> searchProducts(
-            @RequestParam(required = false) String search_text,
-            @RequestParam(required = false, defaultValue = "all") String type) {
+	public ResponseEntity<List<SearchProductDTO>> searchProducts(
+			@RequestParam(required = false) String search_text,
+			@RequestParam(required = false, defaultValue = "all") String type) {
 
-        List<SearchProductDTO> searchResults;
+		List<SearchProductDTO> searchResults;
 
-        if (search_text != null && !search_text.isEmpty()) {
-            // Buscar por texto
-            if ("all".equalsIgnoreCase(type)) {
-                searchResults = productService.searchProductsByName(search_text);
-            } else {
-                // Buscar por texto y tipo
-                searchResults = productService.searchProductsByNameAndType(search_text, type);
-            }
-        } else if (!"all".equalsIgnoreCase(type)) {
-            // Buscar por tipo
-            searchResults = productService.getProductsByTypeToSearch(type);
-        } else {
-            // Todos los productos
-            searchResults = productService.getAllProductsToSearch();
-        }
+		if (search_text != null && !search_text.isEmpty()) {
+			// Buscar por texto
+			if ("all".equalsIgnoreCase(type)) {
+				searchResults = productService.searchProductsByName(search_text);
+			} else {
+				// Buscar por texto y tipo
+				searchResults = productService.searchProductsByNameAndType(search_text, type);
+			}
+		} else if (!"all".equalsIgnoreCase(type)) {
+			// Buscar por tipo
+			searchResults = productService.getProductsByTypeToSearch(type);
+		} else {
+			// Todos los productos
+			searchResults = productService.getAllProductsToSearch();
+		}
 
-        
-
-        return ResponseEntity.ok(searchResults);
-    }
+		return ResponseEntity.ok(searchResults);
+	}
 
 }

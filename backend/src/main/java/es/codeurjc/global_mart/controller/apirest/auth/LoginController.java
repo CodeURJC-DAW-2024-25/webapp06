@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/v1/api/auth")
+@RequestMapping("/api/v1/auth")
 public class LoginController {
 
     @Autowired
@@ -58,7 +58,7 @@ public class LoginController {
                     false);
             return ResponseEntity.ok(loginResponse);
         }
-            
+
         return userLoginService.refresh(response, refreshToken);
     }
 

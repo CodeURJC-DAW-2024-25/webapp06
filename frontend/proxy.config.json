@@ -1,8 +1,8 @@
 {
-    "/v1/api": {
-        "target": "https://localhost:8443",
-        "secure": false,
-        "changeOrigin": true,
-        "logLevel": "debug"
-    }
+  "/api/v1": {
+    "target": "https://localhost:8443",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
 }

@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/api/users")
+@RequestMapping("/api/v1/users")
 public class APIUserController {
 
 	@Autowired
@@ -103,7 +103,7 @@ public class APIUserController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized"),
 			@ApiResponse(responseCode = "404", description = "User not found")
 	})
-	@PutMapping("/update-profile")
+	@PutMapping("/")
 	public ResponseEntity<?> updateProfile(
 			@RequestBody UserCreationDTO userUpdateDTO,
 			Authentication authentication,

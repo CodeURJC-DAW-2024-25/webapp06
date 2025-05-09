@@ -9,7 +9,7 @@ import { tap, catchError, map, switchMap } from 'rxjs/operators';
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = '/v1/api'; // Asegúrate de que coincida con tu backend
+    private apiUrl = '/api/v1'; // Asegúrate de que coincida con tu backend
     private tokenKey = 'auth_token';
     // Cambiar a público para permitir acceso desde el nav component
     public userSubject: BehaviorSubject<any>;

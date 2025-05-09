@@ -86,7 +86,7 @@ export class NavComponent implements OnInit, OnDestroy {
       console.log('Token encontrado en localStorage, verificando validez con el servidor...');
 
       // Intentar refrescar el token para verificar si la sesión sigue siendo válida
-      this.http.post('/v1/api/auth/refresh', {}, { withCredentials: true })
+      this.http.post('/api/v1/auth/refresh', {}, { withCredentials: true })
         .pipe(
           catchError(error => {
             console.error('Error al refrescar la sesión:', error);

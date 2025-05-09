@@ -124,61 +124,67 @@ public class GlobalMartSecurityConfig {
         // Configuración de autorizaciones
         http.authorizeHttpRequests(authorize -> authorize
                 // Permitir explícitamente endpoints de autenticación
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/new/**").permitAll()
                 // MainAPI
-                .requestMatchers(HttpMethod.GET, "/api/main/profile").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/main/profile").authenticated()
 
                 // ProductsAPI
                 // Image
-                .requestMatchers(HttpMethod.GET, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.POST, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "api/products/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.PUT, "api/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.GET, "api/v1/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "api/v1/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "api/v1/products/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "api/v1/products/{id}/image").permitAll()
                 // Product
-                .requestMatchers(HttpMethod.GET, "/api/products/notAcceptedProducts").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/products/accept").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/products/delete").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/products/addViewsCount").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/type/{type}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/products/").hasRole("COMPANY")
-                .requestMatchers(HttpMethod.PUT, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/notAcceptedProducts").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/products/accept").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/products/delete").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/products/addViewsCount").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/type/{type}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/products/").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id}").hasAnyRole("COMPANY", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/products/{id}").hasAnyRole("COMPANY", "ADMIN")
                 // Algorithm
-                .requestMatchers(HttpMethod.GET, "/api/products/mostViewedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/lastProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProducts").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedProductsByType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/acceptedCompanyProducts").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/mostViewedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/lastProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/acceptedProducts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/acceptedProductsByType/{type}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/acceptedCompanyProducts").hasRole("COMPANY")
                 // Page
-                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsAll").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/moreProdsType/{type}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/product/moreProdsCompany").hasRole("COMPANY")
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/moreProdsAll").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/products/moreProdsType/{type}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/product/moreProdsCompany").hasRole("COMPANY")
 
                 // ReviewsAPI
-                .requestMatchers(HttpMethod.POST, "/api/reviews/{id}").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/reviews/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/reviews/{id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/reviews").permitAll()
 
                 // ShoppingCartAPI
-                .requestMatchers(HttpMethod.GET, "/api/shoppingCarts/").hasRole("USER")
-                .requestMatchers(HttpMethod.DELETE, "/api/shoppingCarts/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/{id}").hasRole("USER")
-                .requestMatchers(HttpMethod.POST, "/api/shoppingCarts/payment").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/shoppingcarts/").hasRole("USER")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/shoppingcarts/*").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/users/shoppingcarts/*").hasRole("USER")
+                .requestMatchers(HttpMethod.POST, "/api/v1/users/shoppingcarts/payment").hasRole("USER")
 
                 // UserAPI
-                .requestMatchers(HttpMethod.PUT, "/api/users/").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/v1/users/").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/users/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/profile").hasRole("USER")
+
                 // Image
-                .requestMatchers(HttpMethod.GET, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}/image").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}/image").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/v1/users/{id}/image").permitAll()
+
+                // GraphsAPI
+                .requestMatchers(HttpMethod.GET, "/api/v1/graphs/userGraph").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/api/v1/graphs/companyGraph").hasRole("COMPANY")
 
                 .anyRequest().denyAll());
 

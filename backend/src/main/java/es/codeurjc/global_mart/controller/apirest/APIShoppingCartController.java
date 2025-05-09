@@ -19,7 +19,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/api/users")
+@RequestMapping("/api/v1/users")
 public class APIShoppingCartController {
 
     @Autowired
@@ -44,6 +44,7 @@ public class APIShoppingCartController {
         }
 
         UserDTO user = getUserFromAuthentication(authentication);
+        System.out.println("User Id: " + userService.getUserId(user));
 
         if (user != null && userService.getUserId(user) == id) {
             ShoppingCartDTO shoppingCart = userService.getShoppingCartData(user);
@@ -64,6 +65,7 @@ public class APIShoppingCartController {
     @PostMapping("/shoppingcarts/{productId}")
     public ResponseEntity<ProductDTO> addProductToCart(@RequestParam Long id, @PathVariable Long productId,
             Authentication authentication) {
+        System.out.println("Hola");
         if (authentication == null) {
             return ResponseEntity.status(401).body(null);
         }

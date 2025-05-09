@@ -24,7 +24,7 @@ export interface Cart {
     providedIn: 'root'
 })
 export class ShoppingCartService {
-    private apiUrl = '/v1/api';
+    private apiUrl = '/api/v1';
     private cartSubject = new BehaviorSubject<Cart | null>(null);
     cart$ = this.cartSubject.asObservable();
 
