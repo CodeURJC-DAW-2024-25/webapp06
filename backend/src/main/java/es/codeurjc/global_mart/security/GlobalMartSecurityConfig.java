@@ -86,7 +86,7 @@ public class GlobalMartSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/products/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/products/").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/products/type/{type}").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/products/").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/products/").hasRole("COMPANY")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/products/{id}").hasAnyRole("COMPANY", "ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/products/{id}").hasAnyRole("COMPANY", "ADMIN")
                 // Algorithm

@@ -203,9 +203,13 @@ public class APIUserController {
 			@ApiResponse(responseCode = "404", description = "User image not found")
 	})
 	@GetMapping("/{id}/image")
-	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
+	public ResponseEntity<Object> getUserImage(@PathVariable long id) throws SQLException, IOException {
 
 		Resource postImage = userService.getUserImage(id);
+
+		if (postImage == null) {
+			return ResponseEntity.status(404).body("User image not found");
+		}
 
 		return ResponseEntity
 				.ok()
@@ -220,7 +224,7 @@ public class APIUserController {
 			@ApiResponse(responseCode = "400", description = "Image already exists")
 	})
 	@PostMapping("/{id}/image")
-	public ResponseEntity<?> createProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile)
+	public ResponseEntity<?> createUserImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
 			throws SQLException, IOException {
 
 		userService.createUserImage(id, imageFile.getInputStream(), imageFile.getSize());

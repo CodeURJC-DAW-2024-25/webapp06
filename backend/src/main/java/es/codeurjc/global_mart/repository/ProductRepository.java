@@ -28,13 +28,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByIsAcceptedTrueAndType(String type);
 
     Page<Product> findByIsAcceptedFalse(Pageable pageable);
-    
 
     Page<Product> findByIsAcceptedTrue(Pageable pageable);
+
     Page<Product> findByIsAcceptedTrueAndType(String type, Pageable pageable);
+
     Page<Product> findByIsAcceptedTrueAndCompany(String company, Pageable pageable);
-    
-    
-    
 
 }

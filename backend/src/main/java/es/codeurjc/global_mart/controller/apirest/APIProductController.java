@@ -63,27 +63,47 @@ public class APIProductController {
 		Page<ProductDTO> products;
 
 		if (accepted && company != null) {
-			// Only users with ROLE_COMPANY can access this
 			if (authentication == null || authentication.getAuthorities().stream()
 					.noneMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
 				return ResponseEntity.status(403).build();
 			}
-			// Get accepted products by company
 			products = productService.getAcceptedCompanyProducts(company, pageable);
 		} else if (company == null && !accepted) {
-			// Only users with ROLE_ADMIN can access this
 			if (authentication == null || authentication.getAuthorities().stream()
 					.noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
 				return ResponseEntity.status(403).build();
 			}
-			// Get not accepted products
 			products = productRepository.findByIsAcceptedFalse(pageable)
 					.map(productMapper::toProductDTO);
 		} else {
-			// All users can access this
-			// Get all products
 			products = productRepository.findByIsAcceptedTrue(pageable)
 					.map(productMapper::toProductDTO);
+		}
+
+		return ResponseEntity.ok(products);
+	}
+
+	@Operation(summary = "Get all accepted products", description = "Retrieve all accepted products without pagination.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "List of all accepted products retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
+	})
+	@GetMapping("/all")
+	public ResponseEntity<List<ProductDTO>> getAllProducts(
+			@RequestParam(name = "accepted", required = false) Boolean accepted) {
+
+		List<ProductDTO> products;
+		if (accepted == false) {
+			// Convertir List<Product> a List<ProductDTO>
+			List<Product> notAcceptedProducts = productRepository.findByIsAcceptedFalse();
+			products = notAcceptedProducts.stream()
+					.map(productMapper::toProductDTO)
+					.collect(java.util.stream.Collectors.toList());
+		} else {
+			// Convertir List<Product> a List<ProductDTO>
+			List<Product> acceptedProducts = productRepository.findByIsAcceptedTrue();
+			products = acceptedProducts.stream()
+					.map(productMapper::toProductDTO)
+					.collect(java.util.stream.Collectors.toList());
 		}
 
 		return ResponseEntity.ok(products);
@@ -99,6 +119,24 @@ public class APIProductController {
 			@PageableDefault(size = 5) Pageable pageable) {
 		Page<ProductDTO> products = productRepository.findByIsAcceptedTrueAndType(type, pageable)
 				.map(productMapper::toProductDTO);
+		return ResponseEntity.ok(products);
+	}
+
+	@Operation(summary = "Get products by type", description = "Retrieve products filtered by type.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "List of products retrieved successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))),
+	})
+	@GetMapping("/type/all")
+	public ResponseEntity<List<ProductDTO>> getAllProductsByType(
+			@RequestParam(name = "type", required = true) String type) {
+		// Utilizar repository.findByIsAcceptedTrueAndType para obtener List<Product>
+		List<Product> productList = productRepository.findByIsAcceptedTrueAndType(type);
+
+		// Convertir List<Product> a List<ProductDTO>
+		List<ProductDTO> products = productList.stream()
+				.map(productMapper::toProductDTO)
+				.collect(java.util.stream.Collectors.toList());
+
 		return ResponseEntity.ok(products);
 	}
 
@@ -255,8 +293,7 @@ public class APIProductController {
 			@ApiResponse(responseCode = "400", description = "Bad request")
 	})
 	@PostMapping("/{id}/image")
-	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id,
-			@RequestParam("file") MultipartFile imageFile,
+	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
 			Authentication authentication)
 			throws IOException {
 
