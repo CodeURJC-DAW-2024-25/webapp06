@@ -15,19 +15,19 @@ export class AuthGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): boolean {
-        // Check if user is logged in
+        // Verifica si el usuario está autenticado
         if (!this.authService.getToken()) {
             this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
             return false;
         }
 
-        // Check for required role if specified
-        const requiredRole = route.data['requiredRole'];
-        if (!requiredRole || this.authService.hasRole(requiredRole)) {
+        // Verifica si el usuario tiene al menos uno de los roles requeridos
+        const requiredRoles: string[] = route.data['requiredRoles'];
+        if (requiredRoles && requiredRoles.some(role => this.authService.hasRole(role))) {
             return true;
         }
 
-        // User doesn't have required role
+        // Si no tiene los roles requeridos, redirige al usuario
         this.router.navigate(['/']);
         return false;
     }

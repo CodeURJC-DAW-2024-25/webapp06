@@ -25,18 +25,13 @@ export const routes: Routes = [
   { path: 'about-us', component: AboutUsComponent },
   { path: 'products/:id', component: ProductDetailComponent },
   { path: 'products/category/:category', component: ProductListComponent },
-  { path: 'newProduct', component: FormComponent , canActivate: [AuthGuard], data: { requiredRole: 'COMPANY' }},
-  { path: 'user-profile', component: UserProfileComponent},
-  { path: 'user-graph', component: UserGraphComponent, canActivate: [AuthGuard], data: { requiredRole: 'USER' } },
-  { path: 'company-graph', component: CompanyGraphComponent, canActivate: [AuthGuard], data: { requiredRole: 'COMPANY' } },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: { requiredRole: 'ADMIN' } }, // Ruta protegida para el administrador
+  { path: 'newProduct', component: FormComponent, canActivate: [AuthGuard], data: { requiredRoles: ['COMPANY', 'ADMIN'] } }, // Múltiples roles permitidos
+  { path: 'user-profile', component: UserProfileComponent },
+  { path: 'user-graph', component: UserGraphComponent, canActivate: [AuthGuard], data: { requiredRoles: ['USER'] } },
+  { path: 'company-graph', component: CompanyGraphComponent, canActivate: [AuthGuard], data: { requiredRoles: ['COMPANY'] } },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: { requiredRoles: ['ADMIN'] } },
   { path: 'search', component: ProductSearchComponent },
   { path: 'edit-profile', component: ProfileFormComponent },
-
-
-  // Rutas protegidas
-  { path: 'shoppingcart', component: ShoppingCartComponent, canActivate: [AuthGuard], data: { requiredRole: 'USER' } },
-
-  // Redirigir a la página principal para cualquier ruta desconocida
+  { path: 'shoppingcart', component: ShoppingCartComponent, canActivate: [AuthGuard], data: { requiredRoles: ['USER'] } },
   { path: '**', redirectTo: '' }
 ];
