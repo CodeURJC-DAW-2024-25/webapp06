@@ -35,26 +35,16 @@
   font-size: 18px !important;
 }
 
-:host ::ng-deep .highcharts-axis-title {
-  font-weight: 500 !important;
-}
-
 :host ::ng-deep .highcharts-tooltip {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
 }
 
-:host ::ng-deep .highcharts-series path {
-  stroke-width: 3px;
-}
-
-:host ::ng-deep .highcharts-point {
-  stroke-width: 2px;
-}
-
-:host ::ng-deep .highcharts-grid-line {
-  stroke: #e6e6e6;
-}
-
 :host ::ng-deep .highcharts-data-label text {
   font-weight: 500 !important;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7) !important;
+}
+
+:host ::ng-deep .highcharts-pie-series .highcharts-point {
+  stroke: #fff;
+  stroke-width: 1.5px;
 }
