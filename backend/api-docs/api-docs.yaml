@@ -291,12 +291,6 @@ components:
         value:
           type: integer
           format: int32
-
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
     ErrorResponse:
       type: object
       properties:
@@ -308,6 +302,13 @@ components:
         timestamp:
           type: string
           format: date-time
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
 
 security:
   - bearerAuth: []
@@ -899,8 +900,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProductDTO"
   /api/v1/products/accept:
-    summary: Accept product
     put:
+      summary: Accept product
       tags:
       - api-product-controller
       operationId: acceptProduct
@@ -1446,8 +1447,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProductDTO"
   /api/v1/products/search:
-    summary: Search products
     get:
+      summary: Search products
       tags:
       - api-product-controller
       operationId: searchProducts
@@ -1602,8 +1603,8 @@ paths:
               schema:
                 type: string
   /api/v1/products/delete:
-    summary: Delete product
     delete:
+      summary: Delete product
       tags:
       - api-product-controller
       operationId: deleteProduct_1
