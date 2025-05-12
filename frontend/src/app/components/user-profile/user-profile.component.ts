@@ -197,7 +197,7 @@ export class UserProfileComponent implements OnInit {
 
     this.uploadingPhoto = true;
     const formData = new FormData();
-    formData.append('file', this.selectedFile);
+    formData.append('imageFile', this.selectedFile); // Changed from 'file' to 'imageFile'
 
     this.userService.uploadUserImage(this.user.id, formData).subscribe({
       next: () => {
