@@ -484,6 +484,11 @@ Una vez ya ha sido detenida, se puede volver a arrancar con:
 `    sudo ./docker_script.sh
    `
 
+### Documentación de la API
+
+[YAML](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/50e1321842da4f697e16d371877d4bcfc1d21cc3/backend/api-docs/api-docs.yaml)
+[APIDOCS](https://raw.githack.com/CodeURJC-DAW-2024-25/webapp06/main/backend/api-docs/api-docs.html)
+
 ### Participación de miembros
 
 #### Cristian
