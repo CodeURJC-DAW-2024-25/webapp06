@@ -475,14 +475,12 @@ Para poder crear a imagen de la aplicación es necesario tener docker instalado 
 ### Detener la aplicación
 
 Una vez inicializada la aplicación, para detenerla se puede hacer con:
-`    sudo docker compose stop
-   `
+`sudo docker compose stop`
 
 ### Volver a arrancar la aplicación
 
 Una vez ya ha sido detenida, se puede volver a arrancar con:
-`    sudo ./docker_script.sh
-   `
+`sudo ./docker_script.sh`
 
 ### Documentación de la API
 
@@ -598,3 +596,31 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 | APIReviewsController.java     | [Link5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blame/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIReviewsController.java) |
 
 [Link_al_enlace_de_youtube](https://youtu.be/eJL97nKrpsA)
+
+---
+
+## Práctica 3
+
+### Commits y archivos más significativos
+
+#### Cristian
+
+##### Listados 5 commits más significativos
+
+| **Descripción commit**              | **Link**                                                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Shopping Cart done                  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/3bfa40c877f9a5fe08732ec3d459595dde818ed9) |
+| Connect API Rest to Angular Project | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/af2ec37cd197c8d6bb397b4fedc79091e2effdde) |
+| Login finally done                  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/e864c24eecd6e80df920161684bcbb3c82586631) |
+| Product management                  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/50eded6c3dfaf24e4f308cc35603dd480b48537e) |
+| Angular views                       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/cb84897ca6eb8f17aa5c089f46babf1b05d4e479) |
+
+##### Listado 5 ficheros con mayor participación
+
+| **Fichero**              | **Link**                                                                                                                |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| Views                    | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components)                          |
+| shopping-cart.service.ts | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/service/shopping-cart.service.ts)    |
+| auth.service.ts          | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/service/auth/auth.service.ts)        |
+| login.component.ts       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/login/login.component.ts) |
+| ProductList Folder       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/product-list)             |
