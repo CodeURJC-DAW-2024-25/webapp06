@@ -5,8 +5,10 @@ FROM maven:3.9-eclipse-temurin-21 AS builder
 # Set working directory
 WORKDIR /app
 
-COPY webapp6/pom.xml /app/
-COPY webapp6/src /app/src
+COPY backend/pom.xml /app/
+
+COPY backend/src /app/src
+
 
 RUN mvn clean package -DskipTests
 
