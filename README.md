@@ -595,11 +595,15 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 | ProductService.java           | [Link4](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/webapp6/src/main/java/es/codeurjc/global_mart/service/ProductService.java)                    |
 | APIReviewsController.java     | [Link5](https://github.com/CodeURJC-DAW-2024-25/webapp06/blame/main/webapp6/src/main/java/es/codeurjc/global_mart/controller/API_Rest/APIReviewsController.java) |
 
-[Link_al_enlace_de_youtube](https://youtu.be/eJL97nKrpsA)
+
 
 ---
 
 ## Práctica 3
+### Video de youtube
+
+[Link_al_enlace_de_youtube](https://youtu.be/eJL97nKrpsA)
+
 
 ### Commits y archivos más significativos
 
@@ -624,3 +628,28 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 | auth.service.ts          | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/service/auth/auth.service.ts)        |
 | login.component.ts       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/login/login.component.ts) |
 | ProductList Folder       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/product-list)             |
+
+
+
+
+#### Luis Abril
+
+##### Listados 5 commits más significativos
+
+| **Descripción commit**              | **Link**                                                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| New product and edit product component done                  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/71654ca20576a017086ad7d537a9a9c587d593b0) |
+| Admin functionality| [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/bec1832b56d43fdf7fbc32fd6039d115dd7748cf ) |
+| Problems with the roles fixed and the load of user images                  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/71130f089462bfdc54da68e4706213af72999f71) |
+| All review part done                 | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/aa4cd180de6b358e9b544fdf6cceb56c44872e60  ) |
+| MostViewedProducts algorithm done                      | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/120fdca54cde6c23f6704c77ea5bd61c665ab3a8 ) |
+
+##### Listado 5 ficheros con mayor participación
+
+| **Fichero**              | **Link**                                                                                                                |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| form.component.ts                    | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/newProdFrom/form.component.ts)                          |
+| admin.component.ts | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/admin/admin.component.ts)    |
+| product-detail.component.ts          | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/product-detail/product-detail.component.ts)        |
+| product.service.ts       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/service/product.service.ts) |
+| register.component.ts       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/register/register.component.ts)             |
