@@ -293,7 +293,7 @@ public class APIProductController {
 			@ApiResponse(responseCode = "400", description = "Bad request")
 	})
 	@PostMapping("/{id}/image")
-	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile,
+	public ResponseEntity<ProductDTO> createProductImage(@PathVariable long id, @RequestParam("file") MultipartFile imageFile,
 			Authentication authentication)
 			throws IOException {
 
