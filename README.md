@@ -601,7 +601,7 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 
 ## Práctica 3
 
-###Diagrama 
+### Diagrama de componentes
 ![Diagrama de componentes](./images_readme/Practica3/DiagramaComponentes.png)
 
 ### Video de youtube
@@ -657,3 +657,25 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 | product-detail.component.ts          | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/product-detail/product-detail.component.ts)        |
 | product.service.ts       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/service/product.service.ts) |
 | register.component.ts       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/register/register.component.ts)             |
+
+#### Juan Manuel Bustos
+
+##### Listados 5 commits más significativos
+
+| **Descripción commit**              | **Link**                                                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Graphs components | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/3b88f16bf444d1c4a2d9d54eea66ae392f9eedce) | 
+| Add CompanyGraph component and update routing in user profile | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/0a15a2491904864bf4447ac465a12d3272f6ea19) |
+| Edit Profile  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/72f928948028cf53a1dcc0176793eda1f693ddd6) |
+| Home Component | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/1950bc9043dff7a586594e9b0d64c3ce810ac9ad ) |
+| User Profile | [Link]( https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/68dfbee4ffde9924febf84eed4c0fbf9190b37a6) |
+
+##### Listado 5 ficheros con mayor participación
+
+| **Fichero**              | **Link**                                                                                                                |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| CompanyGrap Folder  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/company-graph)                          |
+| Home Folder | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/home)    |
+| User graph Folder       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/user-graph)        |
+| User Profile Folder  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/user-profile) |
+| Graphs  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/company-graph/company-graph.component.ts)             |
