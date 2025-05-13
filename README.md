@@ -604,6 +604,22 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 ### Diagrama de componentes
 ![Diagrama de componentes](./images_readme/Practica3/DiagramaComponentes.png)
 
+### Instrucciones de ejecución
+
+Asegurarse de que Node.js está instalado  
+Abrir una terminal y ejecutar los siguientes comandos:
+```
+npm install
+```
+```
+cd frontend
+```
+```
+ng serve --proxy-config proxy.conf.json
+```
+
+Después ejecutar la base de datos y la aplicación springboot (fase 1)
+
 ### Video de youtube
 
 [Link_al_enlace_de_youtube](https://youtu.be/eJL97nKrpsA)
@@ -679,3 +695,26 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 | User graph Folder       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/user-graph)        |
 | User Profile Folder  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/user-profile) |
 | Graphs  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/components/company-graph/company-graph.component.ts)             |
+
+
+#### Álvaro Pindado Castiñeira
+
+##### Listados 5 commits más significativos
+
+| **Descripción commit**              | **Link**                                                                                                 |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Search Component | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/e6e4136f64a2689369c7de8bcc8d4d362e4592cc) | 
+| Docker compose fix | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/1b308314d20c26ce92986a00f13fbcadcec1aea9) |
+| Edit Docker for angular  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/d4724d954f8e722418d7e8e572e6c804db92c761) |
+| SPAController | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/05914265cf86c662d7a0694e24f4f96ec3dad434) |
+| Fix of angular routes | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/commit/006f4f1e25ce269f6a1bb23182ab75e5a763ce2e#diff-08f076a2daedf220c1e1be766b4f22d3c7808db95aa892f395c52df6a8ab9971) |
+
+##### Listado 5 ficheros con mayor participación
+
+| **Fichero**              | **Link**                                                                                                                |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| DockerFile  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/Dockerfile)                          |
+| Search Folder | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/tree/main/frontend/src/app/components/search)    |
+| SPA Controller       | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/backend/src/main/java/es/codeurjc/global_mart/controller/SPAController.java)        |
+| Api docs yaml  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/backend/api-docs/api-docs.yaml) |
+| app-routing-module.ts  | [Link](https://github.com/CodeURJC-DAW-2024-25/webapp06/blob/main/frontend/src/app/app-routing.module.ts) |
