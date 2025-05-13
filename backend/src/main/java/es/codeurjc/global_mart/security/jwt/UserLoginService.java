@@ -41,6 +41,10 @@ public class UserLoginService {
 		this.userMapper = userMapper;
 	}
 
+	public UserService getUserService() {
+		return userService;
+	}
+
 	public ResponseEntity<AuthResponse> login(HttpServletResponse response, LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));

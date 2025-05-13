@@ -35,7 +35,20 @@ public class LoginController {
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest,
-            HttpServletResponse response) { // Cambia String por HttpServletResponse
+            HttpServletResponse response) {
+
+        // Check if user exists before attempting authentication
+        if (userLoginService.getUserService().findByUsername(loginRequest.getUsername()).isEmpty()) {
+            AuthResponse errorResponse = new AuthResponse(
+                    AuthResponse.Status.FAILURE,
+                    null,
+                    "User not found",
+                    null,
+                    false);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+
+        // If user exists, proceed with the normal login flow
         return userLoginService.login(response, loginRequest);
     }
 
