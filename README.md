@@ -600,6 +600,10 @@ Mi labor en esta práctica ha sido la colaboración a la hora de realizar la API
 ---
 
 ## Práctica 3
+
+###Diagrama 
+![Diagrama de componentes](./images_readme/Practica3/DiagramaComponentes.png)
+
 ### Video de youtube
 
 [Link_al_enlace_de_youtube](https://youtu.be/eJL97nKrpsA)
